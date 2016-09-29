@@ -9,45 +9,45 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_9_R2.BlockPosition;
-import net.minecraft.server.v1_9_R2.ChatMessage;
-import net.minecraft.server.v1_9_R2.DataWatcher;
-import net.minecraft.server.v1_9_R2.DataWatcherObject;
-import net.minecraft.server.v1_9_R2.DataWatcherRegistry;
-import net.minecraft.server.v1_9_R2.Entity;
-import net.minecraft.server.v1_9_R2.EntityHuman;
-import net.minecraft.server.v1_9_R2.IChatBaseComponent;
-import net.minecraft.server.v1_9_R2.PacketPlayOutBed;
-import net.minecraft.server.v1_9_R2.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
-import net.minecraft.server.v1_9_R2.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_9_R2.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
-import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo.PlayerInfoData;
-import net.minecraft.server.v1_9_R2.PlayerConnection;
-import net.minecraft.server.v1_9_R2.WorldSettings.EnumGamemode;
+import net.minecraft.server.v1_9_R1.BlockPosition;
+import net.minecraft.server.v1_9_R1.ChatMessage;
+import net.minecraft.server.v1_9_R1.DataWatcher;
+import net.minecraft.server.v1_9_R1.DataWatcherObject;
+import net.minecraft.server.v1_9_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_9_R1.Entity;
+import net.minecraft.server.v1_9_R1.EntityHuman;
+import net.minecraft.server.v1_9_R1.IChatBaseComponent;
+import net.minecraft.server.v1_9_R1.PacketPlayOutBed;
+import net.minecraft.server.v1_9_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
+import net.minecraft.server.v1_9_R1.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_9_R1.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_9_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
+import net.minecraft.server.v1_9_R1.PlayerConnection;
+import net.minecraft.server.v1_9_R1.WorldSettings.EnumGamemode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
-import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_9_R2;
+import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_9_R1;
 
 import com.mojang.authlib.GameProfile;
 
-public class NMSCorpses_v1_9_R2 implements Corpses {
+public class NMSCorpses_v1_9_R1 implements Corpses {
 
 	private List<CorpseData> corpses;
 
-	public NMSCorpses_v1_9_R2() {
+	public NMSCorpses_v1_9_R1() {
 		corpses = new ArrayList<CorpseData>();
 		Bukkit.getServer().getScheduler()
 				.scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
@@ -117,7 +117,7 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 				((CraftPlayer) p).getProfile(),
 				ConfigData.showTags() ? p.getName() : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
-		
+
 		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(12, DataWatcherRegistry.a);
 		dw.set(obj2, (byte)0x7F);
 		Location locUnder = getNonClippableBlockUnderPlayer(p, 1);
@@ -521,7 +521,7 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 	}
 
 	public void registerPacketListener(Player p) {
-		PcktIn_v1_9_R2.registerListener(p);
+		PcktIn_v1_9_R1.registerListener(p);
 	}
 
 }

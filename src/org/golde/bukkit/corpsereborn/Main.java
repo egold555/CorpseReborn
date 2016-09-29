@@ -61,14 +61,11 @@ public class Main extends JavaPlugin {
 								+ version);
 				corpses = (Corpses) subClass.getConstructor().newInstance();
 				getServer().getLogger().info("Corpses creator loaded.");
+				//getServer().getLogger().info("NMSCorpses_"+ version);
 			} catch (Exception e) {
-				getServer().getLogger().severe(
-						"================================");
-				getServer()
-						.getLogger()
-						.severe("There was a problem with loading the corpses creator!");
-				getServer().getLogger().severe(
-						"================================");
+				getServer().getLogger().severe("================================");
+				getServer().getLogger().severe("There was a problem with loading the corpses creator!");
+				getServer().getLogger().severe("================================");
 				cont = false;
 				getServer().getPluginManager().disablePlugin(this);
 			}

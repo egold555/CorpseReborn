@@ -9,45 +9,44 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_9_R2.BlockPosition;
-import net.minecraft.server.v1_9_R2.ChatMessage;
-import net.minecraft.server.v1_9_R2.DataWatcher;
-import net.minecraft.server.v1_9_R2.DataWatcherObject;
-import net.minecraft.server.v1_9_R2.DataWatcherRegistry;
-import net.minecraft.server.v1_9_R2.Entity;
-import net.minecraft.server.v1_9_R2.EntityHuman;
-import net.minecraft.server.v1_9_R2.IChatBaseComponent;
-import net.minecraft.server.v1_9_R2.PacketPlayOutBed;
-import net.minecraft.server.v1_9_R2.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
-import net.minecraft.server.v1_9_R2.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_9_R2.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
-import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo.PlayerInfoData;
-import net.minecraft.server.v1_9_R2.PlayerConnection;
-import net.minecraft.server.v1_9_R2.WorldSettings.EnumGamemode;
+import org.golde.bukkit.corpsereborn.ConfigData;
+import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.nms.Corpses;
+import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_8_R3;
+import net.minecraft.server.v1_8_R3.BlockPosition;
+import net.minecraft.server.v1_8_R3.ChatMessage;
+import net.minecraft.server.v1_8_R3.DataWatcher;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.EntityHuman;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.MathHelper;
+import net.minecraft.server.v1_8_R3.PacketPlayOutBed;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.PlayerInfoData;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
+import net.minecraft.server.v1_8_R3.WorldSettings.EnumGamemode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.golde.bukkit.corpsereborn.ConfigData;
-import org.golde.bukkit.corpsereborn.Main;
-import org.golde.bukkit.corpsereborn.nms.Corpses;
-import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_9_R2;
 
 import com.mojang.authlib.GameProfile;
 
-public class NMSCorpses_v1_9_R2 implements Corpses {
+public class NMSCorpses_v1_8_R3 implements Corpses {
 
 	private List<CorpseData> corpses;
 
-	public NMSCorpses_v1_9_R2() {
+	public NMSCorpses_v1_8_R3() {
 		corpses = new ArrayList<CorpseData>();
 		Bukkit.getServer().getScheduler()
 				.scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
@@ -77,14 +76,8 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 			public boolean isSpectator() {
 				return false;
 			}
-
-			@Override
-			public boolean l_() {
-				// TODO Auto-generated method stub
-				return false;
-			}
 		};
-		h.f(currentEntId);
+		h.d(currentEntId);
 		return h.getDataWatcher();
 	}
 
@@ -117,9 +110,7 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 				((CraftPlayer) p).getProfile(),
 				ConfigData.showTags() ? p.getName() : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
-		
-		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(12, DataWatcherRegistry.a);
-		dw.set(obj2, (byte)0x7F);
+		dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
 		Location locUnder = getNonClippableBlockUnderPlayer(p, 1);
 		Location used = locUnder != null ? locUnder : p.getLocation();
 		used.setYaw(p.getLocation().getYaw());
@@ -223,13 +214,13 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 				b.set(packet, prof.getId());
 				Field c = packet.getClass().getDeclaredField("c");
 				c.setAccessible(true);
-				c.setDouble(packet, loc.getX());
+				c.setInt(packet, MathHelper.floor(loc.getX() * 32.0D));
 				Field d = packet.getClass().getDeclaredField("d");
 				d.setAccessible(true);
-				d.setDouble(packet, loc.getY()+ 1.0f/16.0f);
+				d.setInt(packet, MathHelper.floor((loc.getY() + 2) * 32.0D));
 				Field e = packet.getClass().getDeclaredField("e");
 				e.setAccessible(true);
-				e.setDouble(packet, loc.getZ());
+				e.setInt(packet, MathHelper.floor(loc.getZ() * 32.0D));
 				Field f = packet.getClass().getDeclaredField("f");
 				f.setAccessible(true);
 				f.setByte(packet, (byte) (int) (loc.getYaw() * 256.0F / 360.0F));
@@ -237,11 +228,10 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 				g.setAccessible(true);
 				g.setByte(packet,
 						(byte) (int) (loc.getPitch() * 256.0F / 360.0F));
-				Field i = packet.getClass().getDeclaredField("h");
+				Field i = packet.getClass().getDeclaredField("i");
 				i.setAccessible(true);
 				i.set(packet, metadata);
 			} catch (Exception e) {
-				
 				e.printStackTrace();
 			}
 			return packet;
@@ -521,7 +511,7 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 	}
 
 	public void registerPacketListener(Player p) {
-		PcktIn_v1_9_R2.registerListener(p);
+		PcktIn_v1_8_R3.registerListener(p);
 	}
 
 }

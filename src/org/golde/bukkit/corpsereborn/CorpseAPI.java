@@ -18,4 +18,6 @@ public class CorpseAPI {
 		Main.getPlugin().corpses.removeCorpse(data);
 	}
 	
+	//spawnCorpse at locaation
+	
 }
