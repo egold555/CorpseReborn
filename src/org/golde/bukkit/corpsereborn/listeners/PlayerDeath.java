@@ -8,12 +8,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.Util;
 
 public class PlayerDeath implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		if (ConfigData.isOnDeath()) {
+		if (ConfigData.isOnDeath() && Util.playerInCorrectWorld(e.getEntity())) {
 			if (ConfigData.hasLootingInventory()) {
 				Inventory inv = Bukkit.getServer().createInventory(null, 54,
 						e.getEntity().getName() + "'s Items");

@@ -1,4 +1,15 @@
+#Time in seconds until the corpse despawns. Set to -1 for the copse to never despawn.
 corpse-time: 20
+
+#Spawn a corpse when the player dies?
 on-death: true
+
+#Put the players items into a gui when they die? CLick the head of the corpse to open the gui.
 looting-inventory: false
-show-tags: true
+
+#Show the username of the player? If you set this to false ' ' will be used for the username. 
+#The skin will still show even if you choose not do display the username.
+show-tags: false
+
+#Set world to 'all' for every world
+world: all

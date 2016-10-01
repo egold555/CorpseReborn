@@ -17,7 +17,7 @@ public class SpawnCorpse implements CommandExecutor {
 			String commandLabel, String[] args) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(ChatColor.RED
-					+ "You cannot run this command at this time!");
+					+ "Only players can run this command. Sorry about that.");
 			return true;
 		}
 		if (!sender.hasPermission("corpses.spawn")) {
@@ -27,23 +27,9 @@ public class SpawnCorpse implements CommandExecutor {
 		}
 		if (args.length == 0) {
 			Player p = (Player) sender;
-			Inventory items = null;
-			if (ConfigData.hasLootingInventory()) {
-				items = Bukkit.getServer().createInventory(null, 54,
-						p.getName() + "'s Items");
-				for (ItemStack is : p.getInventory().getContents()) {
-					if (is != null) {
-						items.addItem(is);
-					}
-				}
-				for (ItemStack is : p.getInventory().getArmorContents()) {
-					if (is != null) {
-						items.addItem(is);
-					}
-				}
-			}
-			Main.getPlugin().corpses.spawnCorpse(p, items);
-			p.sendMessage(ChatColor.RED + "Corpse of yourself spawned!");
+			
+			Main.getPlugin().corpses.spawnCorpse(p, createInventory(p));
+			p.sendMessage(ChatColor.GREEN + "Corpse of yourself spawned!");
 		} else if (args.length == 1) {
 			Player p = Bukkit.getServer().getPlayer(args[0]);
 			if (p == null) {
@@ -51,22 +37,8 @@ public class SpawnCorpse implements CommandExecutor {
 						+ " is not online!");
 				return true;
 			}
-			Inventory items = null;
-			if (ConfigData.hasLootingInventory()) {
-				items = Bukkit.getServer().createInventory(null, 54,
-						p.getName() + "'s Items");
-				for (ItemStack is : p.getInventory().getContents()) {
-					if (is != null) {
-						items.addItem(is);
-					}
-				}
-				for (ItemStack is : p.getInventory().getArmorContents()) {
-					if (is != null) {
-						items.addItem(is);
-					}
-				}
-			}
-			Main.getPlugin().corpses.spawnCorpse(p, items);
+
+			Main.getPlugin().corpses.spawnCorpse(p, createInventory(p));
 			sender.sendMessage(ChatColor.GREEN + "Spawned corpse of "
 					+ p.getName() + "!");
 		} else {
@@ -74,5 +46,26 @@ public class SpawnCorpse implements CommandExecutor {
 					+ commandLabel + " [Player]");
 		}
 		return true;
+	}
+	
+	Inventory createInventory(Player p){
+		Inventory items = null;
+		
+		if (ConfigData.hasLootingInventory()) {
+			items = Bukkit.getServer().createInventory(null, 54,
+					p.getName() + "'s Items");
+			for (ItemStack is : p.getInventory().getContents()) {
+				if (is != null) {
+					items.addItem(is);
+				}
+			}
+			for (ItemStack is : p.getInventory().getArmorContents()) {
+				if (is != null) {
+					items.addItem(is);
+				}
+			}
+		}
+		
+		return items;
 	}
 }

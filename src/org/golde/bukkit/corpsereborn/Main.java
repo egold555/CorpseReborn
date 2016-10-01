@@ -4,11 +4,8 @@ import java.util.List;
 
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.golde.bukkit.corpsereborn.cmds.SpawnCorpse;
-import org.golde.bukkit.corpsereborn.listeners.PlayerChangedWorld;
-import org.golde.bukkit.corpsereborn.listeners.PlayerDeath;
-import org.golde.bukkit.corpsereborn.listeners.PlayerJoin;
-import org.golde.bukkit.corpsereborn.listeners.PlayerRespawn;
+import org.golde.bukkit.corpsereborn.cmds.*;
+import org.golde.bukkit.corpsereborn.listeners.*;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import com.google.common.reflect.ClassPath;
@@ -24,8 +21,9 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		saveDefaultConfig();
-		getServer().getLogger().info("Loading corpses creator...");
+		Util.info("Loading corpses creator...");
 		loadCorpsesCreator();
+		Util.info("Loading config data...");
 		ConfigData.load();
 		if (!cont) {
 			return;
@@ -36,6 +34,7 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerChangedWorld(), this);
 		pm.registerEvents(new PlayerDeath(), this);
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
+		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 	}
 
 	private String getServerVersion() {
@@ -60,23 +59,21 @@ public class Main extends JavaPlugin {
 						.forName("org.golde.bukkit.corpsereborn.nms.nmsclasses.NMSCorpses_"
 								+ version);
 				corpses = (Corpses) subClass.getConstructor().newInstance();
-				getServer().getLogger().info("Corpses creator loaded.");
-				//getServer().getLogger().info("NMSCorpses_"+ version);
+				Util.info("Corpses creator loaded.");
+				//Util.info("NMSCorpses_"+ version);
 			} catch (Exception e) {
-				getServer().getLogger().severe("================================");
-				getServer().getLogger().severe("There was a problem with loading the corpses creator!");
-				getServer().getLogger().severe("================================");
+				Util.severe("================================");
+				Util.severe("There was a problem with loading the corpses creator!");
+				Util.severe("================================");
 				cont = false;
 				getServer().getPluginManager().disablePlugin(this);
 			}
 		} else {
-			getServer().getLogger().severe("================================");
-			getServer().getLogger().severe("Server version is not supported!");
-			getServer().getLogger().severe("You are running " + version + ".");
-			getServer().getLogger().severe(
-					"The supported versions are: "
-							+ getAppendedVersionsSupported() + ".");
-			getServer().getLogger().severe("================================");
+			Util.severe("================================");
+			Util.severe("Server version is not supported!");
+			Util.severe("You are running " + version + ".");
+			Util.severe("The supported versions are: " + getAppendedVersionsSupported() + ".");
+			Util.severe("================================");
 			cont = false;
 			getServer().getPluginManager().disablePlugin(this);
 		}

@@ -1,6 +1,6 @@
 name: CorpseReborn
 author: Eric & Virizion
-version: 1.0
+version: 1.2
 description: "This is a port to 1.8-1.10 versions of Spigot from the old corpse plugin found here: https://www.spigotmc.org/resources/corpses.1817/ . Credit to Virizion for the original plugin and code! All I did was fix some method and packet changes that occurred when porting this plugin to future versions"
 main: org.golde.bukkit.corpsereborn.Main
 commands:
@@ -8,8 +8,17 @@ commands:
     usage: /<command> [Player]
     description: Spawn a corpse of a player!
     permission: corpses.spawn
-    aliases: [spawnc, scorpse, sc, icanhascorpse]
+    aliases: [spawnc, scorpse, sc]
+  removecorpse:
+    usage: /<command> [Radius]
+    description: Remove a corpse of a player!
+    permission: corpses.remove
+    aliases: [removec, rcorpse, rc]
+    
 permissions:
   corpses.spawn:
     default: op
     description: Permission for /spawncorpse
+  corpses.remove:
+    default: op
+    description: Permission for /removecorpse

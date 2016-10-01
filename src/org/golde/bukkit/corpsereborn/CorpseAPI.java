@@ -6,8 +6,8 @@ import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 public class CorpseAPI {
 
-	public static void spawnCorpse(Player p, Inventory items){
-		Main.getPlugin().corpses.spawnCorpse(p, items);
+	public static CorpseData spawnCorpse(Player p, Inventory items){
+		return Main.getPlugin().corpses.spawnCorpse(p, items);
 	}
 	
 	public static CorpseData spawnCorpse(Player p){
