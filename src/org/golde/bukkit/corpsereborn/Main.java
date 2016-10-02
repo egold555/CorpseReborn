@@ -35,6 +35,7 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerDeath(), this);
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
+		getCommand("corpsereload").setExecutor(new ReloadPlugin());
 	}
 
 	private String getServerVersion() {
@@ -51,7 +52,7 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
-	private void loadCorpsesCreator() {
+	public void loadCorpsesCreator() {
 		String version = getServerVersion();
 		if (isVersionSupported(version)) {
 			try {

@@ -17,7 +17,7 @@ public class PlayerDeath implements Listener {
 		if (ConfigData.isOnDeath() && Util.playerInCorrectWorld(e.getEntity())) {
 			if (ConfigData.hasLootingInventory()) {
 				Inventory inv = Bukkit.getServer().createInventory(null, 54,
-						e.getEntity().getName() + "'s Items");
+						ConfigData.getInventoryName(e.getEntity()));
 				inv.addItem(e.getDrops().toArray(
 						new ItemStack[e.getDrops().size()]));
 				Main.getPlugin().corpses.spawnCorpse(e.getEntity(), inv);

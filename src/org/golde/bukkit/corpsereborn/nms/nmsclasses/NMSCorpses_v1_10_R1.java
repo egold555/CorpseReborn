@@ -115,7 +115,7 @@ public class NMSCorpses_v1_10_R1 implements Corpses {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
-				ConfigData.showTags() ? p.getName() : "");
+				ConfigData.showTags() ? ConfigData.getUsername(p) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 		//dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
 		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(10, DataWatcherRegistry.b);

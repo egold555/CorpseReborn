@@ -80,7 +80,6 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 
 			@Override
 			public boolean l_() {
-				// TODO Auto-generated method stub
 				return false;
 			}
 		};
@@ -115,7 +114,7 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
-				ConfigData.showTags() ? p.getName() : "");
+				ConfigData.showTags() ? ConfigData.getUsername(p) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 		
 		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(12, DataWatcherRegistry.a);

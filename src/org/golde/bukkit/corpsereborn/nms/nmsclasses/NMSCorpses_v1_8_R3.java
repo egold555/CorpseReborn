@@ -108,7 +108,7 @@ public class NMSCorpses_v1_8_R3 implements Corpses {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
-				ConfigData.showTags() ? p.getName() : "");
+				ConfigData.showTags() ? ConfigData.getUsername(p) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 		dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
 		Location locUnder = getNonClippableBlockUnderPlayer(p, 1);

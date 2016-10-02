@@ -53,7 +53,7 @@ public class SpawnCorpse implements CommandExecutor {
 		
 		if (ConfigData.hasLootingInventory()) {
 			items = Bukkit.getServer().createInventory(null, 54,
-					p.getName() + "'s Items");
+					ConfigData.getInventoryName(p));
 			for (ItemStack is : p.getInventory().getContents()) {
 				if (is != null) {
 					items.addItem(is);

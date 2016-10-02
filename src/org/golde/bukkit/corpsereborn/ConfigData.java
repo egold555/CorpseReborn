@@ -2,6 +2,7 @@ package org.golde.bukkit.corpsereborn;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class ConfigData {
 
@@ -11,6 +12,8 @@ public class ConfigData {
 	private static boolean showTags;
 	private static String worldName;
 	private static World world;
+	private static String guiName;
+	private static String username;
 
 	public static int getCorpseTime() {
 		return corpseTime;
@@ -31,6 +34,14 @@ public class ConfigData {
 	public static World getWorld(){
 		return world;
 	}
+	
+	public static String getInventoryName(Player p){
+		return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");
+	}
+	
+	public static String getUsername(Player p){
+		return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");
+	}
 
 	public static void load() {
 		try {
@@ -39,6 +50,8 @@ public class ConfigData {
 			lootingInventory = Main.getPlugin().getConfig().getBoolean("looting-inventory");
 			showTags = Main.getPlugin().getConfig().getBoolean("show-tags");
 			worldName = Main.getPlugin().getConfig().getString("world");
+			guiName = Main.getPlugin().getConfig().getString("gui-title");
+			username = Main.getPlugin().getConfig().getString("username-format");
 			if(worldName.equalsIgnoreCase("all")){
 				world = null;
 			}else{
@@ -51,8 +64,8 @@ public class ConfigData {
 					Util.severe("Defaulting to ALL WORLDS");
 					Util.severe("================================");
 				}
-				Util.info("Config successfully loaded.");
 			}
+			Util.info("Config successfully loaded.");
 
 		} catch (Exception e) {
 			Util.severe("================================");
