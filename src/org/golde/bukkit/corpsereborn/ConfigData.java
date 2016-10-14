@@ -14,33 +14,28 @@ public class ConfigData {
 	private static World world;
 	private static String guiName;
 	private static String username;
+	private static boolean autoDespawn;
+	private static String finishLootingMessage;
 
-	public static int getCorpseTime() {
-		return corpseTime;
+	public static int getCorpseTime() {return corpseTime;}
+	public static boolean isOnDeath() {return onDeath;}
+	public static boolean hasLootingInventory() {return lootingInventory;}
+	public static boolean showTags() {return showTags;}
+	public static World getWorld(){	return world;}
+	public static String getInventoryName(Player p){return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
+	public static String getUsername(Player p){return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
+	public static String finishLootingMessage(String name){
+		if(finishLootingMessage.equalsIgnoreCase("none")){
+			return null;
+		}
+		return finishLootingMessage.replaceAll("%corpse%", name).replaceAll("&", "§");
 	}
 
-	public static boolean isOnDeath() {
-		return onDeath;
-	}
-
-	public static boolean hasLootingInventory() {
-		return lootingInventory;
-	}
-
-	public static boolean showTags() {
-		return showTags;
-	}
-	
-	public static World getWorld(){
-		return world;
-	}
-	
-	public static String getInventoryName(Player p){
-		return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");
-	}
-	
-	public static String getUsername(Player p){
-		return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");
+	public static boolean shouldDespawnAfterLoot(){
+		if(lootingInventory && autoDespawn){
+			return true;
+		}
+		return false;
 	}
 
 	public static void load() {
@@ -52,6 +47,10 @@ public class ConfigData {
 			worldName = Main.getPlugin().getConfig().getString("world");
 			guiName = Main.getPlugin().getConfig().getString("gui-title");
 			username = Main.getPlugin().getConfig().getString("username-format");
+			autoDespawn = Main.getPlugin().getConfig().getBoolean("despawn-after-looted");
+			finishLootingMessage = Main.getPlugin().getConfig().getString("finish-looting-message");
+
+
 			if(worldName.equalsIgnoreCase("all")){
 				world = null;
 			}else{

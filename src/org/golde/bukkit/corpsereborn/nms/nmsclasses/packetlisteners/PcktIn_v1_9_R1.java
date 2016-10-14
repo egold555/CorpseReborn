@@ -13,6 +13,7 @@ import net.minecraft.server.v1_9_R1.PacketPlayInUseEntity.EnumEntityUseAction;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryView;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
@@ -37,8 +38,9 @@ public class PcktIn_v1_9_R1 extends ChannelInboundHandlerAdapter {
 									for (CorpseData cd : Main.getPlugin().corpses
 											.getAllCorpses()) {
 										if (cd.getEntityId() == getId(packet)) {
-											p.openInventory(cd
+											InventoryView view = p.openInventory(cd
 													.getLootInventory());
+											cd.setInventoryView(view);
 											break;
 										}
 									}

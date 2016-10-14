@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
+
 import net.minecraft.server.v1_8_R1.EnumEntityUseAction;
 import net.minecraft.server.v1_8_R1.NetworkManager;
 import net.minecraft.server.v1_8_R1.PacketPlayInUseEntity;
@@ -16,6 +17,7 @@ import net.minecraft.server.v1_8_R1.PacketPlayInUseEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryView;
 
 public class PcktIn_v1_8_R1 extends ChannelInboundHandlerAdapter {
 
@@ -37,8 +39,9 @@ public class PcktIn_v1_8_R1 extends ChannelInboundHandlerAdapter {
 									for (CorpseData cd : Main.getPlugin().corpses
 											.getAllCorpses()) {
 										if (cd.getEntityId() == getId(packet)) {
-											p.openInventory(cd
+											InventoryView view = p.openInventory(cd
 													.getLootInventory());
+											cd.setInventoryView(view);
 											break;
 										}
 									}

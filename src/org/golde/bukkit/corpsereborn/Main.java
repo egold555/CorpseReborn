@@ -33,12 +33,13 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerRespawn(), this);
 		pm.registerEvents(new PlayerChangedWorld(), this);
 		pm.registerEvents(new PlayerDeath(), this);
+		pm.registerEvents(new InventoryHandle(), this);
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 		getCommand("corpsereload").setExecutor(new ReloadPlugin());
 	}
 
-	private String getServerVersion() {
+	public String getServerVersion() {
 		return getServer().getClass().getName().split("\\.")[3];
 	}
 

@@ -7,11 +7,14 @@ on-death: true
 #Put the players items into a gui when they die? CLick the head of the corpse to open the gui.
 looting-inventory: false
 
+#Should the corpse automaticly despawn after it has been looted? (Only has effect is looting-inventory is true!)
+despawn-after-looted: true
+
 #Show the username of the player? If you set this to false ' ' will be used for the username. 
 #The skin will still show even if you choose not do display the username.
 show-tags: true
 
-#Set world to 'all' for every world
+#Set world to 'all' for every world.
 world: all
 
 #Title of inventory created when you click the corpses head to loot it. 
@@ -20,8 +23,13 @@ world: all
 #Minecraft has a 32 character limit on GUI lengths. If your title is more then that you will get a error on the console.
 gui-title: "%corpse%'s Items"
 
-#This is the username of the corpse
+#This is the username of the corpse.
 #%corpse% gets replaced with the corpses name.
 #Color codes and unicode characters work, but might be glitchy.
 #Minecraft has a 16 character limit on name lengths. If your title is more then that you will get a error on the console.
 username-format: "%corpse%"
+
+#This is the message sent when you finish looting the corpse. Set the message to "none" to disable.
+#%corpse% gets replaced with the corpses name.
+#Color codes and unicode characters work, but might be glitchy.
+finish-looting-message: "&bYou have finished looting %corpse%'s corpse."

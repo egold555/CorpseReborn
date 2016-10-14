@@ -7,6 +7,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 public interface Corpses {
 	
@@ -61,6 +62,14 @@ public interface Corpses {
 		public int getEntityId();
 		
 		public Inventory getLootInventory();
+		
+		public void setInventoryView(InventoryView iv);
+		
+		public InventoryView getInventoryView();
+		
+		public String getUsername();
+		
+		public void setUsername(String username);
 		
 	}
 }

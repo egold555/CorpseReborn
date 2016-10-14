@@ -36,6 +36,7 @@ import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
@@ -125,6 +126,7 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 		used.setPitch(p.getLocation().getPitch());
 		NMSCorpseData data = new NMSCorpseData(prof, used, dw, entityId,
 				ConfigData.getCorpseTime() * 20, inv);
+		data.setUsername(ConfigData.getUsername(p));
 		corpses.add(data);
 		return data;
 	}
@@ -165,6 +167,8 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 		private int entityId;
 		private int ticksLeft;
 		private Inventory items;
+		private InventoryView iv;
+		private String username;
 
 		public NMSCorpseData(GameProfile prof, Location loc,
 				DataWatcher metadata, int entityId, int ticksLeft,
@@ -438,6 +442,26 @@ public class NMSCorpses_v1_9_R2 implements Corpses {
 
 		public Inventory getLootInventory() {
 			return items;
+		}
+		
+		@Override
+		public void setInventoryView(InventoryView iv) {
+			this.iv = iv;
+		}
+
+		@Override
+		public InventoryView getInventoryView() {
+			return iv;
+		}
+		
+		@Override
+		public String getUsername() {
+			return username;
+		}
+
+		@Override
+		public void setUsername(String username) {
+			this.username = username;
 		}
 
 	}
