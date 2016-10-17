@@ -33,7 +33,7 @@ public class SpawnCorpse implements CommandExecutor {
 			
 			data = Main.getPlugin().corpses.spawnCorpse(p, makeInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
 			p.sendMessage(ChatColor.GREEN + "Corpse of yourself spawned!");
-			Util.callEvent(new CorpseSpawnEvent(data, true));
+			Util.callEvent(new CorpseSpawnEvent(data, p, true));
 		} else if (args.length == 1) {
 			Player p = Bukkit.getServer().getPlayer(args[0]);
 			if (p == null) {
@@ -45,7 +45,7 @@ public class SpawnCorpse implements CommandExecutor {
 			data = Main.getPlugin().corpses.spawnCorpse(p, makeInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
 			sender.sendMessage(ChatColor.GREEN + "Spawned corpse of "
 					+ p.getName() + "!");
-			Util.callEvent(new CorpseSpawnEvent(data, true));
+			Util.callEvent(new CorpseSpawnEvent(data, p, true));
 		} else {
 			sender.sendMessage(ChatColor.RED + "Correct Usage: /"
 					+ commandLabel + " [Player]");

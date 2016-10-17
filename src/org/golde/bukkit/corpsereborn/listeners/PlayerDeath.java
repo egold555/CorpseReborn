@@ -37,7 +37,7 @@ public class PlayerDeath implements Listener {
 				data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), null);
 			}
 			
-			Util.callEvent(new CorpseSpawnEvent(data, false));
+			Util.callEvent(new CorpseSpawnEvent(data, e.getEntity(), false));
 		}
 	}
 }

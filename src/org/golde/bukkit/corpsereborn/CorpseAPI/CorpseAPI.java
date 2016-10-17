@@ -11,13 +11,13 @@ public class CorpseAPI {
 
 	public static CorpseData spawnCorpse(Player p, Inventory items){
 		CorpseData data = Main.getPlugin().corpses.spawnCorpse(p, items);
-		Util.callEvent(new CorpseSpawnEvent(data, true));
+		Util.callEvent(new CorpseSpawnEvent(data, p, true));
 		return data;
 	}
 	
 	public static CorpseData spawnCorpse(Player p){
 		CorpseData data = Main.getPlugin().corpses.spawnCorpse(p, null);
-		Util.callEvent(new CorpseSpawnEvent(data, true));
+		Util.callEvent(new CorpseSpawnEvent(data, p, true));
 		return data;
 	}
 	
