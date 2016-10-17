@@ -10,11 +10,12 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class PlayerInventoryClone {
 	
-	private Inventory i;
+	private static Inventory i;
 	
 	public PlayerInventoryClone(Player p){
 		PlayerInventory pi = p.getInventory();
-		i = Bukkit.getServer().createInventory(null, 54);
+		i = Bukkit.getServer().createInventory(null, 54, ConfigData.getInventoryName(p));
+	
 		int temp;
 		ArrayList<ItemStack> tempItemStack = new ArrayList<ItemStack>();
 		
@@ -58,6 +59,22 @@ public class PlayerInventoryClone {
 	public PlayerInventoryClone setOffHand(ItemStack stack){
 		i.setItem(7, stack);
 		return this;
+	}
+	
+	public static ItemStack getHelmet(){
+		return i.getItem(1);
+	}
+	
+	public static ItemStack getChestplate(){
+		return i.getItem(2);
+	}
+	
+	public static ItemStack getLeggings(){
+		return i.getItem(3);
+	}
+	
+	public static ItemStack getBoots(){
+		return i.getItem(4);
 	}
 
 }

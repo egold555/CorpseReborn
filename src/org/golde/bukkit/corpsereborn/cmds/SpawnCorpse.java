@@ -7,14 +7,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.PlayerInventoryClone;
+import org.golde.bukkit.corpsereborn.Util;
+import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
+import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 public class SpawnCorpse implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args) {
+		CorpseData data;
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(ChatColor.RED
 					+ "Only players can run this command. Sorry about that.");
@@ -28,8 +31,9 @@ public class SpawnCorpse implements CommandExecutor {
 		if (args.length == 0) {
 			Player p = (Player) sender;
 			
-			Main.getPlugin().corpses.spawnCorpse(p, createInventory(p));
+			data = Main.getPlugin().corpses.spawnCorpse(p, makeInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
 			p.sendMessage(ChatColor.GREEN + "Corpse of yourself spawned!");
+			Util.callEvent(new CorpseSpawnEvent(data, true));
 		} else if (args.length == 1) {
 			Player p = Bukkit.getServer().getPlayer(args[0]);
 			if (p == null) {
@@ -38,9 +42,10 @@ public class SpawnCorpse implements CommandExecutor {
 				return true;
 			}
 
-			Main.getPlugin().corpses.spawnCorpse(p, createInventory(p));
+			data = Main.getPlugin().corpses.spawnCorpse(p, makeInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
 			sender.sendMessage(ChatColor.GREEN + "Spawned corpse of "
 					+ p.getName() + "!");
+			Util.callEvent(new CorpseSpawnEvent(data, true));
 		} else {
 			sender.sendMessage(ChatColor.RED + "Correct Usage: /"
 					+ commandLabel + " [Player]");
@@ -48,24 +53,12 @@ public class SpawnCorpse implements CommandExecutor {
 		return true;
 	}
 	
-	Inventory createInventory(Player p){
-		Inventory items = null;
-		
-		if (ConfigData.hasLootingInventory()) {
-			items = Bukkit.getServer().createInventory(null, 54,
-					ConfigData.getInventoryName(p));
-			for (ItemStack is : p.getInventory().getContents()) {
-				if (is != null) {
-					items.addItem(is);
-				}
-			}
-			for (ItemStack is : p.getInventory().getArmorContents()) {
-				if (is != null) {
-					items.addItem(is);
-				}
-			}
+	Inventory makeInv(Player p){
+		String ver = Main.getPlugin().getServerVersion();
+		PlayerInventoryClone inv = new PlayerInventoryClone(p);
+		if(!ver.startsWith("v1_8")){
+			inv.setOffHand(p.getInventory().getItemInOffHand());
 		}
-		
-		return items;
+		return inv.toInventory();
 	}
 }

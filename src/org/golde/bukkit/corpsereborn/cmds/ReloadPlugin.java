@@ -18,6 +18,8 @@ public class ReloadPlugin implements CommandExecutor{
 		Main.getPlugin().loadCorpsesCreator();
 		Util.info("Loading config data...");
 		ConfigData.load();
+		
+		Main.getPlugin().corpses.removeAllSlimes();
 		return true;
 	}
 

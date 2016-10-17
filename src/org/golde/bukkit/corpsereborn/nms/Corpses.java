@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
@@ -20,6 +21,14 @@ public interface Corpses {
 	public List<CorpseData> getAllCorpses();
 	
 	public void registerPacketListener(Player p);
+	
+	public boolean slimeHit(Player player, Slime slime);
+	
+	public void updateSlimes();
+	
+	public void removeAllSlimes();
+	
+	public boolean isValidSlime(Slime slime);
 	
 	public interface CorpseData {
 		
@@ -70,6 +79,10 @@ public interface Corpses {
 		public String getUsername();
 		
 		public void setUsername(String username);
+		
+		public int getSelectedSlot();
+		
+		public CorpseData setSelectedSlot(int slot);
 		
 	}
 }

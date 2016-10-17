@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.cmds.*;
 import org.golde.bukkit.corpsereborn.listeners.*;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
@@ -34,9 +35,21 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerChangedWorld(), this);
 		pm.registerEvents(new PlayerDeath(), this);
 		pm.registerEvents(new InventoryHandle(), this);
+		pm.registerEvents(new SlimeHit(), this);
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 		getCommand("corpsereload").setExecutor(new ReloadPlugin());
+		
+		new BukkitRunnable(){
+			public void run(){
+				corpses.updateSlimes();
+			}
+		}.runTaskTimer(this, 0, 20);
+	}
+	
+	public void onDisable(){
+		//remove all slimes
+		corpses.removeAllSlimes();
 	}
 
 	public String getServerVersion() {

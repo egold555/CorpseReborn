@@ -16,12 +16,14 @@ public class ConfigData {
 	private static String username;
 	private static boolean autoDespawn;
 	private static String finishLootingMessage;
+	private static boolean newHitbox;
 
 	public static int getCorpseTime() {return corpseTime;}
 	public static boolean isOnDeath() {return onDeath;}
 	public static boolean hasLootingInventory() {return lootingInventory;}
 	public static boolean showTags() {return showTags;}
 	public static World getWorld(){	return world;}
+	public static boolean getNewHitbox(){return newHitbox;}
 	public static String getInventoryName(Player p){return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
 	public static String getUsername(Player p){return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
 	public static String finishLootingMessage(String name){
@@ -49,7 +51,7 @@ public class ConfigData {
 			username = Main.getPlugin().getConfig().getString("username-format");
 			autoDespawn = Main.getPlugin().getConfig().getBoolean("despawn-after-looted");
 			finishLootingMessage = Main.getPlugin().getConfig().getString("finish-looting-message");
-
+			newHitbox = Main.getPlugin().getConfig().getBoolean("new-hitboxes");
 
 			if(worldName.equalsIgnoreCase("all")){
 				world = null;

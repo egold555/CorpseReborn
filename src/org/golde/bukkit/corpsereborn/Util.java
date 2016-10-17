@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -49,8 +50,8 @@ public class Util {
 		return false;
 	}
 
-	public static int removeCorpsesInRadius(Player p, double radius){
-		int removedCount = 0;
+	public static ArrayList<CorpseData> removeCorpsesInRadius(Player p, double radius){
+		ArrayList<CorpseData> returnCorpses = new ArrayList<CorpseData>();
 		ArrayList<CorpseData> iWantToRemove = new ArrayList<CorpseData>();
 		for(CorpseData cd:Main.getPlugin().corpses.getAllCorpses()){
 			Location l = cd.getOrigLocation();
@@ -60,26 +61,26 @@ public class Util {
 		}
 
 		for(CorpseData cd:iWantToRemove){
+			returnCorpses.add(cd);
 			Main.getPlugin().corpses.removeCorpse(cd);
-			removedCount++;
 		}
 
-		return removedCount;
+		return returnCorpses;
 	}
 
-	public static int removeAllCorpses(Player p){
-		int removedCount = 0;
+	public static ArrayList<CorpseData> removeAllCorpses(Player p){
+		ArrayList<CorpseData> returnCorpses = new ArrayList<CorpseData>();
 		ArrayList<CorpseData> iWantToRemove = new ArrayList<CorpseData>();
 		for(CorpseData cd:Main.getPlugin().corpses.getAllCorpses()){
 			iWantToRemove.add(cd);
 		}
 
 		for(CorpseData cd:iWantToRemove){
+			returnCorpses.add(cd);
 			Main.getPlugin().corpses.removeCorpse(cd);
-			removedCount++;
 		}
 
-		return removedCount;
+		return returnCorpses;
 	}
 
 
@@ -104,7 +105,9 @@ public class Util {
 	public static void removeCorpse(CorpseData cd){
 		Main.getPlugin().corpses.removeCorpse(cd);
 	}
-
-
+	
+	public static void callEvent(Event event){
+		Bukkit.getServer().getPluginManager().callEvent(event);
+	}
 
 }
