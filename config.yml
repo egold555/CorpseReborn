@@ -1,3 +1,6 @@
+#Enable checking for new versions of the plugin?
+enable-update-checker: true
+
 #Time in seconds until the corpse despawns. Set to -1 for the copse to never despawn.
 corpse-time: 120
 

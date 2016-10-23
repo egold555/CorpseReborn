@@ -19,7 +19,9 @@ public class ConfigData {
 	private static boolean autoDespawn;
 	private static String finishLootingMessage;
 	private static boolean newHitbox;
+	private static boolean checkForUpdate;
 
+	public static boolean shouldCheckForUpdates(){return checkForUpdate;}
 	public static int getCorpseTime() {return corpseTime;}
 	public static boolean isOnDeath() {return onDeath;}
 	public static boolean hasLootingInventory() {return lootingInventory;}
@@ -54,6 +56,7 @@ public class ConfigData {
 			autoDespawn = Main.getPlugin().getConfig().getBoolean("despawn-after-looted");
 			finishLootingMessage = Main.getPlugin().getConfig().getString("finish-looting-message");
 			newHitbox = Main.getPlugin().getConfig().getBoolean("new-hitboxes");
+			checkForUpdate = Main.getPlugin().getConfig().getBoolean("enable-update-checker");
 
 			if(worldName.equalsIgnoreCase("all")){
 				world = null;

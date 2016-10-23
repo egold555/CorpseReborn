@@ -5,8 +5,15 @@ import java.util.List;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.golde.bukkit.corpsereborn.cmds.*;
-import org.golde.bukkit.corpsereborn.listeners.*;
+import org.golde.bukkit.corpsereborn.cmds.ReloadPlugin;
+import org.golde.bukkit.corpsereborn.cmds.RemoveCorpseRadius;
+import org.golde.bukkit.corpsereborn.cmds.SpawnCorpse;
+import org.golde.bukkit.corpsereborn.listeners.InventoryHandle;
+import org.golde.bukkit.corpsereborn.listeners.PlayerChangedWorld;
+import org.golde.bukkit.corpsereborn.listeners.PlayerDeath;
+import org.golde.bukkit.corpsereborn.listeners.PlayerJoin;
+import org.golde.bukkit.corpsereborn.listeners.PlayerRespawn;
+import org.golde.bukkit.corpsereborn.listeners.SlimeHit;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import com.google.common.reflect.ClassPath;
@@ -22,11 +29,11 @@ public class Main extends JavaPlugin {
 
 	public void onEnable() {
 		plugin = this;
-		saveDefaultConfig();
-		Util.info("Loading corpses creator...");
-		loadCorpsesCreator();
-		Util.info("Loading config data...");
 		ConfigData.load();
+		checkForUpdates();
+		saveDefaultConfig();
+		loadCorpsesCreator();
+		
 		if (!cont) {
 			return;
 		}
@@ -52,8 +59,31 @@ public class Main extends JavaPlugin {
 		//remove all slimes
 		corpses.removeAllSlimes();
 	}
+	
+	void checkForUpdates(){
+		Updater updater = new Updater("29875"); 
+		Updater.UpdateResults result = updater.checkForUpdates();
+		if(result.getResult() == Updater.UpdateResult.FAIL)
+		{
+			Util.severe("Update checker failed to check for updates!");
+			Util.info("Stacktrace: " + result.getVersion());
+		}
+		else if(result.getResult() == Updater.UpdateResult.NO_UPDATE)
+		{
+			Util.info("No update available");
+		}
+		else if(result.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE)
+		{
+			Util.cinfo("&aAn update for CorpseReborn has been found!");
+			Util.cinfo("&bCurrent version: &e" + getDescription().getVersion() + "&b, new version: &e" + result.getVersion());
+		}
+		else if (result.getResult() == Updater.UpdateResult.DEV){
+			Util.cinfo("&eYou seem to have a version of the plugin that is not on spigot...");
+			Util.cinfo("&cExpect bugs!");
+		}
+	}
 
-	public String getServerVersion() {
+	private String getServerVersion() {
 		return getServer().getClass().getName().split("\\.")[3];
 	}
 

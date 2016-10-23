@@ -14,21 +14,27 @@ import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 
 public class Util {
+	private static String prefix = "[CorpseReborn] ";
 
 	public static int getNearestMultipleOfNumberCeil(int number, int multiple) {
 		return (int) (multiple * Math.ceil((double) number / multiple));
 	}
 
 	public static void info(String text){
-		Bukkit.getServer().getLogger().info(text);
+		Bukkit.getServer().getLogger().info(prefix + text);
 	}
 
 	public static void warning(String text){
-		Bukkit.getServer().getLogger().warning(text);
+		Bukkit.getServer().getLogger().warning(prefix + text);
 	}
 
 	public static void severe(String text){
-		Bukkit.getServer().getLogger().severe(text);
+		Bukkit.getServer().getLogger().severe(prefix + text);
+	}
+	
+	public static void cinfo(String text){
+		text = text.replaceAll("&", "§");
+		Bukkit.getConsoleSender().sendMessage(prefix + text);
 	}
 
 	public static boolean playerInCorrectWorld(Player p){
