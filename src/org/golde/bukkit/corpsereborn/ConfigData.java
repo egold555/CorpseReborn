@@ -1,5 +1,7 @@
 package org.golde.bukkit.corpsereborn;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -11,7 +13,7 @@ public class ConfigData {
 	private static boolean lootingInventory;
 	private static boolean showTags;
 	private static String worldName;
-	private static World world;
+	private static ArrayList<World> world;
 	private static String guiName;
 	private static String username;
 	private static boolean autoDespawn;
@@ -22,7 +24,7 @@ public class ConfigData {
 	public static boolean isOnDeath() {return onDeath;}
 	public static boolean hasLootingInventory() {return lootingInventory;}
 	public static boolean showTags() {return showTags;}
-	public static World getWorld(){	return world;}
+	public static ArrayList<World> getWorld(){	return world;}
 	public static boolean getNewHitbox(){return newHitbox;}
 	public static String getInventoryName(Player p){return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
 	public static String getUsername(Player p){return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
@@ -56,15 +58,19 @@ public class ConfigData {
 			if(worldName.equalsIgnoreCase("all")){
 				world = null;
 			}else{
-				if(Bukkit.getWorld(worldName) != null){
-					world = Bukkit.getWorld(worldName);
-				}else{
-					world = null;
-					Util.severe("================================");
-					Util.severe("Could not find the world: " + worldName);
-					Util.severe("Defaulting to ALL WORLDS");
-					Util.severe("================================");
+				String[] worldNames = worldName.split("|");
+				world = new ArrayList<World>();
+				for(String name:worldNames){
+					if(Bukkit.getWorld(name) != null){
+						world.add(Bukkit.getWorld(name));
+					}else{
+						Util.severe("================================");
+						Util.severe("Could not find the world: " + worldName);
+						Util.severe("Please edit your config file.");
+						Util.severe("================================");
+					}
 				}
+				
 			}
 			Util.info("Config successfully loaded.");
 

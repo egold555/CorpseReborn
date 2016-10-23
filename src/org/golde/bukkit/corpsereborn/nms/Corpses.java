@@ -12,7 +12,7 @@ import org.bukkit.inventory.InventoryView;
 
 public interface Corpses {
 	
-	public CorpseData spawnCorpse(Player p, Inventory items);
+	public CorpseData spawnCorpse(Player p, Location loc, Inventory items);
 	
 	public void removeCorpse(CorpseData data);
 	
@@ -22,7 +22,7 @@ public interface Corpses {
 	
 	public void registerPacketListener(Player p);
 	
-	public boolean slimeHit(Player player, Slime slime);
+	public boolean slimeHit(Player player, Slime slime, TypeOfClick clickType);
 	
 	public void updateSlimes();
 	
@@ -76,9 +76,9 @@ public interface Corpses {
 		
 		public InventoryView getInventoryView();
 		
-		public String getUsername();
+		public Player getPlayer();
 		
-		public void setUsername(String username);
+		public void setPlayer(Player Player);
 		
 		public int getSelectedSlot();
 		

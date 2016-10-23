@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -34,8 +35,10 @@ public class Util {
 		if(ConfigData.getWorld() == null){
 			return true;
 		}
-		if(p.getWorld() == ConfigData.getWorld()){
-			return true;
+		for(World world:ConfigData.getWorld()){
+			if(p.getWorld() == world){
+				return true;
+			}
 		}
 		return false;
 	}
@@ -108,6 +111,20 @@ public class Util {
 	
 	public static void callEvent(Event event){
 		Bukkit.getServer().getPluginManager().callEvent(event);
+	}
+	
+	public static Inventory makeNiceInv(Player p){
+		PlayerInventoryClone inv = new PlayerInventoryClone(p);
+		if(Main.serverVersion.getNiceVersion() != ServerVersion.v1_8){
+			inv.setOffHand(p.getInventory().getItemInOffHand());
+		}
+		return inv.toInventory();
+	}
+	
+	public static Inventory makeNiceInv(Player p, ItemStack[] mainInventory, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ItemStack hand, ItemStack offHand){
+		PlayerInventoryClone inv = new PlayerInventoryClone(p, mainInventory, helmet, chestplate, leggings, boots, hand, offHand);
+
+		return inv.toInventory();
 	}
 
 }

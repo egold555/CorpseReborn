@@ -18,6 +18,7 @@ public class Main extends JavaPlugin {
 
 	public Corpses corpses;
 	public boolean cont = true;
+	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
 
 	public void onEnable() {
 		plugin = this;
@@ -63,6 +64,7 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) {
 			return false;
 		}
+		serverVersion = ServerVersion.fromClass(version);
 		return true;
 	}
 
@@ -75,7 +77,7 @@ public class Main extends JavaPlugin {
 								+ version);
 				corpses = (Corpses) subClass.getConstructor().newInstance();
 				Util.info("Corpses creator loaded.");
-				//Util.info("NMSCorpses_"+ version);
+				Util.info("Version: " + serverVersion);
 			} catch (Exception e) {
 				Util.severe("================================");
 				Util.severe("There was a problem with loading the corpses creator!");

@@ -52,6 +52,38 @@ public class PlayerInventoryClone {
 		
 	}
 	
+	public PlayerInventoryClone(Player p, ItemStack[] mainInventory, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ItemStack hand, ItemStack offHand){
+		i = Bukkit.getServer().createInventory(null, 54, ConfigData.getInventoryName(p));
+	
+		int temp;
+		
+		if (helmet != null)
+			i.setItem(1,  helmet);
+		if (chestplate != null)
+			i.setItem(2, chestplate);
+		if (leggings != null)
+			i.setItem(3,  leggings);
+		if (boots != null)
+			i.setItem(4,  boots);
+		if (offHand != null)
+			i.setItem(7, offHand);
+		
+		temp = 18;
+		if (mainInventory != null) {
+			for (ItemStack is: mainInventory) {
+				if (is != null)
+				    i.setItem(temp, is);
+				temp += 1;
+				if (temp >= 54)
+					break;
+			}
+		}
+		
+		if (hand != null)
+			i.setItem(53, hand);
+
+	}
+	
 	public Inventory toInventory(){
 		return i;
 	}

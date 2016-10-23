@@ -12,6 +12,11 @@ public class ReloadPlugin implements CommandExecutor{
 	
 	public boolean onCommand(CommandSender sender, Command cmd,
 			String commandLabel, String[] args){
+		if (!sender.hasPermission("corpses.remove")) {
+			sender.sendMessage(ChatColor.RED
+					+ "You do not have enough permissions!");
+			return true;
+		}
 		sender.sendMessage(ChatColor.GREEN + "Config reloaded.");
 		Main.getPlugin().reloadConfig();
 		Util.info("Loading corpses creator...");

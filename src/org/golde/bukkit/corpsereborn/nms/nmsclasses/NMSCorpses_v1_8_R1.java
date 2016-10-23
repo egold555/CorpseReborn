@@ -96,8 +96,7 @@ public class NMSCorpses_v1_8_R1 extends NmsBase implements Corpses {
 		return newProf;
 	}
 
-	public Location getNonClippableBlockUnderPlayer(Player p, int addToYPos) {
-		Location loc = p.getLocation();
+	public Location getNonClippableBlockUnderPlayer(Location loc, int addToYPos) {
 		if (loc.getBlockY() < 0) {
 			return null;
 		}
@@ -112,20 +111,20 @@ public class NMSCorpses_v1_8_R1 extends NmsBase implements Corpses {
 		return null;
 	}
 
-	public CorpseData spawnCorpse(Player p, Inventory inv) {
+	public CorpseData spawnCorpse(Player p, Location loc, Inventory inv) {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
 				ConfigData.showTags() ? ConfigData.getUsername(p) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 		dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
-		Location locUnder = getNonClippableBlockUnderPlayer(p, 1);
-		Location used = locUnder != null ? locUnder : p.getLocation();
-		used.setYaw(p.getLocation().getYaw());
-		used.setPitch(p.getLocation().getPitch());
+		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
+		Location used = locUnder != null ? locUnder : loc;
+		used.setYaw(loc.getYaw());
+		used.setPitch(loc.getPitch());
 		NMSCorpseData data = new NMSCorpseData(prof, used, dw, entityId,
 				ConfigData.getCorpseTime() * 20, inv);
-		data.setUsername(ConfigData.getUsername(p));
+		data.setPlayer(p);
 		corpses.add(data);
 		spawnSlimeForCorpse(data);
 		return data;
@@ -169,7 +168,7 @@ public class NMSCorpses_v1_8_R1 extends NmsBase implements Corpses {
 		private int ticksLeft;
 		private Inventory items;
 		private InventoryView iv;
-		private String username;
+		private Player player;
 		private int slot;
 
 		public NMSCorpseData(GameProfile prof, Location loc,
@@ -490,13 +489,13 @@ public class NMSCorpses_v1_8_R1 extends NmsBase implements Corpses {
 		}
 		
 		@Override
-		public String getUsername() {
-			return username;
+		public Player getPlayer() {
+			return player;
 		}
 
 		@Override
-		public void setUsername(String username) {
-			this.username = username;
+		public void setPlayer(Player player) {
+			this.player = player;
 		}
 
 		@Override

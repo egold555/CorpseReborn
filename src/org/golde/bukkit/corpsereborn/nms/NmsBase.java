@@ -47,12 +47,11 @@ public abstract class NmsBase {
 
 	// Call this when a player hits a slime.
 	// returns false is slime is NOT a corpse slime, true if slime is a corpse slime.
-	public boolean slimeHit(Player player, Slime slime)
+	public boolean slimeHit(Player player, Slime slime, TypeOfClick clickType)
 	{
-
 		if(isValidSlime(slime)){
 			CorpseData data = allSlimes.get(slime);
-			Util.callEvent(new CorpseClickEvent(data, player));
+			Util.callEvent(new CorpseClickEvent(data, player, clickType));
 			openInventory(player, data);
 			return true;
 		}

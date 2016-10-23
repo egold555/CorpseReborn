@@ -14,7 +14,9 @@ despawn-after-looted: true
 #The skin will still show even if you choose not do display the username.
 show-tags: true
 
+#This is used to specify what world(s) corpses should spawn when somebody dies.
 #Set world to 'all' for every world.
+#Use '|' to add multiple worlds.
 world: all
 
 #Title of inventory created when you click the corpses head to loot it. 

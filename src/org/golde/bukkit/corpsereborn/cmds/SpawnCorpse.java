@@ -6,9 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.golde.bukkit.corpsereborn.Main;
-import org.golde.bukkit.corpsereborn.PlayerInventoryClone;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
@@ -31,9 +29,9 @@ public class SpawnCorpse implements CommandExecutor {
 		if (args.length == 0) {
 			Player p = (Player) sender;
 			
-			data = Main.getPlugin().corpses.spawnCorpse(p, makeInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
+			data = Main.getPlugin().corpses.spawnCorpse(p, p.getLocation(), Util.makeNiceInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
 			p.sendMessage(ChatColor.GREEN + "Corpse of yourself spawned!");
-			Util.callEvent(new CorpseSpawnEvent(data, p, true));
+			Util.callEvent(new CorpseSpawnEvent(data, true));
 		} else if (args.length == 1) {
 			Player p = Bukkit.getServer().getPlayer(args[0]);
 			if (p == null) {
@@ -42,10 +40,10 @@ public class SpawnCorpse implements CommandExecutor {
 				return true;
 			}
 
-			data = Main.getPlugin().corpses.spawnCorpse(p, makeInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
+			data = Main.getPlugin().corpses.spawnCorpse(p, p.getLocation(), Util.makeNiceInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
 			sender.sendMessage(ChatColor.GREEN + "Spawned corpse of "
 					+ p.getName() + "!");
-			Util.callEvent(new CorpseSpawnEvent(data, p, true));
+			Util.callEvent(new CorpseSpawnEvent(data, true));
 		} else {
 			sender.sendMessage(ChatColor.RED + "Correct Usage: /"
 					+ commandLabel + " [Player]");
@@ -53,12 +51,5 @@ public class SpawnCorpse implements CommandExecutor {
 		return true;
 	}
 	
-	Inventory makeInv(Player p){
-		String ver = Main.getPlugin().getServerVersion();
-		PlayerInventoryClone inv = new PlayerInventoryClone(p);
-		if(!ver.startsWith("v1_8")){
-			inv.setOffHand(p.getInventory().getItemInOffHand());
-		}
-		return inv.toInventory();
-	}
+	
 }
