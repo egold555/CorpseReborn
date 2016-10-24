@@ -20,7 +20,7 @@ public class PlayerDeath implements Listener {
 			CorpseData data;
 			if (ConfigData.hasLootingInventory()) {		
 				PlayerInventoryClone inv = new PlayerInventoryClone(e.getEntity());
-				if(Main.serverVersion.getNiceVersion() != ServerVersion.v1_8){
+				if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_9 ) >= 0){
 					inv.setOffHand(e.getEntity().getInventory().getItemInOffHand());
 				}
 				data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), e.getEntity().getLocation(), inv.toInventory()).setSelectedSlot(e.getEntity().getInventory().getHeldItemSlot());

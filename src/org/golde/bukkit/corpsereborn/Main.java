@@ -29,11 +29,10 @@ public class Main extends JavaPlugin {
 
 	public void onEnable() {
 		plugin = this;
-		ConfigData.load();
-		checkForUpdates();
 		saveDefaultConfig();
 		loadCorpsesCreator();
-		
+		ConfigData.load();
+		checkForUpdates();
 		if (!cont) {
 			return;
 		}

@@ -33,7 +33,7 @@ public class SlimeHit implements Listener{
 	
 	@EventHandler(priority=EventPriority.LOW, ignoreCancelled = true)
 	public void rightClick(PlayerInteractAtEntityEvent e){
-		if(Main.serverVersion.getNiceVersion() != ServerVersion.v1_10 || e.getHand().equals(EquipmentSlot.HAND)){
+		if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_10 ) < 0 || e.getHand().equals(EquipmentSlot.HAND)){
 			if(handle(e.getPlayer(), e.getRightClicked(), TypeOfClick.RIGHT_CLICK)){
 				e.setCancelled(true);
 			}

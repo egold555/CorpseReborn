@@ -57,7 +57,11 @@ public class ConfigData {
 			finishLootingMessage = Main.getPlugin().getConfig().getString("finish-looting-message");
 			newHitbox = Main.getPlugin().getConfig().getBoolean("new-hitboxes");
 			checkForUpdate = Main.getPlugin().getConfig().getBoolean("enable-update-checker");
-
+			
+			if(Main.serverVersion.compareTo(ServerVersion.v1_8) < 0 && newHitbox){
+				Util.warning("New hitboxes are disabled because your version does not support it. Please use 1.8+ for the new hitboxes");
+				newHitbox = false;
+			}
 			if(worldName.equalsIgnoreCase("all")){
 				world = null;
 			}else{

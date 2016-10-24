@@ -121,7 +121,7 @@ public class Util {
 	
 	public static Inventory makeNiceInv(Player p){
 		PlayerInventoryClone inv = new PlayerInventoryClone(p);
-		if(Main.serverVersion.getNiceVersion() != ServerVersion.v1_8){
+		if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_9 ) >= 0){
 			inv.setOffHand(p.getInventory().getItemInOffHand());
 		}
 		return inv.toInventory();
