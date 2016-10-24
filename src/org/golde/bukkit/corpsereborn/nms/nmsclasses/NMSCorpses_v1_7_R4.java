@@ -13,7 +13,6 @@ import net.minecraft.server.v1_7_R4.ChunkCoordinates;
 import net.minecraft.server.v1_7_R4.DataWatcher;
 import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
 //import net.minecraft.server.v1_7_R4.EnumPlayerInfoAction;
 import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import net.minecraft.server.v1_7_R4.Item;
@@ -28,7 +27,7 @@ import net.minecraft.server.v1_7_R4.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_7_R4.PacketPlayOutRelEntityMove;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
 //import net.minecraft.server.v1_7_R4.PlayerInfoData;
-
+import net.minecraft.util.com.mojang.authlib.GameProfile;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -47,12 +46,6 @@ import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 import org.golde.bukkit.corpsereborn.nms.NmsBase;
 import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_7_R4;
-
-import com.google.common.collect.Multimap;
-
-import net.minecraft.util.com.mojang.authlib.GameProfile;
-
-import com.mojang.authlib.properties.Property;
 //import net.minecraft.server.v1_7_R4.BlockPosition;
 
 public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
@@ -91,7 +84,6 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		return h.getDataWatcher();
 	}
 
-	@SuppressWarnings("unchecked")
 	public GameProfile cloneProfileWithRandomUUID(net.minecraft.util.com.mojang.authlib.GameProfile gameProfile,
 			String name) {
 		GameProfile newProf = new GameProfile(UUID.randomUUID(), name);
@@ -296,13 +288,11 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 
 		public PacketPlayOutPlayerInfo getInfoPacket() {
 			PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.addPlayer(((CraftPlayer)player).getHandle());
-			//TODO: Do we need to update gamemode and send chat message?
 			return packet;
 		}
 
 		public PacketPlayOutPlayerInfo getRemoveInfoPacket() {
 			PacketPlayOutPlayerInfo packet = PacketPlayOutPlayerInfo.removePlayer(((CraftPlayer)player).getHandle());
-			//TODO: Do we need to update gamemode and send chat message?
 			return packet;
 		}
 

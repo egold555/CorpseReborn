@@ -108,7 +108,6 @@ public class Main extends JavaPlugin {
 						.forName("org.golde.bukkit.corpsereborn.nms.nmsclasses.NMSCorpses_"
 								+ version);
 				corpses = (Corpses) subClass.getConstructor().newInstance();
-				Util.info("Corpses creator loaded.");
 				Util.info("Version: " + serverVersion);
 			} catch (Exception e) {
 				Util.severe("================================");
