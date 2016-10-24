@@ -59,7 +59,7 @@ public class ConfigData {
 			checkForUpdate = Main.getPlugin().getConfig().getBoolean("enable-update-checker");
 			
 			if(Main.serverVersion.compareTo(ServerVersion.v1_8) < 0 && newHitbox){
-				Util.warning("New hitboxes are disabled because your version does not support it. Please use 1.8+ for the new hitboxes");
+				Util.cinfo("&cNew hitboxes and finish-looting-message are disabled because your version ("+Main.serverVersion.name()+") does not support it. Please use 1.8+ for these things to work correctly");
 				newHitbox = false;
 			}
 			if(worldName.equalsIgnoreCase("all")){

@@ -5,6 +5,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.InventoryView;
 import org.golde.bukkit.corpsereborn.ConfigData;
+import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.ServerVersion;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
@@ -20,9 +22,11 @@ public class InventoryHandle implements Listener{
 		}
 
 		if(Util.isInventoryEmpty(iv.getTopInventory())){
-			String message = ConfigData.finishLootingMessage(cd.getPlayer().getName());
-			if(message != null){
-				event.getPlayer().sendMessage(message);
+			if(Main.serverVersion.getNiceVersion() != ServerVersion.v1_7){
+				String message = ConfigData.finishLootingMessage(cd.getPlayer().getName());
+				if(message != null){
+					event.getPlayer().sendMessage(message);
+				}
 			}
 			Util.removeCorpse(cd);
 		}

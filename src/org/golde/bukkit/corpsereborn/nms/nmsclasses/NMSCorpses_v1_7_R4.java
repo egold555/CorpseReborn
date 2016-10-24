@@ -190,7 +190,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		@SuppressWarnings("deprecation")
 		public ItemStack convertBukkitToMc(org.bukkit.inventory.ItemStack stack){
 			if(stack == null){
-				return new ItemStack(Item.getById(0));	
+				return null;	
 			}
 			ItemStack temp = new ItemStack(Item.getById(stack.getTypeId()), stack.getAmount());
 			temp.setData((int)stack.getData().getData());
@@ -243,7 +243,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 				c.setInt(packet, MathHelper.floor(loc.getX() * 32.0D));
 				Field d = packet.getClass().getDeclaredField("d");
 				d.setAccessible(true);
-				d.setInt(packet, MathHelper.floor((loc.getY() + 2) * 32.0D));
+				d.setInt(packet, MathHelper.floor((loc.getY() + 2.1) * 32.0D));
 				Field e = packet.getClass().getDeclaredField("e");
 				e.setAccessible(true);
 				e.setInt(packet, MathHelper.floor(loc.getZ() * 32.0D));
@@ -311,6 +311,9 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		}
 		
 		public PacketPlayOutEntityEquipment getEquipmentPacket(int slot, ItemStack stack){
+			if(stack == null){
+				return null;
+			}
 			return new PacketPlayOutEntityEquipment(entityId, slot, stack);
 		}
 
@@ -335,11 +338,23 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 				conn.sendPacket(spawnPacket);
 				conn.sendPacket(bedPacket);
 				conn.sendPacket(movePacket);
-				conn.sendPacket(helmetInfo);
-				conn.sendPacket(chestplateInfo);
-				conn.sendPacket(leggingsInfo);
-				conn.sendPacket(bootsInfo);
-				conn.sendPacket(mainhandInfo);
+				if(helmetInfo != null){
+					conn.sendPacket(helmetInfo);
+				}
+				if(chestplateInfo != null){
+					conn.sendPacket(chestplateInfo);
+				}
+				if(leggingsInfo != null){
+					conn.sendPacket(leggingsInfo);
+				}
+				if(bootsInfo != null){
+					conn.sendPacket(bootsInfo);
+				}
+				if(mainhandInfo != null){
+					conn.sendPacket(mainhandInfo);
+				}
+				
+				
 			}
 			Bukkit.getServer().getScheduler()
 					.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
@@ -371,11 +386,21 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			conn.sendPacket(spawnPacket);
 			conn.sendPacket(bedPacket);
 			conn.sendPacket(movePacket);
-			conn.sendPacket(helmetInfo);
-			conn.sendPacket(chestplateInfo);
-			conn.sendPacket(leggingsInfo);
-			conn.sendPacket(bootsInfo);
-			conn.sendPacket(mainhandInfo);
+			if(helmetInfo != null){
+				conn.sendPacket(helmetInfo);
+			}
+			if(chestplateInfo != null){
+				conn.sendPacket(chestplateInfo);
+			}
+			if(leggingsInfo != null){
+				conn.sendPacket(leggingsInfo);
+			}
+			if(bootsInfo != null){
+				conn.sendPacket(bootsInfo);
+			}
+			if(mainhandInfo != null){
+				conn.sendPacket(mainhandInfo);
+			}
 			Bukkit.getServer().getScheduler()
 					.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 						public void run() {

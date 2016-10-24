@@ -42,7 +42,10 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerChangedWorld(), this);
 		pm.registerEvents(new PlayerDeath(), this);
 		pm.registerEvents(new InventoryHandle(), this);
-		pm.registerEvents(new SlimeHit(), this);
+		if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
+			pm.registerEvents(new SlimeHit(), this);
+		}
+		
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 		getCommand("corpsereload").setExecutor(new ReloadPlugin());

@@ -90,9 +90,13 @@ public abstract class NmsBase {
 			CorpseData data = allSlimes.get(slime);
 			if(slime.isDead()){
 				allSlimes.remove(slime);
-				spawnSlimeForCorpse(data);
+				if(data != null){
+					spawnSlimeForCorpse(data);
+				}
 			}else{
-				teleportSlime(data.getOrigLocation(), slime);
+				if(data != null){
+					teleportSlime(data.getOrigLocation(), slime);
+				}
 			}
 		}
 	}
