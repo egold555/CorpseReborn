@@ -77,11 +77,13 @@ public class Util {
 		return returnCorpses;
 	}
 
-	public static ArrayList<CorpseData> removeAllCorpses(Player p){
+	public static ArrayList<CorpseData> removeAllCorpses(World world){
 		ArrayList<CorpseData> returnCorpses = new ArrayList<CorpseData>();
 		ArrayList<CorpseData> iWantToRemove = new ArrayList<CorpseData>();
 		for(CorpseData cd:Main.getPlugin().corpses.getAllCorpses()){
-			iWantToRemove.add(cd);
+			if(cd.getTrueLocation().getWorld() == world){
+				iWantToRemove.add(cd);
+			}
 		}
 
 		for(CorpseData cd:iWantToRemove){

@@ -6,6 +6,11 @@ import org.bukkit.event.HandlerList;
 import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
+/**
+ * This event is called when ever a corpse gets clicked on.
+ * @author Eric Golde
+ *
+ */
 public class CorpseClickEvent extends Event{
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -19,14 +24,26 @@ public class CorpseClickEvent extends Event{
         this.clickType = clickType;
     }
 
+    /**
+     * 
+     * @return Returns the corpse that got clicked on.
+     */
     public CorpseData getCorpse() {
         return cd;
     }
     
+    /**
+     * 
+     * @return Returns a enum of if it was a left or right click that occurred on the corpse.
+     */
     public TypeOfClick getClickType(){
     	return clickType;
     }
     
+    /**
+     * 
+     * @return Returns the player who clicked on the corpse.
+     */
     public Player getClicker(){
     	return clicker;
     }

@@ -12,7 +12,7 @@ import org.bukkit.inventory.InventoryView;
 
 public interface Corpses {
 	
-	public CorpseData spawnCorpse(Player p, Location loc, Inventory items);
+	public CorpseData spawnCorpse(Player p, String overrideName, Location loc, Inventory items);
 	
 	public void removeCorpse(CorpseData data);
 	

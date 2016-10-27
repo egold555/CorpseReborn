@@ -111,11 +111,11 @@ public class NMSCorpses_v1_8_R1 extends NmsBase implements Corpses {
 		return null;
 	}
 
-	public CorpseData spawnCorpse(Player p, Location loc, Inventory inv) {
+	public CorpseData spawnCorpse(Player p, String overrideUsername, Location loc, Inventory inv) {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
-				ConfigData.showTags() ? ConfigData.getUsername(p) : "");
+				ConfigData.showTags() ? ConfigData.getUsername(p, overrideUsername) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 		dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);

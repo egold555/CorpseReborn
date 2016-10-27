@@ -29,7 +29,12 @@ public class ConfigData {
 	public static ArrayList<World> getWorld(){	return world;}
 	public static boolean getNewHitbox(){return newHitbox;}
 	public static String getInventoryName(Player p){return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
-	public static String getUsername(Player p){return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
+	public static String getUsername(Player p, String overrideUsername){
+		if(overrideUsername == null){
+			return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");
+		}
+			return overrideUsername;
+		}
 	public static String finishLootingMessage(String name){
 		if(finishLootingMessage.equalsIgnoreCase("none")){
 			return null;
@@ -65,7 +70,7 @@ public class ConfigData {
 			if(worldName.equalsIgnoreCase("all")){
 				world = null;
 			}else{
-				String[] worldNames = worldName.split("|");
+				String[] worldNames = worldName.split("\\|");
 				world = new ArrayList<World>();
 				for(String name:worldNames){
 					if(Bukkit.getWorld(name) != null){

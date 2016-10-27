@@ -18,16 +18,15 @@ public class PlayerDeath implements Listener {
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		if (ConfigData.isOnDeath() && Util.playerInCorrectWorld(e.getEntity())) {
 			CorpseData data;
-			if (ConfigData.hasLootingInventory()) {		
-				PlayerInventoryClone inv = new PlayerInventoryClone(e.getEntity());
-				if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_9 ) >= 0){
-					inv.setOffHand(e.getEntity().getInventory().getItemInOffHand());
-				}
-				data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), e.getEntity().getLocation(), inv.toInventory()).setSelectedSlot(e.getEntity().getInventory().getHeldItemSlot());
-				e.getDrops().clear();
-			} else {
-				data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), e.getEntity().getLocation(), null);
+			PlayerInventoryClone inv = new PlayerInventoryClone(e.getEntity());
+			if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_9 ) >= 0){
+				inv.setOffHand(e.getEntity().getInventory().getItemInOffHand());
 			}
+			data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), null, e.getEntity().getLocation(), inv.toInventory()).setSelectedSlot(e.getEntity().getInventory().getHeldItemSlot());
+			
+			if (ConfigData.hasLootingInventory()) {		
+				e.getDrops().clear();
+			} 
 			
 			Util.callEvent(new CorpseSpawnEvent(data, false));
 		}

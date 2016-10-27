@@ -6,6 +6,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
+/**
+ * This event gets called when a corpse gets removed.
+ * @author Eric Golde
+ *
+ */
 public class CorpseRemoveEvent extends Event{
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -24,14 +29,26 @@ public class CorpseRemoveEvent extends Event{
         this.fromCmd = fromCmd;
     }
 
+    /**
+     * 
+     * @return Returns all the corpses that got removed.
+     */
     public ArrayList<CorpseData> getCorpses() {
         return corpses;
     }
     
+    /**
+     * 
+     * @return AMount of corpses that got removed.
+     */
     public int removedAmount(){
     	return corpses.size();
     }
     
+    /**
+     * 
+     * @return If the corpse was spawned via /removecorpse then this will return true. Corpses removed automatically with the deathtime option in the config will return false.
+     */
     public boolean fromCommand(){
     	return fromCmd;
     }
