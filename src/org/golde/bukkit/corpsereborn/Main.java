@@ -2,6 +2,7 @@ package org.golde.bukkit.corpsereborn;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,9 +27,23 @@ public class Main extends JavaPlugin {
 	public Corpses corpses;
 	public boolean cont = true;
 	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
-
+	public static ServerType serverType = ServerType.UNKNOWN;
 	public void onEnable() {
 		plugin = this;
+		serverType = ServerType.whatAmI(this);
+		if(!serverType.isCompatible()){
+			Util.cinfo("&c====================================================");
+			Util.cinfo("&cIt seems like you are not running a supported version of server. This plugin only supports: ");
+			Util.cinfo("&e" + ServerType.getSupportedVersions());
+			Util.cinfo("&cYou are running: &e" + serverType.name());
+			Util.cinfo("&cExpect things to not work as they were intended too.");
+			Util.cinfo("&eYOU HAVE BEEN WARNED!");
+			if(serverType == ServerType.UNKNOWN){
+				Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
+				Util.cinfo("&b" + Bukkit.getVersion());
+			}
+			Util.cinfo("&c====================================================");
+		}
 		saveDefaultConfig();
 		loadCorpsesCreator();
 		ConfigData.load();

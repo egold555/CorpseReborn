@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ConfigData {
@@ -51,17 +52,18 @@ public class ConfigData {
 
 	public static void load() {
 		try {
-			corpseTime = Main.getPlugin().getConfig().getInt("corpse-time");
-			onDeath = Main.getPlugin().getConfig().getBoolean("on-death");
-			lootingInventory = Main.getPlugin().getConfig().getBoolean("looting-inventory");
-			showTags = Main.getPlugin().getConfig().getBoolean("show-tags");
-			worldName = Main.getPlugin().getConfig().getString("world");
-			guiName = Main.getPlugin().getConfig().getString("gui-title");
-			username = Main.getPlugin().getConfig().getString("username-format");
-			autoDespawn = Main.getPlugin().getConfig().getBoolean("despawn-after-looted");
-			finishLootingMessage = Main.getPlugin().getConfig().getString("finish-looting-message");
-			newHitbox = Main.getPlugin().getConfig().getBoolean("new-hitboxes");
-			checkForUpdate = Main.getPlugin().getConfig().getBoolean("enable-update-checker");
+			FileConfiguration config = Main.getPlugin().getConfig();
+			corpseTime = config.getInt("corpse-time");
+			onDeath = config.getBoolean("on-death");
+			lootingInventory = config.getBoolean("looting-inventory");
+			showTags = config.getBoolean("show-tags");
+			worldName = config.getString("world");
+			guiName = config.getString("gui-title");
+			username = config.getString("username-format");
+			autoDespawn = config.getBoolean("despawn-after-looted");
+			finishLootingMessage = config.getString("finish-looting-message");
+			newHitbox = config.getBoolean("new-hitboxes");
+			checkForUpdate = config.getBoolean("enable-update-checker");
 			
 			if(Main.serverVersion.compareTo(ServerVersion.v1_8) < 0 && newHitbox){
 				Util.cinfo("&cNew hitboxes and finish-looting-message are disabled because your version ("+Main.serverVersion.name()+") does not support it. Please use 1.8+ for these things to work correctly");
