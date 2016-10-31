@@ -117,7 +117,7 @@ public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 				((CraftPlayer) p).getProfile(),
 				ConfigData.showTags() ? ConfigData.getUsername(p, overrideUsername) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
-		dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
+		//dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
 		used.setYaw(loc.getYaw());

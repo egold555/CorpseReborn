@@ -8,6 +8,9 @@ import java.lang.reflect.Field;
 
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.Util;
+import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
+import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 import net.minecraft.server.v1_8_R1.EnumEntityUseAction;
@@ -42,6 +45,7 @@ public class PcktIn_v1_8_R1 extends ChannelInboundHandlerAdapter {
 											InventoryView view = p.openInventory(cd
 													.getLootInventory());
 											cd.setInventoryView(view);
+											Util.callEvent(new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN));
 											break;
 										}
 									}

@@ -16,6 +16,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.Util;
+import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
+import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 public class PcktIn_v1_9_R2 extends ChannelInboundHandlerAdapter {
@@ -41,6 +44,7 @@ public class PcktIn_v1_9_R2 extends ChannelInboundHandlerAdapter {
 											InventoryView view = p.openInventory(cd
 													.getLootInventory());
 											cd.setInventoryView(view);
+											Util.callEvent(new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN));
 											break;
 										}
 									}
