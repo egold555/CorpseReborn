@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -16,7 +15,11 @@ import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseRemoveEvent;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 public abstract class NmsBase {
-	protected HashMap<Slime, CorpseData> allSlimes = new HashMap<Slime, CorpseData>();
+	
+	public static final EntityType ENTITY = EntityType.COW;
+	public static final Class ENTITY_CLASS = Cow.class;
+	
+	protected HashMap<LivingEntity, CorpseData> allSlimes = new HashMap<LivingEntity, CorpseData>();
 
 	public void spawnSlimeForCorpse(CorpseData corpseData)
 	{
@@ -30,8 +33,8 @@ public abstract class NmsBase {
 
 	public void deleteSlimeForCorpse(CorpseData corpseData)
 	{
-		Slime slimeToDelete = null;
-		for (Slime slime: allSlimes.keySet()) {
+		LivingEntity slimeToDelete = null;
+		for (LivingEntity slime: allSlimes.keySet()) {
 			if (corpseData == allSlimes.get(slime)) {
 				slimeToDelete = slime;
 			}
@@ -47,7 +50,7 @@ public abstract class NmsBase {
 
 	// Call this when a player hits a slime.
 	// returns false is slime is NOT a corpse slime, true if slime is a corpse slime.
-	public boolean slimeHit(Player player, Slime slime, TypeOfClick clickType)
+	public boolean slimeHit(Player player, LivingEntity slime, TypeOfClick clickType)
 	{
 		if(isValidSlime(slime)){
 			CorpseData data = allSlimes.get(slime);
@@ -59,7 +62,7 @@ public abstract class NmsBase {
 	}
 
 
-	public boolean isValidSlime(Slime slime){
+	public boolean isValidSlime(LivingEntity slime){
 		CorpseData data = allSlimes.get(slime);
 		if (data == null) {
 			return false;
@@ -73,20 +76,24 @@ public abstract class NmsBase {
 		cd.setInventoryView(view);
 	}
 
-	private Slime spawnSlime(Location loc){
-		Slime slime = (Slime) loc.getWorld().spawn(loc, Slime.class);
-		slime.setSize(4);
+	private LivingEntity spawnSlime(Location loc){
+		LivingEntity slime = (LivingEntity) loc.getWorld().spawn(loc, ENTITY_CLASS);
+		if(slime instanceof Slime){
+			((Slime)slime).setSize(4);
+		}
+		
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 100, true));
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1000000, 100, true));
 		addNbtTagsToSlime(slime);
 		return slime;
 	}
 
 	public void updateSlimes(){
-		for (Slime slime: new ArrayList<Slime>(allSlimes.keySet())) {
+		for (LivingEntity slime: new ArrayList<LivingEntity>(allSlimes.keySet())) {
 			CorpseData data = allSlimes.get(slime);
 			if(slime.isDead()){
 				allSlimes.remove(slime);
@@ -107,7 +114,7 @@ public abstract class NmsBase {
 		return l;
 	}
 
-	private void teleportSlime(Location l, Slime slime){
+	private void teleportSlime(Location l, LivingEntity slime){
 		l = moveAmount(l);
 		if(l.distance(slime.getLocation()) > 0.1f){
 			slime.teleport(l);
@@ -115,12 +122,12 @@ public abstract class NmsBase {
 	}
 
 	public void removeAllSlimes(){
-		for (Slime slime: allSlimes.keySet()) {
+		for (LivingEntity slime: allSlimes.keySet()) {
 			slime.remove();
 		}
 		allSlimes.clear();
 	}
 
-	protected abstract void addNbtTagsToSlime(Slime slime);
+	protected abstract void addNbtTagsToSlime(LivingEntity slime);
 
 }
