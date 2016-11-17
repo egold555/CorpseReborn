@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
 import org.bukkit.inventory.Inventory;
@@ -22,13 +23,13 @@ public interface Corpses {
 	
 	public void registerPacketListener(Player p);
 	
-	public boolean slimeHit(Player player, Slime slime, TypeOfClick clickType);
+	public boolean slimeHit(Player player, LivingEntity slime, TypeOfClick clickType);
 	
 	public void updateSlimes();
 	
 	public void removeAllSlimes();
 	
-	public boolean isValidSlime(Slime slime);
+	public boolean isValidSlime(LivingEntity slime);
 	
 	public interface CorpseData {
 		

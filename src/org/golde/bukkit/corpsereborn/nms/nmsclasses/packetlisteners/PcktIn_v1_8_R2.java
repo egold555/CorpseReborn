@@ -82,11 +82,14 @@ public class PcktIn_v1_8_R2 extends ChannelInboundHandlerAdapter {
 	public static final Channel getChannel(Player p) {
 		NetworkManager nm = ((CraftPlayer) p).getHandle().playerConnection.networkManager;
 		try {
+			return nm.k;
+			/*
 			Field ifield = nm.getClass().getDeclaredField("k");
 			ifield.setAccessible(true);
 			Channel c = (Channel) ifield.get(nm);
 			ifield.setAccessible(false);
 			return c;
+			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

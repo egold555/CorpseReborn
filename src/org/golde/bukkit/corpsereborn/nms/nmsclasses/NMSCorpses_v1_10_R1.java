@@ -39,8 +39,8 @@ import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.golde.bukkit.corpsereborn.ConfigData;
@@ -613,7 +613,7 @@ public class NMSCorpses_v1_10_R1 extends NmsBase implements Corpses {
 	}
 
 	@Override
-	protected void addNbtTagsToSlime(Slime slime) {
+	protected void addNbtTagsToSlime(LivingEntity slime) {
 		slime.setAI(false);
 		Entity nmsEntity = ((CraftEntity) slime).getHandle();
 		nmsEntity.setSilent(true);

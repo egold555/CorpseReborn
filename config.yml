@@ -40,7 +40,7 @@ username-format: "%corpse%"
 finish-looting-message: "&bYou have finished looting %corpse%'s corpse."
 
 #Due to a Minecraft quirk with how the corpses work, the hitboxes were not normal player hitboxes.
-#I have now made it so a invisible slime spawns that covers the whole corpse.
-#When you click on the invisible slime it does the same thing as clicking on the corpse.
+#I have now made it so a invisible Cows spawn that covers the whole corpse.
+#When you click on the invisible Cow it does the same thing as clicking on the corpse.
 #Set to false to use the old glitchy hitboxes.
 new-hitboxes: true
