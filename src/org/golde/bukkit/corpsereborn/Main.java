@@ -32,18 +32,15 @@ public class Main extends JavaPlugin {
 		plugin = this;
 		serverType = ServerType.whatAmI(this);
 		if(!serverType.isCompatible()){
-			Util.cinfo("&c====================================================");
+			Util.cinfo("&e====================================================");
 			Util.cinfo("&cIt seems like you are not running a supported version of server. This plugin only supports: ");
-			Util.cinfo("&e" + ServerType.getSupportedVersions());
+			Util.cinfo("&b" + ServerType.getSupportedVersions());
 			Util.cinfo("&cYou are running: &e" + serverType.name());
 			Util.cinfo("&cExpect things to not work as they were intended too.");
 			Util.cinfo("&eYOU HAVE BEEN WARNED!");
-			if(serverType == ServerType.UNKNOWN){
-				Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
-				Util.cinfo("&b" + Bukkit.getVersion());
-			}
-			Util.cinfo("&c====================================================");
+			Util.cinfo("&e====================================================");
 		}
+
 		saveDefaultConfig();
 		loadCorpsesCreator();
 		ConfigData.load();
@@ -60,23 +57,29 @@ public class Main extends JavaPlugin {
 		if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
 			pm.registerEvents(new SlimeHit(), this);
 		}
-		
+		if(serverVersion == ServerVersion.UNSUPPORTED_SERVER_VERSION){
+			Util.cinfo("&e====================================================");
+			Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
+			Util.cinfo("&b" + Bukkit.getVersion());
+			Util.cinfo("&e====================================================");
+		}
+
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 		getCommand("corpsereload").setExecutor(new ReloadPlugin());
-		
+
 		new BukkitRunnable(){
 			public void run(){
 				corpses.updateSlimes();
 			}
 		}.runTaskTimer(this, 0, 20);
 	}
-	
+
 	public void onDisable(){
 		//remove all slimes
 		corpses.removeAllSlimes();
 	}
-	
+
 	void checkForUpdates(){
 		Updater updater = new Updater("29875"); 
 		Updater.UpdateResults result = updater.checkForUpdates();

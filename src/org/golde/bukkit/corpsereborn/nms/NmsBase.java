@@ -17,6 +17,7 @@ import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 public abstract class NmsBase {
 	
 	public static final EntityType ENTITY = EntityType.COW;
+	@SuppressWarnings("rawtypes")
 	public static final Class ENTITY_CLASS = Cow.class;
 	
 	protected HashMap<LivingEntity, CorpseData> allSlimes = new HashMap<LivingEntity, CorpseData>();
@@ -77,6 +78,7 @@ public abstract class NmsBase {
 	}
 
 	private LivingEntity spawnSlime(Location loc){
+		@SuppressWarnings("unchecked")
 		LivingEntity slime = (LivingEntity) loc.getWorld().spawn(loc, ENTITY_CLASS);
 		if(slime instanceof Slime){
 			((Slime)slime).setSize(4);
