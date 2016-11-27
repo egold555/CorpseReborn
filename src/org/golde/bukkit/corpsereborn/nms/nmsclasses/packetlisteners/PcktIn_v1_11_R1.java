@@ -75,7 +75,7 @@ public class PcktIn_v1_11_R1 extends ChannelInboundHandlerAdapter {
 			throw new NullPointerException("Couldn't get channel??");
 		}
 		c.pipeline().addBefore("packet_handler", "packet_in_listener",
-				new PcktIn_v1_10_R1(p));
+				new PcktIn_v1_11_R1(p));
 	}
 
 	public static final Channel getChannel(Player p) {
