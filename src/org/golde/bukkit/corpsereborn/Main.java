@@ -42,7 +42,9 @@ public class Main extends JavaPlugin {
 			Util.cinfo("&e====================================================");
 		}
 
-		saveDefaultConfig();
+		//saveDefaultConfig();
+		ConfigData.checkConfigForMissingOptions();
+		
 		loadCorpsesCreator();
 		ConfigData.load();
 		checkForUpdates();
