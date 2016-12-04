@@ -1,7 +1,8 @@
 name: CorpseReborn
-author: Eric & Virizion
+authors: ["Eric Golde", "Peter Golde", "Virizion"]
+website: "https://www.spigotmc.org/resources/corpsereborn.29875/"
 version: 2.9
-description: "This is a port to 1.7.10-1.11 versions of Spigot from the old corpse plugin found here: https://www.spigotmc.org/resources/corpses.1817/ . Credit to Virizion for the original plugin and code! All I did was fix some method and packet changes that occurred when porting this plugin to future versions"
+description: "This is a port to 1.7.10-1.11 versions of Spigot from the old Corpse plugin found on Spigot. Thanks to Virizion for letting me take over and manage his project ❤"
 main: org.golde.bukkit.corpsereborn.Main
 commands:
   spawncorpse:
