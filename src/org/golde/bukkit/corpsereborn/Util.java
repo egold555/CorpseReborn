@@ -1,16 +1,22 @@
 package org.golde.bukkit.corpsereborn;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
+import org.golde.bukkit.corpsereborn.nms.NmsBase;
 
 
 public class Util {
@@ -56,6 +62,28 @@ public class Util {
 		}
 		double dis = Math.sqrt((corpseLocation.getX()-playerLoc.getX()) * (corpseLocation.getX()-playerLoc.getX()) + (corpseLocation.getZ()-playerLoc.getZ()) * (corpseLocation.getZ()-playerLoc.getZ()));
 		if(dis <= radius){return true;}
+		return false;
+	}
+	
+	public static void removeBuggedCows(){
+		List<World> world = ConfigData.getWorld();
+		if(world == null){
+			world = Bukkit.getWorlds();
+		}
+		for(World w:world){
+			for(Entity e:w.getEntities()){
+				if(e.getType() == NmsBase.ENTITY){
+					LivingEntity le = (LivingEntity)e;
+					if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)){
+						e.remove();
+					}
+				}
+			}
+		}
+	}
+	
+	public static boolean isCorpseInChunk(Chunk chunk, CorpseData cd){
+		if(cd.getTrueLocation().getChunk().equals(chunk)){return true;}
 		return false;
 	}
 

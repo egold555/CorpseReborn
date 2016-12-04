@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.cmds.ReloadPlugin;
 import org.golde.bukkit.corpsereborn.cmds.RemoveCorpseRadius;
 import org.golde.bukkit.corpsereborn.cmds.SpawnCorpse;
+import org.golde.bukkit.corpsereborn.listeners.ChunkCorpseFix;
 import org.golde.bukkit.corpsereborn.listeners.InventoryHandle;
 import org.golde.bukkit.corpsereborn.listeners.PlayerChangedWorld;
 import org.golde.bukkit.corpsereborn.listeners.PlayerDeath;
@@ -45,6 +46,12 @@ public class Main extends JavaPlugin {
 		loadCorpsesCreator();
 		ConfigData.load();
 		checkForUpdates();
+		if(serverVersion == ServerVersion.UNSUPPORTED_SERVER_VERSION){
+			Util.cinfo("&e====================================================");
+			Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
+			Util.cinfo("&b" + Bukkit.getVersion());
+			Util.cinfo("&e====================================================");
+		}
 		if (!cont) {
 			return;
 		}
@@ -54,20 +61,21 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new PlayerChangedWorld(), this);
 		pm.registerEvents(new PlayerDeath(), this);
 		pm.registerEvents(new InventoryHandle(), this);
+		pm.registerEvents(new ChunkCorpseFix(), this);
 		if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
 			pm.registerEvents(new SlimeHit(), this);
 		}
-		if(serverVersion == ServerVersion.UNSUPPORTED_SERVER_VERSION){
-			Util.cinfo("&e====================================================");
-			Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
-			Util.cinfo("&b" + Bukkit.getVersion());
-			Util.cinfo("&e====================================================");
-		}
+		
 
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 		getCommand("corpsereload").setExecutor(new ReloadPlugin());
-
+		new BukkitRunnable(){
+			public void run(){
+				Util.removeBuggedCows();
+			}
+		}.runTaskLater(this, 2);
+		
 		new BukkitRunnable(){
 			public void run(){
 				corpses.updateSlimes();

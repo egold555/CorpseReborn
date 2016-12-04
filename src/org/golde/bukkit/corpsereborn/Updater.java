@@ -130,6 +130,14 @@ public class Updater
             return 1;
         }
 
+        if(newV.hasNextInt())
+        {
+            currentV.close();
+            newV.close();
+
+            return -1;
+        }
+        
         currentV.close();
         newV.close();
         return 0;
