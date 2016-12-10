@@ -22,12 +22,17 @@ commands:
     aliases: [cr, corpser, reloadc]
   resendcorpses:
     usage: /<command>
-    description: dfjis
+    description: Resend corpses to all players
+    permission: corpses.resend
+    aliases: [rc, resendc, cresend]
     
 permissions:
   corpses.spawn:
     default: op
     description: Permission for /spawncorpse
+  corpses.resend:
+    default: op
+    description: Permission for /resendcorpses
   corpses.remove:
     default: op
     description: Permission for /removecorpse
