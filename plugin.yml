@@ -1,7 +1,7 @@
 name: CorpseReborn
 authors: ["Eric Golde", "Peter Golde", "Virizion"]
 website: "https://www.spigotmc.org/resources/corpsereborn.29875/"
-version: 2.9
+version: 2.9.1
 description: "This is a port to 1.7.10-1.11 versions of Spigot from the old Corpse plugin found on Spigot. Thanks to Virizion for letting me take over and manage his project §4❤"
 main: org.golde.bukkit.corpsereborn.Main
 commands:
@@ -16,10 +16,13 @@ commands:
     permission: corpses.remove
     aliases: [removec, rcorpse, rc]
   corpsereload:
-    usage: /<command> [Radius]
+    usage: /<command>
     description: Reload the config
     permission: corpses.reload
     aliases: [cr, corpser, reloadc]
+  resendcorpses:
+    usage: /<command>
+    description: dfjis
     
 permissions:
   corpses.spawn:

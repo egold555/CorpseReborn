@@ -43,6 +43,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
@@ -531,12 +532,16 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 
 	}
 
+	int tickNumber = 0;
+	
 	public void tick() {
+		++tickNumber;
+		
 		List<CorpseData> toRemoveCorpses = new ArrayList<CorpseData>();
-		for (CorpseData data : corpses) {
+		for (final CorpseData data : corpses) {
 			List<Player> worldPlayers = data.getOrigLocation().getWorld()
 					.getPlayers();
-			for (Player p : worldPlayers) {
+			for (final Player p : worldPlayers) {
 				if (data.isTickingPlayer(p)) {
 					int ticks = data.getPlayerTicksLeft(p);
 					if (ticks > 0) {
@@ -548,14 +553,23 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 				}
 				if (data.mapContainsPlayer(p)) {
 					if (isInViewDistance(p, data) && !data.canSee(p)) {
-						data.resendCorpseToPlayer(p);
+						new BukkitRunnable() {
+							public void run() {
+								data.resendCorpseToPlayer(p);
+							}
+						}.runTaskLater(Main.getPlugin(), 2);
+						
 						data.setCanSee(p, true);
 					} else if (!isInViewDistance(p, data) && data.canSee(p)) {
 						data.destroyCorpseFromPlayer(p);
 						data.setCanSee(p, false);
 					}
 				} else if (isInViewDistance(p, data)) {
-					data.resendCorpseToPlayer(p);
+					new BukkitRunnable() {
+						public void run() {
+							data.resendCorpseToPlayer(p);
+						}
+					}.runTaskLater(Main.getPlugin(), 2);
 					data.setCanSee(p, true);
 				} else {
 					data.setCanSee(p, false);

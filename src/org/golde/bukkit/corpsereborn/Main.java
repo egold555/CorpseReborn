@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.cmds.ReloadPlugin;
 import org.golde.bukkit.corpsereborn.cmds.RemoveCorpseRadius;
+import org.golde.bukkit.corpsereborn.cmds.ResendCorpses;
 import org.golde.bukkit.corpsereborn.cmds.SpawnCorpse;
 import org.golde.bukkit.corpsereborn.listeners.ChunkCorpseFix;
 import org.golde.bukkit.corpsereborn.listeners.InventoryHandle;
@@ -72,6 +73,7 @@ public class Main extends JavaPlugin {
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 		getCommand("corpsereload").setExecutor(new ReloadPlugin());
+		getCommand("resendcorpses").setExecutor(new ResendCorpses());
 		new BukkitRunnable(){
 			public void run(){
 				Util.removeBuggedCows();
@@ -83,6 +85,7 @@ public class Main extends JavaPlugin {
 				corpses.updateSlimes();
 			}
 		}.runTaskTimer(this, 0, 20);
+		
 	}
 
 	public void onDisable(){
