@@ -1,7 +1,7 @@
 name: CorpseReborn
 authors: ["Eric Golde", "Peter Golde", "Virizion"]
 website: "https://www.spigotmc.org/resources/corpsereborn.29875/"
-version: 2.9.1
+version: 2.9.2
 description: "This is a port to 1.7.10-1.11 versions of Spigot from the old Corpse plugin found on Spigot. Thanks to Virizion for letting me take over and manage his project §4❤"
 main: org.golde.bukkit.corpsereborn.Main
 commands:
@@ -15,16 +15,15 @@ commands:
     description: Remove a corpse of a player!
     permission: corpses.remove
     aliases: [removec, rcorpse, rc]
-  corpsereload:
+  corpsereborn:
     usage: /<command>
-    description: Reload the config
-    permission: corpses.reload
-    aliases: [cr, corpser, reloadc]
+    description: Main info about plugin + reload config
+    aliases: [cr, corpser, corpse, creborn]
   resendcorpses:
     usage: /<command>
     description: Resend corpses to all players
     permission: corpses.resend
-    aliases: [rc, resendc, cresend]
+    aliases: [resendc, cresend]
     
 permissions:
   corpses.spawn:
@@ -38,4 +37,4 @@ permissions:
     description: Permission for /removecorpse
   corpses.reload:
     default: op
-    description: Permission for /corpsereload
+    description: Permission for /corpsereborn reload

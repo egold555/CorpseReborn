@@ -57,46 +57,46 @@ public class ConfigData {
 	{
 		FileConfiguration config = Main.getPlugin().getConfig();
 
-		if (! config.contains("enable-update-checker", true)) {
+		if (! config.isSet("enable-update-checker")) {
 			Main.getPlugin().getLogger().info("did not find enable-update-checker");
 			appendConfig("#Enable checking for new versions of the plugin?",
                          "enable-update-checker: true");
 		}
 		
-		if (! config.contains("corpse-time", true)) {
+		if (! config.isSet("corpse-time")) {
 			appendConfig("#Time in seconds until the corpse despawns. Set to -1 for the copse to never despawn.",
                          "corpse-time: 120");
 		}
 		
-		if (! config.contains("on-death", true)) {
+		if (! config.isSet("on-death")) {
 			appendConfig("#Spawn a corpse when the player dies?",
                          "on-death: true");
 		}
 		
-		if (! config.contains("looting-inventory", true)) {
+		if (! config.isSet("looting-inventory")) {
 			appendConfig("#Put the players items into a GUI when they die? Click the the corpse to open the GUI.",
                          "looting-inventory: true");
 		}
 		
-		if (! config.contains("despawn-after-looted", true)) {
+		if (! config.isSet("despawn-after-looted")) {
 			appendConfig("#Should the corpse automaticly despawn after it has been looted? (Only has effect is looting-inventory is true!)",
                          "despawn-after-looted: true");
 		}
 		
-		if (! config.contains("show-tags", true)) {
+		if (! config.isSet("show-tags")) {
 			appendConfig("#Show the username of the player? If you set this to false ' ' will be used for the username.",
 					     "#The skin will still show even if you choose not do display the username.",
                          "show-tags: true");
 		}
 		
-		if (! config.contains("world", true)) {
+		if (! config.isSet("world")) {
 			appendConfig("#This is used to specify what world(s) corpses should spawn when somebody dies.",
 					     "#Set world to 'all' for every world.",
 					     "#Use '|' to add multiple worlds.",
                          "world: all");
 		}
 		
-		if (! config.contains("gui-title", true)) {
+		if (! config.isSet("gui-title")) {
 			appendConfig("#Title of inventory created when you click the corpses head to loot it. ",
 					     "#%corpse% gets replaced with the corpses name.",
 					     "#Color codes and unicode characters work, but might be glitchy.",
@@ -104,7 +104,7 @@ public class ConfigData {
                          "gui-title: \"%corpse%'s Items\"");
 		}
 		
-		if (! config.contains("username-format", true)) {
+		if (! config.isSet("username-format")) {
 			appendConfig("#This is the username of the corpse.",
 					     "#%corpse% gets replaced with the corpses name.",
 					     "#Color codes and unicode characters work, but might be glitchy.",
@@ -112,14 +112,14 @@ public class ConfigData {
                          "username-format: \"%corpse%\"");
 		}
 		
-		if (! config.contains("finish-looting-message", true)) {
+		if (! config.isSet("finish-looting-message")) {
 			appendConfig("#This is the message sent when you finish looting the corpse. Set the message to \"none\" to disable.",
 					     "#%corpse% gets replaced with the corpses name.",
 					     "#Color codes and unicode characters work, but might be glitchy.",
                          "finish-looting-message: \"&bYou have finished looting %corpse%'s corpse.\"");
 		}
 		
-		if (! config.contains("new-hitboxes", true)) {
+		if (! config.isSet("new-hitboxes")) {
 			appendConfig("#Due to a Minecraft quirk with how the corpses work, the hitboxes were not normal player hitboxes.",
 					     "#I have now made it so a invisible Cows spawn that covers the whole corpse.",
 					     "#When you click on the invisible Cow it does the same thing as clicking on the corpse.",

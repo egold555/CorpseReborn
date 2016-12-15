@@ -72,7 +72,7 @@ public class Main extends JavaPlugin {
 
 		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
-		getCommand("corpsereload").setExecutor(new ReloadPlugin());
+		getCommand("corpsereborn").setExecutor(new ReloadPlugin());
 		getCommand("resendcorpses").setExecutor(new ResendCorpses());
 		new BukkitRunnable(){
 			public void run(){

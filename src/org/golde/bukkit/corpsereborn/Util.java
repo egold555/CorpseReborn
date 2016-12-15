@@ -75,6 +75,7 @@ public class Util {
 				if(e.getType() == NmsBase.ENTITY){
 					LivingEntity le = (LivingEntity)e;
 					if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)){
+						Util.info("Removed bugged cow at " + e.getLocation().getBlockX() + " " + e.getLocation().getBlockY() + " " + e.getLocation().getBlockZ());
 						e.remove();
 					}
 				}
@@ -174,4 +175,5 @@ public class Util {
 		}
 		return result;
 	}
+
 }

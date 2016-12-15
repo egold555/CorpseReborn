@@ -24,11 +24,18 @@ public class PlayerDeath implements Listener {
 			}
 			data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), null, e.getEntity().getLocation(), inv.toInventory()).setSelectedSlot(e.getEntity().getInventory().getHeldItemSlot());
 			
-			if (ConfigData.hasLootingInventory()) {		
-				e.getDrops().clear();
-			} 
+			 
+			CorpseSpawnEvent cse = new CorpseSpawnEvent(data, false);
+			Util.callEvent(cse);
+			if(cse.isCancelled()){
+				Main.getPlugin().corpses.removeCorpse(data);
+			}else{
+				if (ConfigData.hasLootingInventory()) {		
+					e.getDrops().clear();
+				}
+			}
 			
-			Util.callEvent(new CorpseSpawnEvent(data, false));
+			
 		}
 	}
 }
