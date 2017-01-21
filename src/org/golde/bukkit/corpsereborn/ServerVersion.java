@@ -1,7 +1,8 @@
 package org.golde.bukkit.corpsereborn;
 
+import org.bukkit.Bukkit;
+
 public enum ServerVersion {
-	
 	v1_7,
 	v1_7_R4,
 	v1_8,
@@ -30,7 +31,14 @@ public enum ServerVersion {
 		}
 	}
 	
+	public static String getParenthesesContent(String str){
+        return str.substring(str.indexOf('(')+1,str.indexOf(')'));
+    }
+	
+	public static String rawMcVersion = getParenthesesContent(Bukkit.getVersion()).replaceAll("MC: ", "");
+	
 	public static ServerVersion fromClass(String clazz){
+		
 		switch(clazz){
 		case "v1_7_R4": return v1_7_R4;
 		case "v1_8_R1": return v1_8_R1;

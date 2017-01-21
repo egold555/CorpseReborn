@@ -3,12 +3,14 @@ package org.golde.bukkit.corpsereborn;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public enum ServerType {
 	BUKKIT(true), 
 	SPIGOT(true), 
 	PAPER_SPIGOT(false), //corpse just gets removed. No errors.
+	TACO_SPIGOT(false), //fork of paper
 	GLOWSTONE(false), //Plugin does not load
 	SPONGE(false), //Not tested
 	CAULDRON(false), //NMS Does not load. 
@@ -32,10 +34,17 @@ public enum ServerType {
 	}
 
 	public static ServerType whatAmI(JavaPlugin p){
-		try{
+		
+		if(Bukkit.getVersion().toLowerCase().contains("paper")){
+			return PAPER_SPIGOT;
+		}else if(Bukkit.getVersion().toLowerCase().contains("taco")){
+			return TACO_SPIGOT;
+		}
+		
+		/*try{
 			Class.forName("org.github.paperspigot.PaperSpigotConfig");
 			return PAPER_SPIGOT;
-		}catch (Exception e){}
+		}catch (Exception e){}*/
 		
 		try{
 			Class.forName("net.glowstone.GlowServer");

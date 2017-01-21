@@ -8,6 +8,7 @@ import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
+import org.golde.bukkit.corpsereborn.dump.ReportError;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 /**
@@ -32,14 +33,19 @@ public class CorpseAPI {
 	 */
 	public static CorpseData spawnCorpse(Player player, String overrideName, Location location, ItemStack[] mainInventory, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ItemStack hand, ItemStack offHand)
 	{
-		CorpseData data = Main.getPlugin().corpses.spawnCorpse(player, overrideName, location, Util.makeNiceInv(player, mainInventory, helmet, chestplate, leggings, boots, hand, offHand));
-		
-		if (hand != null)
-			data.setSelectedSlot(8); 
-		Util.callEvent(new CorpseSpawnEvent(data, true));
+		CorpseData data = null;
+		try{
+			data = Main.getPlugin().corpses.spawnCorpse(player, overrideName, location, Util.makeNiceInv(player, mainInventory, helmet, chestplate, leggings, boots, hand, offHand));
+
+			if (hand != null)
+				data.setSelectedSlot(8); 
+			Util.callEvent(new CorpseSpawnEvent(data, true));
+		}catch(Exception ex){
+			new ReportError(ex);
+		}
 		return data;
 	}
-	
+
 	/**
 	 * Spawns a corpse at the given location
 	 * @param player Player to spawn the corpse of. This must be a online player.
@@ -51,7 +57,7 @@ public class CorpseAPI {
 	{
 		return spawnCorpse(player, null, location, mainInventory, null, null, null, null, null, null);
 	}
-	
+
 	/**
 	 * Spawns a corpse at the given location
 	 * @param player Player to spawn the corpse of. This must be a online player.
@@ -67,7 +73,7 @@ public class CorpseAPI {
 	{
 		return spawnCorpse(player, null, location, mainInventory, helmet, chestplate, leggings, boots, null, null);
 	}
-	
+
 	/**
 	 * Spawns a corpse at the given location
 	 * @param player Player to spawn the corpse of. This must be a online player.
@@ -84,7 +90,7 @@ public class CorpseAPI {
 	{
 		return spawnCorpse(player, null, location, mainInventory, helmet, chestplate, leggings, boots, hand, null);
 	}
-	
+
 	/**
 	 * Spawns a corpse at the given location
 	 * @param player Player to spawn the corpse of. This must be a online player.
@@ -102,7 +108,7 @@ public class CorpseAPI {
 	{
 		return spawnCorpse(player, overrideName, location, mainInventory, helmet, chestplate, leggings, boots, hand, null);
 	}
-	
+
 	/**
 	 * Spawns a corpse at the given location
 	 * @param player Player to spawn the corpse of. This must be a online player.
@@ -119,9 +125,13 @@ public class CorpseAPI {
 	 * @param data remove a corpse from the given CorpseData
 	 */
 	public static void removeCorpse(CorpseData data){
-		Main.getPlugin().corpses.removeCorpse(data);
+		try{
+			Main.getPlugin().corpses.removeCorpse(data);
+		}catch(Exception ex){
+			new ReportError(ex);
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param world The world to remove all the corpses in
@@ -129,7 +139,7 @@ public class CorpseAPI {
 	public void removeAllCorpses(World world){
 		Util.removeAllCorpses(world);
 	}
-	
+
 	/**
 	 * Removes all corpses in ALL worlds
 	 */
@@ -138,5 +148,5 @@ public class CorpseAPI {
 			removeAllCorpses(world);
 		}
 	}
-	
+
 }

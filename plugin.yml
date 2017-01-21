@@ -1,9 +1,9 @@
 main: org.golde.bukkit.corpsereborn.Main
 name: CorpseReborn
 authors: ["Eric Golde", "Peter Golde", "Virizion"]
-website: "https://www.spigotmc.org/resources/corpsereborn.29875/"
-version: 2.9.2
-description: "This is a port to 1.7.10-1.11 versions of Spigot from the old Corpse plugin found on Spigot. Thanks to Virizion for letting me take over and manage his project §4❤"
+website: https://www.spigotmc.org/resources/corpsereborn.29875/
+version: 2.9.5
+description: "This is a port to 1.7.10-1.12 versions of Spigot from the old Corpse plugin found on Spigot. Thanks to Virizion for letting me take over and manage his project §4❤"
 load: POSTWORLD
 softdepend: [Multiverse-Core, MultiWorld]
 
@@ -41,3 +41,6 @@ permissions:
   corpses.reload:
     default: op
     description: Permission for /corpsereborn reload
+  corpses.dump:
+    default: op
+    description: Permission for /corpsereborn dump

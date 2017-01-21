@@ -12,41 +12,50 @@ import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseRemoveEvent;
+import org.golde.bukkit.corpsereborn.dump.ReportError;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 
 public abstract class NmsBase {
-	
+
 	public static final EntityType ENTITY = EntityType.COW;
 	@SuppressWarnings("rawtypes")
 	public static final Class ENTITY_CLASS = Cow.class;
-	
+
 	protected HashMap<LivingEntity, CorpseData> allSlimes = new HashMap<LivingEntity, CorpseData>();
 
 	public void spawnSlimeForCorpse(CorpseData corpseData)
 	{
-		if(!ConfigData.hasLootingInventory() || !ConfigData.getNewHitbox()){
-			return;
+		try{
+			if(!ConfigData.hasLootingInventory() || !ConfigData.getNewHitbox()){
+				return;
+			}
+			Location l = corpseData.getOrigLocation();
+			l = moveAmount(l);
+			allSlimes.put(spawnSlime(l), corpseData);
+		}catch(Exception ex){
+			new ReportError(ex);
 		}
-		Location l = corpseData.getOrigLocation();
-		l = moveAmount(l);
-		allSlimes.put(spawnSlime(l), corpseData);
 	}
 
 	public void deleteSlimeForCorpse(CorpseData corpseData)
 	{
-		LivingEntity slimeToDelete = null;
-		for (LivingEntity slime: allSlimes.keySet()) {
-			if (corpseData == allSlimes.get(slime)) {
-				slimeToDelete = slime;
+		try{
+			LivingEntity slimeToDelete = null;
+			for (LivingEntity slime: allSlimes.keySet()) {
+				if (corpseData == allSlimes.get(slime)) {
+					slimeToDelete = slime;
+				}
 			}
-		}
 
-		if (slimeToDelete != null) {
-			allSlimes.remove(slimeToDelete);
-			slimeToDelete.remove();
-		}
+			if (slimeToDelete != null) {
+				allSlimes.remove(slimeToDelete);
+				slimeToDelete.remove();
+			}
 
-		Util.callEvent(new CorpseRemoveEvent(corpseData, false));
+			Util.callEvent(new CorpseRemoveEvent(corpseData, false));
+		}catch(Exception ex){
+			new ReportError(ex);
+		}
 	}
 
 	// Call this when a player hits a slime.
@@ -73,40 +82,52 @@ public abstract class NmsBase {
 
 	private void openInventory(Player player, CorpseData cd)
 	{
-		InventoryView view = player.openInventory(cd.getLootInventory());
-		cd.setInventoryView(view);
+		try{
+			InventoryView view = player.openInventory(cd.getLootInventory());
+			cd.setInventoryView(view);
+		}catch(Exception ex){
+			new ReportError(ex);
+		}
 	}
 
 	private LivingEntity spawnSlime(Location loc){
 		@SuppressWarnings("unchecked")
 		LivingEntity slime = (LivingEntity) loc.getWorld().spawn(loc, ENTITY_CLASS);
-		if(slime instanceof Slime){
-			((Slime)slime).setSize(4);
+		try{
+			if(slime instanceof Slime){
+				((Slime)slime).setSize(4);
+			}
+
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1000000, 100, true));
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 100, true));
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1000000, 100, true));
+			addNbtTagsToSlime(slime);
+		}catch(Exception ex){
+			new ReportError(ex);
 		}
-		
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1000000, 100, true));
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 100, true));
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1000000, 100, true));
-		addNbtTagsToSlime(slime);
 		return slime;
 	}
 
 	public void updateSlimes(){
-		for (LivingEntity slime: new ArrayList<LivingEntity>(allSlimes.keySet())) {
-			CorpseData data = allSlimes.get(slime);
-			if(slime.isDead()){
-				allSlimes.remove(slime);
-				if(data != null){
-					spawnSlimeForCorpse(data);
-				}
-			}else{
-				if(data != null){
-					teleportSlime(data.getOrigLocation(), slime);
+		try{
+			for (LivingEntity slime: new ArrayList<LivingEntity>(allSlimes.keySet())) {
+				CorpseData data = allSlimes.get(slime);
+				if(slime.isDead()){
+					allSlimes.remove(slime);
+					if(data != null){
+						spawnSlimeForCorpse(data);
+					}
+				}else{
+					if(data != null){
+						teleportSlime(data.getOrigLocation(), slime);
+					}
 				}
 			}
+		}catch(Exception ex){
+			new ReportError(ex);
 		}
 	}
 

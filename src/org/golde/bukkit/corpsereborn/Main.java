@@ -6,10 +6,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.golde.bukkit.corpsereborn.cmds.ReloadPlugin;
+import org.golde.bukkit.corpsereborn.cmds.GenericCommands;
 import org.golde.bukkit.corpsereborn.cmds.RemoveCorpseRadius;
 import org.golde.bukkit.corpsereborn.cmds.ResendCorpses;
 import org.golde.bukkit.corpsereborn.cmds.SpawnCorpse;
+import org.golde.bukkit.corpsereborn.dump.ReportError;
 import org.golde.bukkit.corpsereborn.listeners.ChunkCorpseFix;
 import org.golde.bukkit.corpsereborn.listeners.InventoryHandle;
 import org.golde.bukkit.corpsereborn.listeners.PlayerChangedWorld;
@@ -31,66 +32,75 @@ public class Main extends JavaPlugin {
 	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
 	public static ServerType serverType = ServerType.UNKNOWN;
 	public void onEnable() {
-		plugin = this;
-		serverType = ServerType.whatAmI(this);
-		if(!serverType.isCompatible()){
-			Util.cinfo("&e====================================================");
-			Util.cinfo("&cIt seems like you are not running a supported version of server. This plugin only supports: ");
-			Util.cinfo("&b" + ServerType.getSupportedVersions());
-			Util.cinfo("&cYou are running: &e" + serverType.name());
-			Util.cinfo("&cExpect things to not work as they were intended too.");
-			Util.cinfo("&eYOU HAVE BEEN WARNED!");
-			Util.cinfo("&e====================================================");
-		}
-
-		//saveDefaultConfig();
-		ConfigData.checkConfigForMissingOptions();
-		
-		loadCorpsesCreator();
-		ConfigData.load();
-		checkForUpdates();
-		if(serverVersion == ServerVersion.UNSUPPORTED_SERVER_VERSION){
-			Util.cinfo("&e====================================================");
-			Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
-			Util.cinfo("&b" + Bukkit.getVersion());
-			Util.cinfo("&e====================================================");
-		}
-		if (!cont) {
-			return;
-		}
-		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(new PlayerJoin(), this);
-		pm.registerEvents(new PlayerRespawn(), this);
-		pm.registerEvents(new PlayerChangedWorld(), this);
-		pm.registerEvents(new PlayerDeath(), this);
-		pm.registerEvents(new InventoryHandle(), this);
-		pm.registerEvents(new ChunkCorpseFix(), this);
-		if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
-			pm.registerEvents(new SlimeHit(), this);
-		}
-		
-
-		getCommand("spawncorpse").setExecutor(new SpawnCorpse());
-		getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
-		getCommand("corpsereborn").setExecutor(new ReloadPlugin());
-		getCommand("resendcorpses").setExecutor(new ResendCorpses());
-		new BukkitRunnable(){
-			public void run(){
-				Util.removeBuggedCows();
+		try{
+			plugin = this;
+			serverType = ServerType.whatAmI(this);
+			if(!serverType.isCompatible()){
+				Util.cinfo("&e====================================================");
+				Util.cinfo("&cIt seems like you are not running a supported version of server. This plugin only supports: ");
+				Util.cinfo("&b" + ServerType.getSupportedVersions());
+				Util.cinfo("&cYou are running: &e" + serverType.name());
+				Util.cinfo("&cExpect things to not work as they were intended too.");
+				Util.cinfo("&eYOU HAVE BEEN WARNED!");
+				Util.cinfo("&e====================================================");
 			}
-		}.runTaskLater(this, 2);
-		
-		new BukkitRunnable(){
-			public void run(){
-				corpses.updateSlimes();
+
+			//saveDefaultConfig();
+			ConfigData.checkConfigForMissingOptions();
+
+			loadCorpsesCreator();
+			ConfigData.load();
+			checkForUpdates();
+			if(serverVersion == ServerVersion.UNSUPPORTED_SERVER_VERSION){
+				Util.cinfo("&e====================================================");
+				Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
+				Util.cinfo("&b" + Bukkit.getVersion());
+				Util.cinfo("&e====================================================");
 			}
-		}.runTaskTimer(this, 0, 20);
-		
+			if (!cont) {
+				return;
+			}
+			PluginManager pm = getServer().getPluginManager();
+			pm.registerEvents(new PlayerJoin(), this);
+			pm.registerEvents(new PlayerRespawn(), this);
+			pm.registerEvents(new PlayerChangedWorld(), this);
+			pm.registerEvents(new PlayerDeath(), this);
+			pm.registerEvents(new InventoryHandle(), this);
+			pm.registerEvents(new ChunkCorpseFix(), this);
+			if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
+				pm.registerEvents(new SlimeHit(), this);
+			}
+
+
+			getCommand("spawncorpse").setExecutor(new SpawnCorpse());
+			getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
+			getCommand("corpsereborn").setExecutor(new GenericCommands());
+			getCommand("resendcorpses").setExecutor(new ResendCorpses());
+			new BukkitRunnable(){
+				public void run(){
+					Util.removeBuggedCows();
+				}
+			}.runTaskLater(this, 2);
+
+			new BukkitRunnable(){
+				public void run(){
+					corpses.updateSlimes();
+				}
+			}.runTaskTimer(this, 0, 20);
+			
+		}catch(Exception ex){
+			new ReportError(ex);
+		}
 	}
 
 	public void onDisable(){
-		//remove all slimes
-		corpses.removeAllSlimes();
+		try{
+			//remove all slimes
+			corpses.removeAllSlimes();
+		}catch(Exception ex){
+			new ReportError(ex);
+		}
+		
 	}
 
 	void checkForUpdates(){
