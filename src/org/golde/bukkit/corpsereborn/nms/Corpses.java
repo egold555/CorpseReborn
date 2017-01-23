@@ -22,13 +22,13 @@ public interface Corpses {
 	
 	public void registerPacketListener(Player p);
 	
-	public boolean slimeHit(Player player, LivingEntity slime, TypeOfClick clickType);
+	public boolean cowHit(Player player, LivingEntity cow, TypeOfClick clickType);
 	
-	public void updateSlimes();
+	public void updateCows();
 	
-	public void removeAllSlimes();
+	public void removeAllCows();
 	
-	public boolean isValidSlime(LivingEntity slime);
+	public boolean isValidCow(LivingEntity cow);
 	
 	public interface CorpseData {
 		
@@ -47,6 +47,8 @@ public interface Corpses {
 		public boolean canSee(Player p);
 
 		public Set<Player> getPlayersWhoSee();
+		
+		public void removeFromMap(Player p);
 
 		public void removeAllFromMap(Collection<Player> toRemove);
 

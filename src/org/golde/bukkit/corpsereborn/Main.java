@@ -17,7 +17,7 @@ import org.golde.bukkit.corpsereborn.listeners.PlayerChangedWorld;
 import org.golde.bukkit.corpsereborn.listeners.PlayerDeath;
 import org.golde.bukkit.corpsereborn.listeners.PlayerJoin;
 import org.golde.bukkit.corpsereborn.listeners.PlayerRespawn;
-import org.golde.bukkit.corpsereborn.listeners.SlimeHit;
+import org.golde.bukkit.corpsereborn.listeners.CowHit;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import com.google.common.reflect.ClassPath;
@@ -27,6 +27,8 @@ public class Main extends JavaPlugin {
 
 	private static Main plugin;
 
+	public final int playerInitialTickDelay = 35;  
+	
 	public Corpses corpses;
 	public boolean cont = true;
 	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
@@ -68,7 +70,7 @@ public class Main extends JavaPlugin {
 			pm.registerEvents(new InventoryHandle(), this);
 			pm.registerEvents(new ChunkCorpseFix(), this);
 			if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
-				pm.registerEvents(new SlimeHit(), this);
+				pm.registerEvents(new CowHit(), this);
 			}
 
 
@@ -84,7 +86,7 @@ public class Main extends JavaPlugin {
 
 			new BukkitRunnable(){
 				public void run(){
-					corpses.updateSlimes();
+					corpses.updateCows();
 				}
 			}.runTaskTimer(this, 0, 20);
 			
@@ -95,8 +97,8 @@ public class Main extends JavaPlugin {
 
 	public void onDisable(){
 		try{
-			//remove all slimes
-			corpses.removeAllSlimes();
+			//remove all cows
+			corpses.removeAllCows();
 		}catch(Exception ex){
 			new ReportError(ex);
 		}

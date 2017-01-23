@@ -37,6 +37,12 @@ public class PlayerDeath implements Listener {
 					}
 				}
 			}
+			
+			// For each corpse, remove player from view of that corpse.
+			//in therory fixing a bug. Realy not sure
+			for (CorpseData cd:Main.getPlugin().corpses.getAllCorpses()) {
+				cd.removeFromMap(e.getEntity());
+			}
 		}catch(Exception ex){
 			new ReportError(ex);
 		}

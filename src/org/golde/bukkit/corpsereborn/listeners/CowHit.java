@@ -16,7 +16,7 @@ import org.golde.bukkit.corpsereborn.dump.ReportError;
 import org.golde.bukkit.corpsereborn.nms.NmsBase;
 import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 
-public class SlimeHit implements Listener{
+public class CowHit implements Listener{
 
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void leftClick(EntityDamageByEntityEvent e){
@@ -27,7 +27,7 @@ public class SlimeHit implements Listener{
 				}
 			}
 			if(e.getDamager().getType() == NmsBase.ENTITY && e.getEntity() instanceof Player && e.getCause() == DamageCause.ENTITY_ATTACK ){
-				if(Main.getPlugin().corpses.isValidSlime((LivingEntity)e.getDamager())){
+				if(Main.getPlugin().corpses.isValidCow((LivingEntity)e.getDamager())){
 					e.setDamage(0);
 					e.setCancelled(true);
 				}
@@ -52,7 +52,7 @@ public class SlimeHit implements Listener{
 
 	boolean handle(Player p, Entity entity, TypeOfClick clickType){
 		if(entity.getType() == NmsBase.ENTITY){
-			return Main.getPlugin().corpses.slimeHit(p, (LivingEntity)entity, clickType);
+			return Main.getPlugin().corpses.cowHit(p, (LivingEntity)entity, clickType);
 		}
 		return false;
 	}

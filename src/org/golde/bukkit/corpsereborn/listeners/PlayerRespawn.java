@@ -16,7 +16,7 @@ public class PlayerRespawn implements Listener {
 				if (data.getOrigLocation().getWorld()
 						.equals(e.getRespawnLocation().getWorld())) {
 					data.setCanSee(e.getPlayer(), false);
-					data.tickPlayerLater(35, e.getPlayer());
+					data.tickPlayerLater(Main.getPlugin().playerInitialTickDelay, e.getPlayer());
 				}
 			}
 		}catch(Exception ex){

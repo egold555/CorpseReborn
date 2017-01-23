@@ -60,9 +60,9 @@ public abstract class NmsBase {
 
 	// Call this when a player hits a slime.
 	// returns false is slime is NOT a corpse slime, true if slime is a corpse slime.
-	public boolean slimeHit(Player player, LivingEntity slime, TypeOfClick clickType)
+	public boolean cowHit(Player player, LivingEntity slime, TypeOfClick clickType)
 	{
-		if(isValidSlime(slime)){
+		if(isValidCow(slime)){
 			CorpseData data = allSlimes.get(slime);
 			Util.callEvent(new CorpseClickEvent(data, player, clickType));
 			openInventory(player, data);
@@ -72,7 +72,7 @@ public abstract class NmsBase {
 	}
 
 
-	public boolean isValidSlime(LivingEntity slime){
+	public boolean isValidCow(LivingEntity slime){
 		CorpseData data = allSlimes.get(slime);
 		if (data == null) {
 			return false;
@@ -111,7 +111,7 @@ public abstract class NmsBase {
 		return slime;
 	}
 
-	public void updateSlimes(){
+	public void updateCows(){
 		try{
 			for (LivingEntity slime: new ArrayList<LivingEntity>(allSlimes.keySet())) {
 				CorpseData data = allSlimes.get(slime);
@@ -144,7 +144,7 @@ public abstract class NmsBase {
 		}
 	}
 
-	public void removeAllSlimes(){
+	public void removeAllCows(){
 		for (LivingEntity slime: allSlimes.keySet()) {
 			slime.remove();
 		}

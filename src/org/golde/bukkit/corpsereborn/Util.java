@@ -188,5 +188,15 @@ public class Util {
 		}
 		return result;
 	}
+	
+	public static Location bedLocation(Location loc){
+		Location l = loc.clone();
+		l.setY(bedLocation());
+		return l;
+	}
+	
+	public static int bedLocation(){
+		return 1;
+	}
 
 }

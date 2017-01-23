@@ -46,6 +46,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 import org.golde.bukkit.corpsereborn.nms.NmsBase;
 import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_11_R1;
@@ -286,7 +287,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 				Field b = packet.getClass().getDeclaredField("b");
 				b.setAccessible(true);
 				b.set(packet,
-						new BlockPosition(loc.getBlockX(), loc.getBlockY() - 2,
+						new BlockPosition(loc.getBlockX(), Util.bedLocation(),
 								loc.getBlockZ()));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -358,7 +359,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 			final List<Player> toSend = loc.getWorld().getPlayers();
 			for (Player p : toSend) {
 				PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
-				p.sendBlockChange(loc.clone().subtract(0, 2, 0),
+				p.sendBlockChange(Util.bedLocation(loc),
 						Material.BED_BLOCK, (byte) 0);
 				conn.sendPacket(infoPacket);
 				conn.sendPacket(spawnPacket);
@@ -396,7 +397,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 			final PacketPlayOutEntityEquipment mainhandInfo = getEquipmentPacket(EnumItemSlot.MAINHAND, convertBukkitToMc(items.getItem(slot+45)));
 			final PacketPlayOutEntityEquipment offhandInfo = getEquipmentPacket(EnumItemSlot.OFFHAND, convertBukkitToMc(items.getItem(7)));
 			PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
-			p.sendBlockChange(loc.clone().subtract(0, 2, 0),
+			p.sendBlockChange(Util.bedLocation(loc),
 					Material.BED_BLOCK, (byte) 0);
 			conn.sendPacket(infoPacket);
 			conn.sendPacket(spawnPacket);
@@ -423,11 +424,11 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 			PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(
 					entityId);
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-			Block b = loc.clone().subtract(0, 2, 0).getBlock();
+			Block b = Util.bedLocation(loc).getBlock();
 			boolean removeBed = true;
 			for (CorpseData cd : getAllCorpses()) {
 				if (cd != this
-						&& cd.getOrigLocation().clone().subtract(0, 2, 0)
+						&& Util.bedLocation(cd.getOrigLocation())
 								.getBlock().getLocation()
 								.equals(b.getLocation())) {
 					removeBed = false;
@@ -451,7 +452,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 			boolean removeBed = true;
 			for (CorpseData cd : getAllCorpses()) {
 				if (cd != this
-						&& cd.getOrigLocation().clone().subtract(0, 2, 0)
+						&& Util.bedLocation(cd.getOrigLocation())
 								.getBlock().getLocation()
 								.equals(b.getLocation())) {
 					removeBed = false;
