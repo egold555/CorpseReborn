@@ -31,6 +31,7 @@ public class Main extends JavaPlugin {
 	
 	public Corpses corpses;
 	public boolean cont = true;
+	public boolean isDev = false;
 	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
 	public static ServerType serverType = ServerType.UNKNOWN;
 	public void onEnable() {
@@ -125,6 +126,7 @@ public class Main extends JavaPlugin {
 		else if (result.getResult() == Updater.UpdateResult.DEV){
 			Util.cinfo("&eYou seem to have a version of the plugin that is not on spigot...");
 			Util.cinfo("&cExpect bugs!");
+			isDev = true;
 		}
 	}
 

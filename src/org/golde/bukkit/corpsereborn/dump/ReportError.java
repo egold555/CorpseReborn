@@ -24,12 +24,12 @@ public class ReportError {
 		final DumpTemplate dt = new DumpTemplate(e);
 		new BukkitRunnable(){
 			public void run(){
-				makeDump(cs, dt);
+				makeDump(cs, dt, e);
 			}
 		}.runTaskAsynchronously(Main.getPlugin());
 	}
 
-	private void makeDump(final CommandSender sender, final DumpTemplate dt){
+	private void makeDump(final CommandSender sender, final DumpTemplate dt, final Exception e){
 		PastebinAPI api = new PastebinAPI("bcfd9fe9a975802e3b494234ebaa1c25");
 		CreatePaste paste = api.createPaste();
 		paste.withText(dt.output());
@@ -46,11 +46,14 @@ public class ReportError {
 			}
 			
 			sender.sendMessage(ChatColor.YELLOW + url);
-		} catch (PastebinException e) {
+		} catch (PastebinException e1) {
 			sender.sendMessage(ChatColor.RED + "Failed to dump, please check the console for more information.");
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException e1) {
 			sender.sendMessage(ChatColor.RED + "Failed to dump, please check the console for more information.");
+			e.printStackTrace();
+		}
+		if(Main.getPlugin().isDev){
 			e.printStackTrace();
 		}
 		
