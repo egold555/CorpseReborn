@@ -61,4 +61,7 @@ public class CorpseRemoveEvent extends Event{
         return handlers;
     }
 
+    /**
+     * Returns if the event got cancelled or not.
+     */
 }

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.golde.bukkit.corpsereborn.Main;
 
@@ -37,23 +38,75 @@ public class DumpTemplate {
 	private String getPlugins(){
 		String toReturn = "";
 		for(Plugin pl:Bukkit.getPluginManager().getPlugins()){
-			toReturn = toReturn + "  Name: " + pl.getName() + NEW_LINE +
-					"    Version: " + pl.getDescription().getVersion() + NEW_LINE;
+			toReturn = toReturn + pl.getName()  + " - " + pl.getDescription().getVersion() + NEW_LINE;
 		}
 		return toReturn;
 	}
 	
+	private String getConfig() {
+		/*IOException ex;
+		File config = new File(Main.getPlugin().getDataFolder(), "config.yml");
+		try {
+			return Files.toString(config, Charset.defaultCharset()).replaceAll("\"", "");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			ex = e;
+		}
+		return "Could not read Config File: " + ex.getMessage();*/
+		FileConfiguration config = Main.getPlugin().getConfig();
+		String cfg = "";
+		cfg = cfg + "enable-update-checker: " + config.getBoolean("enable-update-checker") + NEW_LINE;
+		cfg = cfg + "corpse-time: " + config.getInt("corpse-time") + NEW_LINE;
+		cfg = cfg + "on-death: " + config.getBoolean("on-death") + NEW_LINE;
+		cfg = cfg + "looting-inventory: " + config.getBoolean("looting-inventory") + NEW_LINE;
+		cfg = cfg + "despawn-after-looted: " + config.getBoolean("despawn-after-looted") + NEW_LINE;
+		cfg = cfg + "show-tags: " + config.getBoolean("show-tags") + NEW_LINE;
+		cfg = cfg + "world: " + config.getString("world") + NEW_LINE;
+		cfg = cfg + "gui-title: " + config.getString("gui-title") + NEW_LINE;
+		cfg = cfg + "username-format: " + config.getString("username-format") + NEW_LINE;
+		cfg = cfg + "finish-looting-message: " + config.getString("finish-looting-message") + NEW_LINE;
+		cfg = cfg + "new-hitboxes: " + config.getString("new-hitboxes");
+		return cfg;
+	}
+	
 	@SuppressWarnings("static-access")
 	public String output(){
-		String formatted = "Date: " + getDate() + NEW_LINE +
+		/*String formatted = "Date: " + getDate() + NEW_LINE +
 				"CorpseReborn Version: " + Main.getPlugin().getDescription().getVersion().split(" ")[0] + NEW_LINE + NEW_LINE + 
 				"Server Version: " + Bukkit.getVersion() + NEW_LINE +
 				"Server Type: " + Main.getPlugin().serverType.name() +NEW_LINE + 
 				"Folder Version: " + Main.getPlugin().serverVersion.name() + NEW_LINE +NEW_LINE +
 				"Plugins: " + NEW_LINE + getPlugins() + NEW_LINE +
-				"Exception: " + exception;
+				"Exception: " + exception;*/
 		
-		return formatted;
+		return "Date: " + getDate() + 
+				NEW_LINE +
+				"CorpseReborn Version: " + Main.getPlugin().getDescription().getVersion().split(" ")[0] + 
+				NEW_LINE + 
+				NEW_LINE + 
+				"Server Version: " + Bukkit.getVersion() + 
+				NEW_LINE +
+				"Server Type: " + Main.getPlugin().serverType.name() +
+				NEW_LINE + 
+				"Folder Version: " + Main.getPlugin().serverVersion.name() + 
+				NEW_LINE +
+				NEW_LINE + 
+				"Exception: " + 
+				NEW_LINE +
+				exception +
+				NEW_LINE +
+				NEW_LINE +
+				"Plugins: " +
+				NEW_LINE + 
+				getPlugins()+
+				NEW_LINE +
+				"Config: " +
+				NEW_LINE +
+				getConfig().replaceAll("&", "*");
+				
+				
+
 	}
 
 	public boolean isFromDumpCommand() {

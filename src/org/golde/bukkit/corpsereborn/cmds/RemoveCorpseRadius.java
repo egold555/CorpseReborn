@@ -29,6 +29,7 @@ public class RemoveCorpseRadius implements CommandExecutor {
 			}
 			if (args.length == 0) {
 				//sender.sendMessage(ChatColor.RED + "Correct Usage: /" + commandLabel + " [radius]");
+				
 				ArrayList<CorpseData> corpses = Util.removeAllCorpses(((Player)sender).getWorld());
 				sender.sendMessage(ChatColor.GREEN + "Successfully removed all corpse(s) in the world. (" + corpses.size() + " of them!)");
 				Util.callEvent(new CorpseRemoveEvent(corpses, true));

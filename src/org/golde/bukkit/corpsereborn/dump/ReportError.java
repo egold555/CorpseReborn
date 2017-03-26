@@ -53,8 +53,10 @@ public class ReportError {
 			sender.sendMessage(ChatColor.RED + "Failed to dump, please check the console for more information.");
 			e.printStackTrace();
 		}
+
 		if(Main.getPlugin().isDev){
-			e.printStackTrace();
+			Bukkit.getLogger().info(dt.output());
+			//e.printStackTrace();
 		}
 		
 	}

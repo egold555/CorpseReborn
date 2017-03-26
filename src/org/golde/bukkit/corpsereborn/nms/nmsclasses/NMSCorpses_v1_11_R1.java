@@ -9,30 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_11_R1.BlockPosition;
-import net.minecraft.server.v1_11_R1.ChatMessage;
-import net.minecraft.server.v1_11_R1.DataWatcher;
-import net.minecraft.server.v1_11_R1.DataWatcherObject;
-import net.minecraft.server.v1_11_R1.DataWatcherRegistry;
-import net.minecraft.server.v1_11_R1.Enchantment;
-import net.minecraft.server.v1_11_R1.EnchantmentVanishing;
-import net.minecraft.server.v1_11_R1.Entity;
-import net.minecraft.server.v1_11_R1.EntityHuman;
-import net.minecraft.server.v1_11_R1.EnumGamemode;
-import net.minecraft.server.v1_11_R1.EnumItemSlot;
-import net.minecraft.server.v1_11_R1.IChatBaseComponent;
-import net.minecraft.server.v1_11_R1.Item;
-import net.minecraft.server.v1_11_R1.ItemStack;
-import net.minecraft.server.v1_11_R1.PacketPlayOutBed;
-import net.minecraft.server.v1_11_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
-import net.minecraft.server.v1_11_R1.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_11_R1.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_11_R1.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
-import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
-import net.minecraft.server.v1_11_R1.PlayerConnection;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -54,6 +30,28 @@ import org.golde.bukkit.corpsereborn.nms.NmsBase;
 import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_11_R1;
 
 import com.mojang.authlib.GameProfile;
+
+import net.minecraft.server.v1_11_R1.BlockPosition;
+import net.minecraft.server.v1_11_R1.ChatMessage;
+import net.minecraft.server.v1_11_R1.DataWatcher;
+import net.minecraft.server.v1_11_R1.DataWatcherObject;
+import net.minecraft.server.v1_11_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_11_R1.Entity;
+import net.minecraft.server.v1_11_R1.EntityHuman;
+import net.minecraft.server.v1_11_R1.EnumGamemode;
+import net.minecraft.server.v1_11_R1.EnumItemSlot;
+import net.minecraft.server.v1_11_R1.IChatBaseComponent;
+import net.minecraft.server.v1_11_R1.Item;
+import net.minecraft.server.v1_11_R1.ItemStack;
+import net.minecraft.server.v1_11_R1.PacketPlayOutBed;
+import net.minecraft.server.v1_11_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
+import net.minecraft.server.v1_11_R1.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_11_R1.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_11_R1.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
+import net.minecraft.server.v1_11_R1.PlayerConnection;
 
 public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 
@@ -123,6 +121,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 
 
 
+	@SuppressWarnings("deprecation")
 	public CorpseData spawnCorpse(Player p, String overrideUsername, Location loc, Inventory inv) {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(

@@ -18,7 +18,7 @@ import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 
 public class CowHit implements Listener{
 
-	@EventHandler(priority=EventPriority.LOWEST)
+	@EventHandler(priority=EventPriority.LOWEST, ignoreCancelled = true)
 	public void leftClick(EntityDamageByEntityEvent e){
 		try{
 			if(e.getDamager() instanceof Player && e.getCause() == DamageCause.ENTITY_ATTACK){

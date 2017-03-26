@@ -42,10 +42,13 @@ public class PcktIn_v1_8_R1 extends ChannelInboundHandlerAdapter {
 									for (CorpseData cd : Main.getPlugin().corpses
 											.getAllCorpses()) {
 										if (cd.getEntityId() == getId(packet)) {
-											InventoryView view = p.openInventory(cd
-													.getLootInventory());
-											cd.setInventoryView(view);
-											Util.callEvent(new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN));
+											CorpseClickEvent cce = new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN);
+											Util.callEvent(cce);
+											if(!cce.isCancelled()) {
+												InventoryView view = p.openInventory(cd
+														.getLootInventory());
+												cd.setInventoryView(view);
+											}
 											break;
 										}
 									}

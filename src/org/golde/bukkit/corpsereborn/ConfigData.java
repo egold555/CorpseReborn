@@ -58,7 +58,7 @@ public class ConfigData {
 		FileConfiguration config = Main.getPlugin().getConfig();
 
 		if (! config.isSet("enable-update-checker")) {
-			Main.getPlugin().getLogger().info("did not find enable-update-checker");
+			//Main.getPlugin().getLogger().info("did not find enable-update-checker");
 			appendConfig("#Enable checking for new versions of the plugin?",
                          "enable-update-checker: true");
 		}

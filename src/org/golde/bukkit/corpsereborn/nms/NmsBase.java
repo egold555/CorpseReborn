@@ -64,9 +64,12 @@ public abstract class NmsBase {
 	{
 		if(isValidCow(slime)){
 			CorpseData data = allSlimes.get(slime);
-			Util.callEvent(new CorpseClickEvent(data, player, clickType));
-			openInventory(player, data);
-			return true;
+			CorpseClickEvent cce = new CorpseClickEvent(data, player, clickType);
+			Util.callEvent(cce);
+			if(!cce.isCancelled()) {
+				openInventory(player, data);
+				return true;
+			}
 		}
 		return false;
 	}
