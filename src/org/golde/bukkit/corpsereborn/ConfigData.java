@@ -126,6 +126,7 @@ public class ConfigData {
 					     "#Set to false to use the old glitchy hitboxes.",
                          "new-hitboxes: true");
 		}
+		
 	}
 	
 	private static String newLine = "\r\n";

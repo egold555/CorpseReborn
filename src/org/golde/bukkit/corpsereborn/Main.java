@@ -79,11 +79,13 @@ public class Main extends JavaPlugin {
 			getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 			getCommand("corpsereborn").setExecutor(new GenericCommands());
 			getCommand("resendcorpses").setExecutor(new ResendCorpses());
+			
+			// Removing stray cows after 2 ticks, and every minute.
 			new BukkitRunnable(){
 				public void run(){
 					Util.removeBuggedCows();
 				}
-			}.runTaskLater(this, 2);
+			}.runTaskTimer(this, 2, 20*60);
 
 			new BukkitRunnable(){
 				public void run(){

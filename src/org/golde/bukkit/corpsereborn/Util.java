@@ -78,7 +78,7 @@ public class Util {
 		}
 		for(World w:world){
 			for(Entity e:w.getEntities()){
-				if(e instanceof LivingEntity && e instanceof Cow /*&& e.getType() == NmsBase.ENTITY*/){
+				if(e instanceof LivingEntity && e instanceof Cow && !Main.getPlugin().corpses.isValidCow((LivingEntity)e)){
 					LivingEntity le = (LivingEntity)e;
 					if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)){
 						Util.info("Removed bugged cow at " + e.getLocation().getBlockX() + " " + e.getLocation().getBlockY() + " " + e.getLocation().getBlockZ());
@@ -89,6 +89,7 @@ public class Util {
 		}
 
 	}
+
 
 	public static boolean isCorpseInChunk(Chunk chunk, CorpseData cd){
 		if(cd.getTrueLocation().getChunk().equals(chunk)){return true;}
