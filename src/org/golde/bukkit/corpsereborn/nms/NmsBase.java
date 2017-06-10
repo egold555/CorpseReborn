@@ -30,7 +30,7 @@ public abstract class NmsBase {
 				return;
 			}
 			Location l = corpseData.getOrigLocation();
-			l = moveAmount(l);
+			l = moveAmount(l, corpseData.getRotation());
 			allSlimes.put(spawnSlime(l), corpseData);
 		}catch(Exception ex){
 			new ReportError(ex);
@@ -96,6 +96,7 @@ public abstract class NmsBase {
 	private LivingEntity spawnSlime(Location loc){
 		@SuppressWarnings("unchecked")
 		LivingEntity slime = (LivingEntity) loc.getWorld().spawn(loc, ENTITY_CLASS);
+		slime.teleport(loc);
 		try{
 			if(slime instanceof Slime){
 				((Slime)slime).setSize(4);
@@ -125,7 +126,7 @@ public abstract class NmsBase {
 					}
 				}else{
 					if(data != null){
-						teleportSlime(data.getOrigLocation(), slime);
+						teleportSlime(data.getOrigLocation(), slime, data.getRotation());
 					}
 				}
 			}
@@ -134,14 +135,29 @@ public abstract class NmsBase {
 		}
 	}
 
-	private Location moveAmount(Location l){
+	private Location moveAmount(Location l, int rotation){
 		l = l.clone();
-		l = l.add(0, -0.8, -0.9);
+		if(rotation == 0) {
+			l = l.add(0, -0.8, -0.9);
+			l.setYaw(0);
+		}
+		else if(rotation == 1) {
+			l = l.add(+0.9, -0.8, 0);
+			l.setYaw(90);
+		}
+		else if(rotation == 2) {
+			l = l.add(0, -0.8, +0.9);
+			l.setYaw(180);
+		}
+		else if(rotation == 3) {
+			l = l.add(-0.9, -0.8, 0);
+			l.setYaw(270);
+		}
 		return l;
 	}
 
-	private void teleportSlime(Location l, LivingEntity slime){
-		l = moveAmount(l);
+	private void teleportSlime(Location l, LivingEntity slime, int rotation){
+		l = moveAmount(l, rotation);
 		if(l.distance(slime.getLocation()) > 0.1f){
 			slime.teleport(l);
 		}

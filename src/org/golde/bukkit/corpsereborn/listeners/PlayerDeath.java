@@ -24,7 +24,7 @@ public class PlayerDeath implements Listener {
 				if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_9 ) >= 0){
 					inv.setOffHand(e.getEntity().getInventory().getItemInOffHand());
 				}
-				data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), null, e.getEntity().getLocation(), inv.toInventory()).setSelectedSlot(e.getEntity().getInventory().getHeldItemSlot());
+				data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), null, e.getEntity().getLocation(), inv.toInventory(), 0).setSelectedSlot(e.getEntity().getInventory().getHeldItemSlot());
 
 				
 				CorpseSpawnEvent cse = new CorpseSpawnEvent(data, false);

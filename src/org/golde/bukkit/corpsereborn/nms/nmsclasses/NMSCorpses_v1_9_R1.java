@@ -119,7 +119,7 @@ public class NMSCorpses_v1_9_R1 extends NmsBase implements Corpses {
 		return null;
 	}
 
-	public CorpseData spawnCorpse(Player p, String overrideUsername, Location loc, Inventory inv) {
+	public CorpseData spawnCorpse(Player p, String overrideUsername, Location loc, Inventory inv, int facing) {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
@@ -133,7 +133,7 @@ public class NMSCorpses_v1_9_R1 extends NmsBase implements Corpses {
 		used.setYaw(loc.getYaw());
 		used.setPitch(loc.getPitch());
 		NMSCorpseData data = new NMSCorpseData(prof, used, dw, entityId,
-				ConfigData.getCorpseTime() * 20, inv);
+				ConfigData.getCorpseTime() * 20, inv, facing);
 		data.setPlayer(p);
 		corpses.add(data);
 		spawnSlimeForCorpse(data);
@@ -180,10 +180,11 @@ public class NMSCorpses_v1_9_R1 extends NmsBase implements Corpses {
 		private InventoryView iv;
 		private Player player;
 		private int slot;
+		private int rotation;
 
 		public NMSCorpseData(GameProfile prof, Location loc,
 				DataWatcher metadata, int entityId, int ticksLeft,
-				Inventory items) {
+				Inventory items, int rotation) {
 			this.prof = prof;
 			this.loc = loc;
 			this.metadata = metadata;
@@ -192,6 +193,16 @@ public class NMSCorpses_v1_9_R1 extends NmsBase implements Corpses {
 			this.canSee = new HashMap<Player, Boolean>();
 			this.tickLater = new HashMap<Player, Integer>();
 			this.items = items;
+			this.rotation = rotation;
+			if(rotation >3 || rotation < 0) {
+				this.rotation = 0;
+			}
+		}
+		
+
+		@Override
+		public int getRotation() {
+			return rotation;
 		}
 		
 		@SuppressWarnings("deprecation")
@@ -353,7 +364,7 @@ public class NMSCorpses_v1_9_R1 extends NmsBase implements Corpses {
 			for (Player p : toSend) {
 				PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 				p.sendBlockChange(Util.bedLocation(loc),
-						Material.BED_BLOCK, (byte) 0);
+						Material.BED_BLOCK, (byte) rotation);
 				conn.sendPacket(infoPacket);
 				conn.sendPacket(spawnPacket);
 				conn.sendPacket(bedPacket);
@@ -391,7 +402,7 @@ public class NMSCorpses_v1_9_R1 extends NmsBase implements Corpses {
 			final PacketPlayOutEntityEquipment offhandInfo = getEquipmentPacket(EnumItemSlot.OFFHAND, convertBukkitToMc(items.getItem(7)));
 			PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 			p.sendBlockChange(Util.bedLocation(loc),
-					Material.BED_BLOCK, (byte) 0);
+					Material.BED_BLOCK, (byte) rotation);
 			conn.sendPacket(infoPacket);
 			conn.sendPacket(spawnPacket);
 			conn.sendPacket(bedPacket);

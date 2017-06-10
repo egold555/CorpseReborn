@@ -12,7 +12,7 @@ import org.bukkit.inventory.InventoryView;
 
 public interface Corpses {
 	
-	public CorpseData spawnCorpse(Player p, String overrideName, Location loc, Inventory items);
+	public CorpseData spawnCorpse(Player p, String overrideName, Location loc, Inventory items, int facing);
 	
 	public void removeCorpse(CorpseData data);
 	
@@ -85,6 +85,8 @@ public interface Corpses {
 		public int getSelectedSlot();
 		
 		public CorpseData setSelectedSlot(int slot);
+		
+		public int getRotation();
 		
 	}
 }

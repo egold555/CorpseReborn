@@ -31,7 +31,7 @@ public class SpawnCorpse implements CommandExecutor {
 			if (args.length == 0) {
 				Player p = (Player) sender;
 
-				data = Main.getPlugin().corpses.spawnCorpse(p, null, p.getLocation(), Util.makeNiceInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
+				data = Main.getPlugin().corpses.spawnCorpse(p, null, p.getLocation(), Util.makeNiceInv(p), 0).setSelectedSlot(p.getInventory().getHeldItemSlot());
 				p.sendMessage(ChatColor.GREEN + "Corpse of yourself spawned!");
 				Util.callEvent(new CorpseSpawnEvent(data, true));
 			} else if (args.length == 1) {
@@ -42,7 +42,7 @@ public class SpawnCorpse implements CommandExecutor {
 					return true;
 				}
 
-				data = Main.getPlugin().corpses.spawnCorpse(p, null, p.getLocation(), Util.makeNiceInv(p)).setSelectedSlot(p.getInventory().getHeldItemSlot());
+				data = Main.getPlugin().corpses.spawnCorpse(p, null, p.getLocation(), Util.makeNiceInv(p), 0).setSelectedSlot(p.getInventory().getHeldItemSlot());
 				sender.sendMessage(ChatColor.GREEN + "Spawned corpse of "
 						+ p.getName() + "!");
 				Util.callEvent(new CorpseSpawnEvent(data, true));
