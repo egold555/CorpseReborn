@@ -3,4 +3,6 @@ This is a port of the plugin Corpses by Virizion (https://www.spigotmc.org/resou
 
 Link to my plugin: https://www.spigotmc.org/resources/corpsereborn.29875/
 
+Premade addons that I have made for people: https://github.com/egold555/CorpseReborn-Add-ons
+
 *Credit to Virizion for making the original 1.8 - 1.8.8 plugin. All I did was add and modify his code. Without his amazing work this would not have been possable!*
