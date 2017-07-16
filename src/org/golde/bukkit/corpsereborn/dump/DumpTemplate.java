@@ -49,7 +49,6 @@ public class DumpTemplate {
 		try {
 			return Files.toString(config, Charset.defaultCharset()).replaceAll("\"", "");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			ex = e;
 		}

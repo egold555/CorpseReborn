@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.potion.PotionEffect;
@@ -98,9 +100,7 @@ public abstract class NmsBase {
 		LivingEntity slime = (LivingEntity) loc.getWorld().spawn(loc, ENTITY_CLASS);
 		slime.teleport(loc);
 		try{
-			if(slime instanceof Slime){
-				((Slime)slime).setSize(4);
-			}
+			
 
 			slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
 			slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
@@ -171,5 +171,36 @@ public abstract class NmsBase {
 	}
 
 	protected abstract void addNbtTagsToSlime(LivingEntity slime);
-
+	
+	public Location getNonClippableBlockUnderPlayer(Location loc, int addToYPos) {
+		if (loc.getBlockY() < 0) {
+			return null;
+		}
+		for (int y = loc.getBlockY(); y >= 0; y--) {
+			Block block = loc.getWorld().getBlockAt(loc.getBlockX(), y, loc.getBlockZ());
+			Material m = block.getType();
+			if (m.isSolid()) {
+				float slabAdjust = 0.0F;
+				if (isLowerSlab(block)) {
+					slabAdjust = -0.5F;
+				}
+				return new Location(loc.getWorld(), loc.getX(), y + addToYPos + slabAdjust, loc.getZ());
+			}
+		}
+		
+		return new Location(loc.getWorld(), loc.getX(), 1 + addToYPos, loc.getZ());
+	}
+	
+	private boolean isLowerSlab(Block block)
+	{
+		int id = block.getType().getId();
+		if (id == 44 || id == 126 || id == 182 || id == 205) {
+			int data = block.getData();
+			if (data < 8) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

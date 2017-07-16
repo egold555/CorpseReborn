@@ -6,22 +6,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.golde.bukkit.corpsereborn.cmds.GenericCommands;
-import org.golde.bukkit.corpsereborn.cmds.RemoveCorpseRadius;
-import org.golde.bukkit.corpsereborn.cmds.ResendCorpses;
-import org.golde.bukkit.corpsereborn.cmds.SpawnCorpse;
+import org.golde.bukkit.corpsereborn.cmds.*;
 import org.golde.bukkit.corpsereborn.dump.ReportError;
-import org.golde.bukkit.corpsereborn.listeners.ChunkCorpseFix;
-import org.golde.bukkit.corpsereborn.listeners.InventoryHandle;
-import org.golde.bukkit.corpsereborn.listeners.PlayerChangedWorld;
-import org.golde.bukkit.corpsereborn.listeners.PlayerDeath;
-import org.golde.bukkit.corpsereborn.listeners.PlayerJoin;
-import org.golde.bukkit.corpsereborn.listeners.PlayerRespawn;
-import org.golde.bukkit.corpsereborn.listeners.CowHit;
+import org.golde.bukkit.corpsereborn.listeners.*;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
 
@@ -31,9 +23,26 @@ public class Main extends JavaPlugin {
 	
 	public Corpses corpses;
 	public boolean cont = true;
-	public boolean isDev = false;
+	public boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
 	public static ServerType serverType = ServerType.UNKNOWN;
+	
+	public boolean isWorldGuardEnabled = false;
+	public WorldGuardPlugin worldGuard = null;
+	
+	public WorldguardListener worldGuardListener;
+	
+	@Override
+	public void onLoad() {
+		PluginManager pm = getServer().getPluginManager();
+		if(pm.getPlugin("WorldGuard") != null) {
+			Util.info("Worldguard detected. Adding custom spawn flags");
+			worldGuard = (WorldGuardPlugin)getServer().getPluginManager().getPlugin("WorldGuard");
+			worldGuardListener = new WorldguardListener(worldGuard);
+			isWorldGuardEnabled = true;
+		}
+	}
+	
 	public void onEnable() {
 		try{
 			plugin = this;
@@ -73,12 +82,15 @@ public class Main extends JavaPlugin {
 			if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
 				pm.registerEvents(new CowHit(), this);
 			}
-
-
+			
 			getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 			getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 			getCommand("corpsereborn").setExecutor(new GenericCommands());
 			getCommand("resendcorpses").setExecutor(new ResendCorpses());
+			
+			if(isWorldGuardEnabled) {
+				worldGuardListener.registerEvents(pm);
+			}
 			
 			// Removing stray cows after 2 ticks, and every minute.
 			new BukkitRunnable(){

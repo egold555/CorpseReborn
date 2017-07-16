@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import net.minecraft.server.v1_7_R4.Enchantment;
 import net.minecraft.server.v1_7_R4.ChunkCoordinates;
 import net.minecraft.server.v1_7_R4.DataWatcher;
 import net.minecraft.server.v1_7_R4.Entity;
@@ -199,6 +200,9 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			}
 			ItemStack temp = new ItemStack(Item.getById(stack.getTypeId()), stack.getAmount());
 			temp.setData((int)stack.getData().getData());
+			if(stack.getEnchantments().size() >= 1) {
+				temp.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);//Dummy enchantment
+			}
 			return temp;
 		}
 

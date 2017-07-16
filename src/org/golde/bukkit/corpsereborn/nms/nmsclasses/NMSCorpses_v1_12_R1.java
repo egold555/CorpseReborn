@@ -31,6 +31,7 @@ import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_12
 
 import com.mojang.authlib.GameProfile;
 
+import net.minecraft.server.v1_12_R1.Enchantment;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.ChatMessage;
 import net.minecraft.server.v1_12_R1.DataWatcher;
@@ -232,6 +233,9 @@ public class NMSCorpses_v1_12_R1 extends NmsBase implements Corpses {
 			}
 			ItemStack temp = new ItemStack(Item.getById(stack.getTypeId()), stack.getAmount());
 			temp.setData((int)stack.getData().getData());
+			if(stack.getEnchantments().size() >= 1) {
+				temp.addEnchantment(Enchantment.c(0), 1);//Dummy enchantment
+			}
 			return temp;
 		}
 

@@ -29,6 +29,7 @@ import net.minecraft.server.v1_10_R1.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import net.minecraft.server.v1_10_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
+import net.minecraft.server.v1_10_R1.Enchantment;
 import net.minecraft.server.v1_10_R1.PlayerConnection;
 
 import org.bukkit.Bukkit;
@@ -219,6 +220,9 @@ public class NMSCorpses_v1_10_R1 extends NmsBase implements Corpses {
 			}
 			ItemStack temp = new ItemStack(Item.getById(stack.getTypeId()), stack.getAmount());
 			temp.setData((int)stack.getData().getData());
+			if(stack.getEnchantments().size() >= 1) {
+				temp.addEnchantment(Enchantment.c(0), 1);//Dummy enchantment
+			}
 			return temp;
 		}
 

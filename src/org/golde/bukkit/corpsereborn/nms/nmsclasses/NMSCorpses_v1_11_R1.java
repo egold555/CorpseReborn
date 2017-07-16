@@ -52,6 +52,7 @@ import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_11_R1.PlayerConnection;
+import net.minecraft.server.v1_11_R1.Enchantment;
 
 public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 
@@ -103,22 +104,6 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 		newProf.getProperties().putAll(oldProf.getProperties());
 		return newProf;
 	}
-
-	public Location getNonClippableBlockUnderPlayer(Location loc, int addToYPos) {
-		if (loc.getBlockY() < 0) {
-			return null;
-		}
-		for (int y = loc.getBlockY(); y >= 0; y--) {
-			Material m = loc.getWorld()
-					.getBlockAt(loc.getBlockX(), y, loc.getBlockZ()).getType();
-			if (m.isSolid()) {
-				return new Location(loc.getWorld(), loc.getX(), y + addToYPos,
-						loc.getZ());
-			}
-		}
-		return null;
-	}
-
 
 
 	@SuppressWarnings("deprecation")
@@ -232,6 +217,10 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 			}
 			ItemStack temp = new ItemStack(Item.getById(stack.getTypeId()), stack.getAmount());
 			temp.setData((int)stack.getData().getData());
+			if(stack.getEnchantments().size() >= 1) {
+				temp.addEnchantment(Enchantment.c(0), 1);//Dummy enchantment
+			}
+			
 			return temp;
 		}
 
