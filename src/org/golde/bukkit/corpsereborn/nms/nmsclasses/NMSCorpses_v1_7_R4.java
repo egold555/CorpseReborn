@@ -48,7 +48,6 @@ import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 import org.golde.bukkit.corpsereborn.nms.NmsBase;
 import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_7_R4;
-//import net.minecraft.server.v1_7_R4.BlockPosition;
 
 public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 
@@ -57,11 +56,11 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 	public NMSCorpses_v1_7_R4() {
 		corpses = new ArrayList<CorpseData>();
 		Bukkit.getServer().getScheduler()
-				.scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
-					public void run() {
-						tick();
-					}
-				}, 0L, 1L);
+		.scheduleSyncRepeatingTask(Main.getPlugin(), new Runnable() {
+			public void run() {
+				tick();
+			}
+		}, 0L, 1L);
 	}
 
 	public static DataWatcher clonePlayerDatawatcher(Player player,
@@ -186,13 +185,13 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 				this.rotation = 0;
 			}
 		}
-		
+
 
 		@Override
 		public int getRotation() {
 			return rotation;
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		public ItemStack convertBukkitToMc(org.bukkit.inventory.ItemStack stack){
 			if(stack == null){
@@ -278,15 +277,15 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 				Field a = packet.getClass().getDeclaredField("a");
 				a.setAccessible(true);
 				a.setInt(packet, entityId);
-				
+
 				Field b = packet.getClass().getDeclaredField("b");
 				b.setAccessible(true);
 				b.setInt(packet, loc.getBlockX());
-				
+
 				Field c = packet.getClass().getDeclaredField("c");
 				c.setAccessible(true);
 				c.setInt(packet, Util.bedLocation());
-				
+
 				Field d = packet.getClass().getDeclaredField("d");
 				d.setAccessible(true);
 				d.setInt(packet, loc.getBlockZ());
@@ -316,7 +315,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		public Location getTrueLocation() {
 			return loc.clone().add(0, 0.1, 0);
 		}
-		
+
 		public PacketPlayOutEntityEquipment getEquipmentPacket(int slot, ItemStack stack){
 			if(stack == null){
 				return null;
@@ -345,33 +344,35 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 				conn.sendPacket(spawnPacket);
 				conn.sendPacket(bedPacket);
 				conn.sendPacket(movePacket);
-				if(helmetInfo != null){
-					conn.sendPacket(helmetInfo);
+				if(ConfigData.shouldRenderArmor()) {
+					if(helmetInfo != null){
+						conn.sendPacket(helmetInfo);
+					}
+					if(chestplateInfo != null){
+						conn.sendPacket(chestplateInfo);
+					}
+					if(leggingsInfo != null){
+						conn.sendPacket(leggingsInfo);
+					}
+					if(bootsInfo != null){
+						conn.sendPacket(bootsInfo);
+					}
+					if(mainhandInfo != null){
+						conn.sendPacket(mainhandInfo);
+					}
 				}
-				if(chestplateInfo != null){
-					conn.sendPacket(chestplateInfo);
-				}
-				if(leggingsInfo != null){
-					conn.sendPacket(leggingsInfo);
-				}
-				if(bootsInfo != null){
-					conn.sendPacket(bootsInfo);
-				}
-				if(mainhandInfo != null){
-					conn.sendPacket(mainhandInfo);
-				}
-				
-				
+
+
 			}
 			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
-						public void run() {
-							for (Player p : toSend) {
-								((CraftPlayer) p).getHandle().playerConnection
-										.sendPacket(removeInfo);
-							}
-						}
-					}, 20L);
+			.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+				public void run() {
+					for (Player p : toSend) {
+						((CraftPlayer) p).getHandle().playerConnection
+						.sendPacket(removeInfo);
+					}
+				}
+			}, 20L);
 		}
 
 		@SuppressWarnings("deprecation")
@@ -393,28 +394,30 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			conn.sendPacket(spawnPacket);
 			conn.sendPacket(bedPacket);
 			conn.sendPacket(movePacket);
-			if(helmetInfo != null){
-				conn.sendPacket(helmetInfo);
-			}
-			if(chestplateInfo != null){
-				conn.sendPacket(chestplateInfo);
-			}
-			if(leggingsInfo != null){
-				conn.sendPacket(leggingsInfo);
-			}
-			if(bootsInfo != null){
-				conn.sendPacket(bootsInfo);
-			}
-			if(mainhandInfo != null){
-				conn.sendPacket(mainhandInfo);
+			if(ConfigData.shouldRenderArmor()) {
+				if(helmetInfo != null){
+					conn.sendPacket(helmetInfo);
+				}
+				if(chestplateInfo != null){
+					conn.sendPacket(chestplateInfo);
+				}
+				if(leggingsInfo != null){
+					conn.sendPacket(leggingsInfo);
+				}
+				if(bootsInfo != null){
+					conn.sendPacket(bootsInfo);
+				}
+				if(mainhandInfo != null){
+					conn.sendPacket(mainhandInfo);
+				}
 			}
 			Bukkit.getServer().getScheduler()
-					.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
-						public void run() {
-							((CraftPlayer) p).getHandle().playerConnection
-									.sendPacket(removeInfo);
-						}
-					}, 20L);
+			.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+				public void run() {
+					((CraftPlayer) p).getHandle().playerConnection
+					.sendPacket(removeInfo);
+				}
+			}, 20L);
 
 		}
 
@@ -428,8 +431,8 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			for (CorpseData cd : getAllCorpses()) {
 				if (cd != this
 						&& Util.bedLocation(cd.getOrigLocation())
-								.getBlock().getLocation()
-								.equals(b.getLocation())) {
+						.getBlock().getLocation()
+						.equals(b.getLocation())) {
 					removeBed = false;
 					break;
 				}
@@ -452,15 +455,15 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			for (CorpseData cd : getAllCorpses()) {
 				if (cd != this
 						&& Util.bedLocation(cd.getOrigLocation())
-								.getBlock().getLocation()
-								.equals(b.getLocation())) {
+						.getBlock().getLocation()
+						.equals(b.getLocation())) {
 					removeBed = false;
 					break;
 				}
 			}
 			for (Player p : loc.getWorld().getPlayers()) {
 				((CraftPlayer) p).getHandle().playerConnection
-						.sendPacket(packet);
+				.sendPacket(packet);
 				if (removeBed) {
 					p.sendBlockChange(b.getLocation(), b.getType(), b.getData());
 				}
@@ -508,7 +511,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		public InventoryView getInventoryView() {
 			return iv;
 		}
-		
+
 		@Override
 		public Player getPlayer() {
 			return player;
@@ -617,7 +620,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 	protected void addNbtTagsToSlime(LivingEntity slime) {
 		Entity entity = ((CraftEntity)slime).getHandle();
 		NBTTagCompound tag = new NBTTagCompound();
-		
+
 		entity.c(tag);
 		tag.setInt("Silent", 1);
 		tag.setInt("Invulnerable", 1);

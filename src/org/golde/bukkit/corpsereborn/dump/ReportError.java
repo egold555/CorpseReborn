@@ -30,6 +30,10 @@ public class ReportError {
 	}
 
 	private void makeDump(final CommandSender sender, final DumpTemplate dt, final Exception e){
+		if(Main.getPlugin().isDev){
+			Bukkit.getLogger().info(dt.output());
+			return;
+		}
 		PastebinAPI api = new PastebinAPI("bcfd9fe9a975802e3b494234ebaa1c25");
 		CreatePaste paste = api.createPaste();
 		paste.withText(dt.output());
@@ -54,10 +58,7 @@ public class ReportError {
 			e.printStackTrace();
 		}
 
-		if(Main.getPlugin().isDev){
-			Bukkit.getLogger().info(dt.output());
-			//e.printStackTrace();
-		}
+		
 		
 	}
 }

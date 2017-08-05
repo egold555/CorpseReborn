@@ -36,6 +36,7 @@ import net.minecraft.server.v1_11_R1.ChatMessage;
 import net.minecraft.server.v1_11_R1.DataWatcher;
 import net.minecraft.server.v1_11_R1.DataWatcherObject;
 import net.minecraft.server.v1_11_R1.DataWatcherRegistry;
+import net.minecraft.server.v1_11_R1.Enchantment;
 import net.minecraft.server.v1_11_R1.Entity;
 import net.minecraft.server.v1_11_R1.EntityHuman;
 import net.minecraft.server.v1_11_R1.EnumGamemode;
@@ -52,7 +53,6 @@ import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import net.minecraft.server.v1_11_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_11_R1.PlayerConnection;
-import net.minecraft.server.v1_11_R1.Enchantment;
 
 public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 
@@ -106,7 +106,6 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 	}
 
 
-	@SuppressWarnings("deprecation")
 	public CorpseData spawnCorpse(Player p, String overrideUsername, Location loc, Inventory inv, int facing) {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
@@ -125,17 +124,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 		Location used = locUnder != null ? locUnder : loc;
 		used.setYaw(loc.getYaw());
 		used.setPitch(loc.getPitch());
-		//1.11+ curse of vanishing fix
-		org.bukkit.inventory.ItemStack[] itemList = inv.getContents().clone(); //clone so we dont get a exception
-		for(int i = 0; i < inv.getContents().length; i++){
-			if(itemList[i] != null){
-				if(itemList[i].containsEnchantment(org.bukkit.enchantments.Enchantment.getById(71))){
-					itemList[i].setType(Material.AIR);
-					itemList[i].setAmount(0);
-				}
-			}	
-		}
-		inv.setContents(itemList);
+		
 		NMSCorpseData data = new NMSCorpseData(prof, used, dw, entityId,
 				ConfigData.getCorpseTime() * 20, inv, facing);
 		data.setPlayer(p);
@@ -203,7 +192,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 				this.rotation = 0;
 			}
 		}
-		
+
 
 		@Override
 		public int getRotation() {
@@ -220,7 +209,7 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 			if(stack.getEnchantments().size() >= 1) {
 				temp.addEnchantment(Enchantment.c(0), 1);//Dummy enchantment
 			}
-			
+
 			return temp;
 		}
 
@@ -378,12 +367,14 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 				conn.sendPacket(spawnPacket);
 				conn.sendPacket(bedPacket);
 				conn.sendPacket(movePacket);
-				conn.sendPacket(helmetInfo);
-				conn.sendPacket(chestplateInfo);
-				conn.sendPacket(leggingsInfo);
-				conn.sendPacket(bootsInfo);
-				conn.sendPacket(mainhandInfo);
-				conn.sendPacket(offhandInfo);
+				if(ConfigData.shouldRenderArmor()) {
+					conn.sendPacket(helmetInfo);
+					conn.sendPacket(chestplateInfo);
+					conn.sendPacket(leggingsInfo);
+					conn.sendPacket(bootsInfo);
+					conn.sendPacket(mainhandInfo);
+					conn.sendPacket(offhandInfo);
+				}
 			}
 			Bukkit.getServer().getScheduler()
 			.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
@@ -416,12 +407,14 @@ public class NMSCorpses_v1_11_R1 extends NmsBase implements Corpses {
 			conn.sendPacket(spawnPacket);
 			conn.sendPacket(bedPacket);
 			conn.sendPacket(movePacket);
-			conn.sendPacket(helmetInfo);
-			conn.sendPacket(chestplateInfo);
-			conn.sendPacket(leggingsInfo);
-			conn.sendPacket(bootsInfo);
-			conn.sendPacket(mainhandInfo);
-			conn.sendPacket(offhandInfo);
+			if(ConfigData.shouldRenderArmor()) {
+				conn.sendPacket(helmetInfo);
+				conn.sendPacket(chestplateInfo);
+				conn.sendPacket(leggingsInfo);
+				conn.sendPacket(bootsInfo);
+				conn.sendPacket(mainhandInfo);
+				conn.sendPacket(offhandInfo);
+			}
 			Bukkit.getServer().getScheduler()
 			.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 				public void run() {

@@ -1,6 +1,7 @@
 package org.golde.bukkit.corpsereborn;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,6 +49,66 @@ public class PlayerInventoryClone {
 		for(int x = 18; x <= 44; x++){
 			i.setItem(x, tempItemStack.get(temp));
 			temp++;
+		}
+		
+	}
+	
+	public PlayerInventoryClone(Player p, List<ItemStack> drops){
+		ArrayList<ItemStack> itemsToPlace = new ArrayList<ItemStack>(drops);  // clone list.
+		
+		PlayerInventory pi = p.getInventory();
+		i = Bukkit.getServer().createInventory(null, 54, ConfigData.getInventoryName(p));
+	
+		int temp;
+		ArrayList<ItemStack> tempItemStack = new ArrayList<ItemStack>();
+		
+		//set armor
+		temp = 4;
+		for(ItemStack stack:pi.getArmorContents()){
+			if (stack != null && itemsToPlace.contains(stack)) {
+				i.setItem(temp, stack);
+				itemsToPlace.remove(stack);
+			}
+
+			temp--;
+		}
+		
+		if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_9 ) >= 0){
+			// handle off hand.
+			ItemStack stack = pi.getItemInOffHand();
+			if (stack != null && itemsToPlace.contains(stack)) {
+				i.setItem(7, stack);
+				itemsToPlace.remove(stack);
+			}
+		}
+		
+		//set hotbar
+		for(int x = 0; x <= 8; x++){
+			ItemStack stack = pi.getItem(x);
+			if (stack != null && itemsToPlace.contains(stack)) {
+				tempItemStack.add(pi.getItem(x));
+				itemsToPlace.remove(stack);
+			}
+		}
+		
+		temp = 0;
+		for(int x = 45; x <= 53; x++){
+			i.setItem(x, tempItemStack.get(temp));
+			temp++;
+			if (temp >= tempItemStack.size())
+				break;
+		}
+		
+		tempItemStack.clear();
+		
+		//set rest of items.
+
+		temp = 0;
+		for(int x = 18; x <= 44; x++){
+			i.setItem(x, itemsToPlace.get(temp));
+			temp++;
+			if (temp >= itemsToPlace.size())
+				break;
 		}
 		
 	}

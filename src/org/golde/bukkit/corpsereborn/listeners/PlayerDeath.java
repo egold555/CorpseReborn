@@ -20,12 +20,9 @@ public class PlayerDeath implements Listener {
 		try{
 			if (ConfigData.isOnDeath() && Util.playerInCorrectWorld(e.getEntity())) {
 				CorpseData data;
-				PlayerInventoryClone inv = new PlayerInventoryClone(e.getEntity());
-				if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_9 ) >= 0){
-					inv.setOffHand(e.getEntity().getInventory().getItemInOffHand());
-				}
+				PlayerInventoryClone inv = new PlayerInventoryClone(e.getEntity(), e.getDrops());
+				
 				data = Main.getPlugin().corpses.spawnCorpse(e.getEntity(), null, e.getEntity().getLocation(), inv.toInventory(), 0).setSelectedSlot(e.getEntity().getInventory().getHeldItemSlot());
-
 				
 				CorpseSpawnEvent cse = new CorpseSpawnEvent(data, false);
 				Util.callEvent(cse);

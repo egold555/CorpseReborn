@@ -199,5 +199,5 @@ public class Util {
 	public static int bedLocation(){
 		return 1;
 	}
-
+	
 }
