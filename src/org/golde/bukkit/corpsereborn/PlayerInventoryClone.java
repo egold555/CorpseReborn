@@ -93,10 +93,10 @@ public class PlayerInventoryClone {
 		
 		temp = 0;
 		for(int x = 45; x <= 53; x++){
-			i.setItem(x, tempItemStack.get(temp));
-			temp++;
 			if (temp >= tempItemStack.size())
 				break;
+			i.setItem(x, tempItemStack.get(temp));
+			temp++;
 		}
 		
 		tempItemStack.clear();
@@ -105,10 +105,10 @@ public class PlayerInventoryClone {
 
 		temp = 0;
 		for(int x = 18; x <= 44; x++){
-			i.setItem(x, itemsToPlace.get(temp));
-			temp++;
 			if (temp >= itemsToPlace.size())
 				break;
+			i.setItem(x, itemsToPlace.get(temp));
+			temp++;
 		}
 		
 	}
