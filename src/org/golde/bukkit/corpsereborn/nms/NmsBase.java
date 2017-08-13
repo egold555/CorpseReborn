@@ -99,9 +99,9 @@ public abstract class NmsBase {
 		@SuppressWarnings("unchecked")
 		LivingEntity slime = (LivingEntity) loc.getWorld().spawn(loc, ENTITY_CLASS);
 		slime.teleport(loc);
+		slime.setCustomName("CRHitbox");
+		slime.setCustomNameVisible(false);
 		try{
-			
-
 			slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
 			slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
 			slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1000000, 100, true));

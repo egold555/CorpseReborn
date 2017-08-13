@@ -1,0 +1,1 @@
+xcopy /s ..\doc \\ATHLON64\wwwroot\plugins\CorpseReborn\doc

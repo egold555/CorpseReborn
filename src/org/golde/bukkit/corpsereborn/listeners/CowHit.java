@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -55,6 +56,13 @@ public class CowHit implements Listener{
 			return Main.getPlugin().corpses.cowHit(p, (LivingEntity)entity, clickType);
 		}
 		return false;
+	}
+	
+	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled = true)
+	public void cowDamageEvent(EntityDamageEvent e) {
+		if(e.getEntity().getCustomName().equals("CRHitbox")) {
+			e.setDamage(0);
+		}
 	}
 
 }

@@ -1,0 +1,1 @@
+"c:\program files\java\jdk1.8.0_51\bin\javadoc" org.golde.bukkit.corpsereborn.CorpseAPI org.golde.bukkit.corpsereborn.CorpseAPI.events -d ..\doc
