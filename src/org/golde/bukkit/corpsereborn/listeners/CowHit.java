@@ -60,7 +60,11 @@ public class CowHit implements Listener{
 	
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled = true)
 	public void cowDamageEvent(EntityDamageEvent e) {
-		if(e.getEntity().getCustomName().equals("CRHitbox")) {
+		Entity entity = e.getEntity();
+		if(entity == null || entity.getType() != NmsBase.ENTITY) {
+			return;
+		}
+		if(entity.getCustomName() != null && entity.getCustomName().equals("CRHitbox")) {
 			e.setDamage(0);
 		}
 	}
