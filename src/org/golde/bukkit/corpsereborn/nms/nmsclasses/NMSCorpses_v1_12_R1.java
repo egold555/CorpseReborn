@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
@@ -141,11 +142,72 @@ public class NMSCorpses_v1_12_R1 extends NmsBase implements Corpses {
 		
 		NMSCorpseData data = new NMSCorpseData(prof, used, dw, entityId,
 				ConfigData.getCorpseTime() * 20, inv, facing);
-		data.setPlayer(p);
+
+		if(p.getKiller() != null) {
+			data.killerName = p.getKiller().getName();
+			data.killerUUID = p.getKiller().getUniqueId();
+		}
+		
+		data.corpseName = p.getName();
 
 		corpses.add(data);
 		spawnSlimeForCorpse(data);
 		return data;
+	}
+	
+	@Override
+	public CorpseData loadCorpse(String gpName, String gpJSON, Location loc, Inventory items, int facing) {
+		int entityId = getNextEntityId();
+		GameProfile gp = new GameProfile(UUID.randomUUID(), ConfigData.showTags() ? ConfigData.getUsername(gpName, null) : "");
+		DataWatcher dw = clonePlayerDatawatcher(gp, loc.getWorld(), entityId);
+		//dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
+		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(10, DataWatcherRegistry.b);
+		//dw.register(obj, (byte)10);
+		dw.set(obj, (int)0);
+		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(13, DataWatcherRegistry.a);
+		dw.set(obj2, (byte)0x7F);
+		
+		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
+		Location used = locUnder != null ? locUnder : loc;
+		used.setYaw(loc.getYaw());
+		used.setPitch(loc.getPitch());
+		
+		NMSCorpseData data = new NMSCorpseData(gp, used, dw, entityId,
+				ConfigData.getCorpseTime() * 20, items, facing);
+
+		data.corpseName = gpName;
+		corpses.add(data);
+		spawnSlimeForCorpse(data);
+		
+		return data;
+	}
+	
+	public static DataWatcher clonePlayerDatawatcher(GameProfile gp, World world,
+			int currentEntId) {
+		EntityHuman h = new EntityHuman(((CraftWorld) world).getHandle(),gp) {
+			public void sendMessage(IChatBaseComponent arg0) {
+				return;
+			}
+
+			public boolean a(int arg0, String arg1) {
+				return false;
+			}
+
+			public BlockPosition getChunkCoordinates() {
+				return null;
+			}
+
+			public boolean isSpectator() {
+				return false;
+			}
+
+			@Override
+			public boolean z() {
+				return false;
+			}
+		};
+		h.f(currentEntId);
+		return h.getDataWatcher();
 	}
 
 	public void removeCorpse(CorpseData data) {
@@ -186,9 +248,12 @@ public class NMSCorpses_v1_12_R1 extends NmsBase implements Corpses {
 		private int ticksLeft;
 		private Inventory items;
 		private InventoryView iv;
-		private Player player;
 		private int slot;
 		private int rotation;
+		private String corpseName;
+		
+		private String killerName;
+		private UUID killerUUID;
 
 		public NMSCorpseData(GameProfile prof, Location loc,
 				DataWatcher metadata, int entityId, int ticksLeft,
@@ -530,16 +595,6 @@ public class NMSCorpses_v1_12_R1 extends NmsBase implements Corpses {
 		}
 
 		@Override
-		public Player getPlayer() {
-			return player;
-		}
-
-		@Override
-		public void setPlayer(Player player) {
-			this.player = player;
-		}
-
-		@Override
 		public int getSelectedSlot() {
 			return slot;
 		}
@@ -548,6 +603,24 @@ public class NMSCorpses_v1_12_R1 extends NmsBase implements Corpses {
 		public CorpseData setSelectedSlot(int slot) {
 			this.slot = slot;
 			return this;
+		}
+
+
+		@Override
+		public String getCorpseName() {
+			return corpseName;
+		}
+
+
+		@Override
+		public String getKillerUsername() {
+			return killerName;
+		}
+
+
+		@Override
+		public UUID getKillerUUID() {
+			return killerUUID;
 		}
 
 	}

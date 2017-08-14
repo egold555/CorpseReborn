@@ -6,14 +6,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
-import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseRemoveEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
 public class WorldguardListener implements Listener{

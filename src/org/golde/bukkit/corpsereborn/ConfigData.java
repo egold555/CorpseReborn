@@ -26,6 +26,7 @@ public class ConfigData {
 	private static boolean newHitbox;
 	private static boolean checkForUpdate;
 	private static boolean shouldRenderArmor;
+	private static boolean shouldSaveCorpses;
 
 	public static boolean shouldCheckForUpdates(){return checkForUpdate;}
 	public static int getCorpseTime() {return corpseTime;}
@@ -34,11 +35,18 @@ public class ConfigData {
 	public static boolean showTags() {return showTags;}
 	public static ArrayList<World> getWorld(){	return world;}
 	public static boolean getNewHitbox(){return newHitbox;}
+	public static boolean shouldSaveCorpses(){return shouldSaveCorpses;}
 	public static boolean shouldRenderArmor() {return shouldRenderArmor;}
 	public static String getInventoryName(Player p){return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
+	
+	@Deprecated
 	public static String getUsername(Player p, String overrideUsername){
+		return getUsername(p.getName(), overrideUsername);
+	}
+	
+	public static String getUsername(String pUsername, String overrideUsername){
 		if(overrideUsername == null){
-			return username.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");
+			return username.replaceAll("%corpse%", pUsername).replaceAll("&", "§");
 		}
 		return overrideUsername;
 	}
@@ -135,6 +143,12 @@ public class ConfigData {
 					"#Set to false to not render player armor and items on the corpses",
 					"render-armor: true");
 		}
+		
+		if (! config.isSet("save-corpses")) {
+			appendConfig("#Should we save corpses on restart?",
+					"#Note: Skins will not be saved, but everything else will",
+					"save-corpses: true");
+		}
 
 	}
 
@@ -177,6 +191,7 @@ public class ConfigData {
 			newHitbox = config.getBoolean("new-hitboxes");
 			checkForUpdate = config.getBoolean("enable-update-checker");
 			shouldRenderArmor = config.getBoolean("render-armor");
+			shouldSaveCorpses = config.getBoolean("save-corpses");
 
 			if(Main.serverVersion.compareTo(ServerVersion.v1_8) < 0 && newHitbox){
 				Util.cinfo("&cNew hitboxes and finish-looting-message are disabled because your version ("+Main.serverVersion.name()+") does not support it. Please use 1.8+ for these things to work correctly");

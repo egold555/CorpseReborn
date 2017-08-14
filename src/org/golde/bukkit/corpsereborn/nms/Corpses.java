@@ -3,6 +3,7 @@ package org.golde.bukkit.corpsereborn.nms;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -13,6 +14,8 @@ import org.bukkit.inventory.InventoryView;
 public interface Corpses {
 	
 	public CorpseData spawnCorpse(Player p, String overrideName, Location loc, Inventory items, int facing);
+	
+	public CorpseData loadCorpse(String gpName, String gpJSON, Location loc, Inventory items, int facing);
 	
 	public void removeCorpse(CorpseData data);
 	
@@ -78,9 +81,9 @@ public interface Corpses {
 		
 		public InventoryView getInventoryView();
 		
-		public Player getPlayer();
+		public String getKillerUsername();
 		
-		public void setPlayer(Player Player);
+		public UUID getKillerUUID();
 		
 		public int getSelectedSlot();
 		
@@ -88,5 +91,7 @@ public interface Corpses {
 		
 		public int getRotation();
 		
+		public String getCorpseName();
+
 	}
 }

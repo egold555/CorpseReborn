@@ -1,8 +1,11 @@
 package org.golde.bukkit.corpsereborn;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,7 +36,7 @@ public class Main extends JavaPlugin {
 	
 	public Corpses corpses;
 	public boolean cont = true;
-	public boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
+	public boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
 	public static ServerType serverType = ServerType.UNKNOWN;
 	
@@ -41,6 +44,8 @@ public class Main extends JavaPlugin {
 	public WorldGuardPlugin worldGuard = null;
 	
 	public WorldguardListener worldGuardListener;
+	
+	private File corpseSaveFile;
 	
 	@Override
 	public void onLoad() {
@@ -72,6 +77,8 @@ public class Main extends JavaPlugin {
 
 			loadCorpsesCreator();
 			ConfigData.load();
+			corpseSaveFile = new File(getDataFolder(), "corpses.yml");
+			
 			checkForUpdates();
 			if(serverVersion == ServerVersion.UNSUPPORTED_SERVER_VERSION){
 				Util.cinfo("&e====================================================");
@@ -114,6 +121,11 @@ public class Main extends JavaPlugin {
 					corpses.updateCows();
 				}
 			}.runTaskTimer(this, 0, 20);
+			
+			if(corpseSaveFile.exists()){
+				YMLCorpse.loadAndSpawnAllCorpses(corpses, YamlConfiguration.loadConfiguration(new File(getDataFolder(), "corpses.yml")));
+			}
+			
 
 			
 		}catch(Exception ex){
@@ -122,6 +134,17 @@ public class Main extends JavaPlugin {
 	}
 
 	public void onDisable(){
+		
+		if(ConfigData.shouldSaveCorpses()) {
+			YamlConfiguration corpseSave = new YamlConfiguration();
+			YMLCorpse.save(corpses.getAllCorpses(), corpseSave);
+			try {
+				corpseSave.save(corpseSaveFile);
+			} catch (IOException e) {
+				new ReportError(e);
+			}
+		}
+		
 		try{
 			//remove all cows
 			corpses.removeAllCows();

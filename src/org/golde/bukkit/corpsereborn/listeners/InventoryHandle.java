@@ -25,7 +25,7 @@ public class InventoryHandle implements Listener{
 
 			if(Util.isInventoryEmpty(iv.getTopInventory())){
 				if(Main.serverVersion.getNiceVersion() != ServerVersion.v1_7){
-					String message = ConfigData.finishLootingMessage(cd.getPlayer().getName());
+					String message = ConfigData.finishLootingMessage(cd.getCorpseName());
 					if(message != null){
 						event.getPlayer().sendMessage(message);
 					}

@@ -1,5 +1,8 @@
 package org.golde.bukkit.corpsereborn.CorpseAPI.events;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -32,11 +35,23 @@ public class CorpseSpawnEvent extends Event implements Cancellable{
     }
     
     /**
-     * 
+     * USE String getKillerName() and getKillerUUID()!
      * @return The player who killed the corpse. Can be null if the player did not die by the means of another player.
      */
+    @Deprecated
     public Player getKiller(){
-    	return cd.getPlayer().getKiller();
+    	if(Bukkit.getPlayer(cd.getKillerUUID()) != null && Bukkit.getPlayer(cd.getKillerUUID()).isOnline()) {
+    		return Bukkit.getPlayer(cd.getKillerUUID());
+    	}
+    	return null;
+    }
+    
+    public String getKillerUsername() {
+    	return cd.getKillerUsername();
+    }
+    
+    public UUID getKillerUUID() {
+    	return cd.getKillerUUID();
     }
     
     /**

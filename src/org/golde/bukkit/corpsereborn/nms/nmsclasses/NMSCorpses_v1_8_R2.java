@@ -48,6 +48,7 @@ import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.nms.Corpses;
 import org.golde.bukkit.corpsereborn.nms.NmsBase;
+import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_8_R2;
 
 import com.mojang.authlib.GameProfile;
@@ -126,10 +127,21 @@ public class NMSCorpses_v1_8_R2 extends NmsBase implements Corpses {
 		used.setPitch(loc.getPitch());
 		NMSCorpseData data = new NMSCorpseData(prof, used, dw, entityId,
 				ConfigData.getCorpseTime() * 20, inv, facing);
-		data.setPlayer(p);
+		
+		if(p.getKiller() != null) {
+			data.killerName = p.getKiller().getName();
+			data.killerUUID = p.getKiller().getUniqueId();
+		}
+		
 		corpses.add(data);
 		spawnSlimeForCorpse(data);
 		return data;
+	}
+	
+	@Override
+	public CorpseData loadCorpse(String gpName, String gpJSON, Location loc, Inventory items, int facing) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public void removeCorpse(CorpseData data) {
@@ -170,10 +182,12 @@ public class NMSCorpses_v1_8_R2 extends NmsBase implements Corpses {
 		private int ticksLeft;
 		private Inventory items;
 		private InventoryView iv;
-		private Player player;
 		private int slot;
 		private int rotation;
 
+		private String killerName;
+		private UUID killerUUID;
+		
 		public NMSCorpseData(GameProfile prof, Location loc,
 				DataWatcher metadata, int entityId, int ticksLeft,
 				Inventory items, int rotation) {
@@ -509,16 +523,6 @@ public class NMSCorpses_v1_8_R2 extends NmsBase implements Corpses {
 		}
 
 		@Override
-		public Player getPlayer() {
-			return player;
-		}
-
-		@Override
-		public void setPlayer(Player player) {
-			this.player = player;
-		}
-
-		@Override
 		public int getSelectedSlot() {
 			return slot;
 		}
@@ -527,6 +531,24 @@ public class NMSCorpses_v1_8_R2 extends NmsBase implements Corpses {
 		public CorpseData setSelectedSlot(int slot) {
 			this.slot = slot;
 			return this;
+		}
+
+
+		@Override
+		public String getCorpseName() {
+			return prof.getName();
+		}
+
+
+		@Override
+		public String getKillerUsername() {
+			return killerName;
+		}
+
+
+		@Override
+		public UUID getKillerUUID() {
+			return killerUUID;
 		}
 
 	}

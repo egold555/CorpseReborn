@@ -191,6 +191,7 @@ public abstract class NmsBase {
 		return new Location(loc.getWorld(), loc.getX(), 1 + addToYPos, loc.getZ());
 	}
 	
+	@SuppressWarnings("deprecation")
 	private boolean isLowerSlab(Block block)
 	{
 		int id = block.getType().getId();

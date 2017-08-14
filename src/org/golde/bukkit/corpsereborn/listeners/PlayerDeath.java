@@ -7,7 +7,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.PlayerInventoryClone;
-import org.golde.bukkit.corpsereborn.ServerVersion;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent;
 import org.golde.bukkit.corpsereborn.dump.ReportError;

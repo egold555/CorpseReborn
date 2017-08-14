@@ -12,10 +12,11 @@ import org.bukkit.inventory.PlayerInventory;
 public class PlayerInventoryClone {
 	
 	private static Inventory i;
+	public static final int INVENTORY_SIZE = 54;
 	
 	public PlayerInventoryClone(Player p){
 		PlayerInventory pi = p.getInventory();
-		i = Bukkit.getServer().createInventory(null, 54, ConfigData.getInventoryName(p));
+		i = Bukkit.getServer().createInventory(null, INVENTORY_SIZE, ConfigData.getInventoryName(p));
 	
 		int temp;
 		ArrayList<ItemStack> tempItemStack = new ArrayList<ItemStack>();
@@ -88,6 +89,9 @@ public class PlayerInventoryClone {
 			if (stack != null && itemsToPlace.contains(stack)) {
 				tempItemStack.add(pi.getItem(x));
 				itemsToPlace.remove(stack);
+			}
+			else {
+				tempItemStack.add(null);
 			}
 		}
 		
