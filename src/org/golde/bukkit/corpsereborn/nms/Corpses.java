@@ -92,6 +92,8 @@ public interface Corpses {
 		public int getRotation();
 		
 		public String getCorpseName();
+		
+		public String getProfilePropertiesJson();
 
 	}
 }
