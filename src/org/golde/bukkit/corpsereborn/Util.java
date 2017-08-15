@@ -63,8 +63,12 @@ public class Util {
 		return false;
 	}
 
+	
 	public static boolean isWithinRadius(Player p, double radius, Location corpseLocation){
-		Location playerLoc = p.getLocation();
+		return isWithinRadius(p.getLocation(), radius, corpseLocation);
+	}
+	
+	public static boolean isWithinRadius(Location playerLoc, double radius, Location corpseLocation){
 		if(playerLoc.getWorld() != corpseLocation.getWorld()){
 			return false;
 		}

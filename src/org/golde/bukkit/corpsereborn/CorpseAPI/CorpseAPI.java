@@ -1,5 +1,8 @@
 package org.golde.bukkit.corpsereborn.CorpseAPI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -147,8 +150,8 @@ public class CorpseAPI {
 
 
 	/**
-	 * 
-	 * @param data remove a corpse from the given CorpseData
+	 * Remove a corpse from the given CorpseData
+	 * @param data The corpse to remove
 	 */
 	public static void removeCorpse(CorpseData data){
 		try{
@@ -159,20 +162,37 @@ public class CorpseAPI {
 	}
 
 	/**
-	 * 
+	 * Remove all corpses in a certain world
 	 * @param world The world to remove all the corpses in
 	 */
-	public void removeAllCorpses(World world){
+	public static void removeAllCorpses(World world){
 		Util.removeAllCorpses(world);
 	}
 
 	/**
 	 * Removes all corpses in ALL worlds
 	 */
-	public void removeAllCorpses(){
+	public static void removeAllCorpses(){
 		for(World world:ConfigData.getWorld()){
 			removeAllCorpses(world);
 		}
+	}
+	
+	/**
+	 * Get all corpses in a certain radius
+	 * @param loc Location to find corpse from
+	 * @param radius in which to look for corpses
+	 * @return List of all corpses found
+	 */
+	public static List<CorpseData> getCorpseInRadius(Location loc, int radius) {
+		List<CorpseData> toReturn = new ArrayList<CorpseData>();
+		for(CorpseData cd:Main.getPlugin().corpses.getAllCorpses()){
+			Location l = cd.getOrigLocation();
+			if(Util.isWithinRadius(loc, radius, l)){
+				toReturn.add(cd);
+			}
+		}
+		return toReturn;
 	}
 
 }
