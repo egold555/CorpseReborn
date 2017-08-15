@@ -9,9 +9,29 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_7_R4.Enchantment;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.golde.bukkit.corpsereborn.ConfigData;
+import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.Util;
+import org.golde.bukkit.corpsereborn.nms.Corpses;
+import org.golde.bukkit.corpsereborn.nms.NmsBase;
+import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_7_R4;
+
 import net.minecraft.server.v1_7_R4.ChunkCoordinates;
 import net.minecraft.server.v1_7_R4.DataWatcher;
+import net.minecraft.server.v1_7_R4.Enchantment;
 import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 //import net.minecraft.server.v1_7_R4.EnumPlayerInfoAction;
@@ -29,26 +49,7 @@ import net.minecraft.server.v1_7_R4.PacketPlayOutRelEntityMove;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
 //import net.minecraft.server.v1_7_R4.PlayerInfoData;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.golde.bukkit.corpsereborn.ConfigData;
-import org.golde.bukkit.corpsereborn.Main;
-import org.golde.bukkit.corpsereborn.Util;
-import org.golde.bukkit.corpsereborn.nms.Corpses;
-import org.golde.bukkit.corpsereborn.nms.NmsBase;
-import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
-import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_7_R4;
+import net.minecraft.util.com.mojang.authlib.properties.PropertyMap;
 
 public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 
@@ -112,7 +113,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
-				ConfigData.showTags() ? ConfigData.getUsername(p, overrideUsername) : "");
+				ConfigData.showTags() ? ConfigData.getUsername(p.getName(), overrideUsername) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 		dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
@@ -127,6 +128,8 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			data.killerUUID = p.getKiller().getUniqueId();
 		}
 		
+		data.corpseName = p.getName();
+		data.player = p;
 		corpses.add(data);
 		spawnSlimeForCorpse(data);
 		return data;
@@ -134,8 +137,29 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 	
 	@Override
 	public CorpseData loadCorpse(String gpName, String gpJSON, Location loc, Inventory items, int facing) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public static DataWatcher clonePlayerDatawatcher(GameProfile gp, World world,
+			int currentEntId) {
+		EntityHuman h = new EntityHuman(
+				((CraftWorld) world).getHandle(),
+				gp) {
+			public void sendMessage(IChatBaseComponent arg0) {
+				return;
+			}
+
+			public boolean a(int arg0, String arg1) {
+				return false;
+			}
+
+			@Override
+			public ChunkCoordinates getChunkCoordinates() {
+				return null;
+			}
+		};
+		h.d(currentEntId);
+		return h.getDataWatcher();
 	}
 
 	public void removeCorpse(CorpseData data) {
@@ -167,6 +191,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 
 	public class NMSCorpseData implements CorpseData {
 
+		public String corpseName;
 		private Map<Player, Boolean> canSee;
 		private Map<Player, Integer> tickLater;
 		private GameProfile prof;
@@ -540,7 +565,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 
 		@Override
 		public String getCorpseName() {
-			return prof.getName();
+			return corpseName;
 		}
 
 
@@ -553,6 +578,14 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		@Override
 		public UUID getKillerUUID() {
 			return killerUUID;
+		}
+
+		@Override
+		public String getProfilePropertiesJson() {
+			/*PropertyMap pmap = prof.getProperties();
+			net.minecraft.util.com.google.gson.JsonElement element = new PropertyMap.Serializer().serialize(pmap, null, null);
+			return element.toString();*/
+			return null;
 		}
 
 	}

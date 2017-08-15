@@ -2,6 +2,8 @@ package org.golde.bukkit.corpsereborn;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -33,20 +35,20 @@ public class Main extends JavaPlugin {
 	private static Main plugin;
 
 	public final int playerInitialTickDelay = 35;  
-	
+
 	public Corpses corpses;
 	public boolean cont = true;
-	public boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
-	public static ServerVersion serverVersion = ServerVersion.UNSUPPORTED_SERVER_VERSION;
+	public boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
+	public static ServerVersion serverVersion = ServerVersion.UNKNOWN;
 	public static ServerType serverType = ServerType.UNKNOWN;
-	
+
 	public boolean isWorldGuardEnabled = false;
 	public WorldGuardPlugin worldGuard = null;
-	
+
 	public WorldguardListener worldGuardListener;
-	
+
 	private File corpseSaveFile;
-	
+
 	@Override
 	public void onLoad() {
 		PluginManager pm = getServer().getPluginManager();
@@ -57,7 +59,7 @@ public class Main extends JavaPlugin {
 			isWorldGuardEnabled = true;
 		}
 	}
-	
+
 	public void onEnable() {
 		try{
 			plugin = this;
@@ -78,9 +80,9 @@ public class Main extends JavaPlugin {
 			loadCorpsesCreator();
 			ConfigData.load();
 			corpseSaveFile = new File(getDataFolder(), "corpses.yml");
-			
+
 			checkForUpdates();
-			if(serverVersion == ServerVersion.UNSUPPORTED_SERVER_VERSION){
+			if(serverVersion == ServerVersion.UNKNOWN){
 				Util.cinfo("&e====================================================");
 				Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
 				Util.cinfo("&b" + Bukkit.getVersion());
@@ -99,16 +101,16 @@ public class Main extends JavaPlugin {
 			if(serverVersion.getNiceVersion() != ServerVersion.v1_7){
 				pm.registerEvents(new CowHit(), this);
 			}
-			
+
 			getCommand("spawncorpse").setExecutor(new SpawnCorpse());
 			getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 			getCommand("corpsereborn").setExecutor(new GenericCommands());
 			getCommand("resendcorpses").setExecutor(new ResendCorpses());
-			
+
 			if(isWorldGuardEnabled) {
 				worldGuardListener.registerEvents(pm);
 			}
-			
+
 			// Removing stray cows after 2 ticks, and every minute.
 			new BukkitRunnable(){
 				public void run(){
@@ -121,20 +123,34 @@ public class Main extends JavaPlugin {
 					corpses.updateCows();
 				}
 			}.runTaskTimer(this, 0, 20);
-			
-			if(corpseSaveFile.exists()){
-				YMLCorpse.loadAndSpawnAllCorpses(corpses, YamlConfiguration.loadConfiguration(new File(getDataFolder(), "corpses.yml")));
+
+			if(ConfigData.shouldSaveCorpses()) {
+				if(corpseSaveFile.exists()){
+					YamlConfiguration corpseConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "corpses.yml"));
+					if(ServerVersion.valueOf(corpseConfig.getString("VERSION")) == Main.serverVersion) { //Different versions save different things to config
+
+						YMLCorpse.loadAndSpawnAllCorpses(corpses, corpseConfig);
+					}
+					else {
+						Util.info("Looks like you changed server versions. I have made a backup of your corpses.yml just in case.");
+						Util.copyFiles(corpseSaveFile, new File(getDataFolder(), "corpses.yml.backup"));
+						Util.info("Removing old corpses.yml because you updated your server!");
+					}
+
+				}
 			}
 			
+			sendCoolDataToEric();
 
-			
+
+
 		}catch(Exception ex){
 			new ReportError(ex);
 		}
 	}
 
 	public void onDisable(){
-		
+
 		if(ConfigData.shouldSaveCorpses()) {
 			YamlConfiguration corpseSave = new YamlConfiguration();
 			YMLCorpse.save(corpses.getAllCorpses(), corpseSave);
@@ -144,14 +160,14 @@ public class Main extends JavaPlugin {
 				new ReportError(e);
 			}
 		}
-		
+
 		try{
 			//remove all cows
 			corpses.removeAllCows();
 		}catch(Exception ex){
 			new ReportError(ex);
 		}
-		
+
 	}
 
 	void checkForUpdates(){
@@ -243,5 +259,30 @@ public class Main extends JavaPlugin {
 
 	public static Main getPlugin() {
 		return plugin;
+	}
+	
+	private void sendCoolDataToEric() {
+		if(ConfigData.shouldSendDataToEric())
+		try {
+			
+			HttpURLConnection con = (HttpURLConnection) new URL("http://web2.golde.org/files/spigot/CorpseReborn/stats/write.php?v=" + serverVersion.name() + "&t=" + serverType.name()).openConnection();
+
+			// optional default is GET
+			con.setRequestMethod("GET");
+
+			//add request header
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+			int responseCode = con.getResponseCode();
+			if(responseCode == 200) {
+				Util.info("Successfully sent stats!");
+			}else {
+				Util.warning("Failed to send stats: Responce Code:" + responseCode);
+			}
+			
+		}catch(Exception e) {
+			Util.warning("Eric's server seems to be down. I can not send stats to it!");
+		}
+		
 	}
 }

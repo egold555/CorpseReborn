@@ -1,5 +1,7 @@
 package org.golde.bukkit.corpsereborn;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,6 +200,15 @@ public class Util {
 	
 	public static int bedLocation(){
 		return 1;
+	}
+	
+	public static boolean copyFiles(File source, File dest) {
+		try {
+			Files.copy(source.toPath(), dest.toPath());
+			return true;
+		}catch (Exception e) {
+			return false;
+		}
 	}
 	
 }

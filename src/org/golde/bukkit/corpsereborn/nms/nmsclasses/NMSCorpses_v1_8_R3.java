@@ -9,10 +9,35 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_8_R3.Enchantment;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.golde.bukkit.corpsereborn.ConfigData;
+import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.Util;
+import org.golde.bukkit.corpsereborn.nms.Corpses;
+import org.golde.bukkit.corpsereborn.nms.NmsBase;
+import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_8_R3;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.PropertyMap;
+
 import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.ChatMessage;
 import net.minecraft.server.v1_8_R3.DataWatcher;
+import net.minecraft.server.v1_8_R3.Enchantment;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
@@ -30,28 +55,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_8_R3.PlayerConnection;
 import net.minecraft.server.v1_8_R3.WorldSettings.EnumGamemode;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
-import org.golde.bukkit.corpsereborn.ConfigData;
-import org.golde.bukkit.corpsereborn.Main;
-import org.golde.bukkit.corpsereborn.Util;
-import org.golde.bukkit.corpsereborn.nms.Corpses;
-import org.golde.bukkit.corpsereborn.nms.NmsBase;
-import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
-import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_8_R3;
-
-import com.mojang.authlib.GameProfile;
 
 public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 
@@ -118,7 +121,7 @@ public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 		int entityId = getNextEntityId();
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
-				ConfigData.showTags() ? ConfigData.getUsername(p, overrideUsername) : "");
+				ConfigData.showTags() ? ConfigData.getUsername(p.getName(), overrideUsername) : "");
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 		//dw.watch(10, ((CraftPlayer) p).getHandle().getDataWatcher().getByte(10));
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
@@ -133,6 +136,7 @@ public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 			data.killerUUID = p.getKiller().getUniqueId();
 		}
 		
+		data.corpseName = p.getName();
 		corpses.add(data);
 		spawnSlimeForCorpse(data);
 		return data;
@@ -140,8 +144,54 @@ public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 	
 	@Override
 	public CorpseData loadCorpse(String gpName, String gpJSON, Location loc, Inventory items, int facing) {
-		// TODO Auto-generated method stub
-		return null;
+		int entityId = getNextEntityId();
+		GameProfile gp = new GameProfile(UUID.randomUUID(), ConfigData.showTags() ? ConfigData.getUsername(gpName, null) : "");
+		
+		if (gpJSON != null) {
+			JsonElement element = new JsonParser().parse(gpJSON);
+			PropertyMap propertyMap = new PropertyMap.Serializer().deserialize(element,  null,  null);
+			gp.getProperties().putAll(propertyMap);
+		}
+        
+		DataWatcher dw = clonePlayerDatawatcher(gp, loc.getWorld(), entityId);
+        
+        Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
+		Location used = locUnder != null ? locUnder : loc;
+		used.setYaw(loc.getYaw());
+		used.setPitch(loc.getPitch());
+		
+		NMSCorpseData data = new NMSCorpseData(gp, used, dw, entityId,
+				ConfigData.getCorpseTime() * 20, items, facing);
+
+		data.corpseName = gpName;
+		corpses.add(data);
+		spawnSlimeForCorpse(data);
+        return data;
+	}
+	
+	public static DataWatcher clonePlayerDatawatcher(GameProfile gp, World world,
+			int currentEntId) {
+		EntityHuman h = new EntityHuman(
+				((CraftWorld) world).getHandle(),
+				gp) {
+			public void sendMessage(IChatBaseComponent arg0) {
+				return;
+			}
+
+			public boolean a(int arg0, String arg1) {
+				return false;
+			}
+
+			public BlockPosition getChunkCoordinates() {
+				return null;
+			}
+
+			public boolean isSpectator() {
+				return false;
+			}
+		};
+		h.d(currentEntId);
+		return h.getDataWatcher();
 	}
 
 	public void removeCorpse(CorpseData data) {
@@ -173,6 +223,7 @@ public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 
 	public class NMSCorpseData implements CorpseData {
 
+		public String corpseName;
 		private Map<Player, Boolean> canSee;
 		private Map<Player, Integer> tickLater;
 		private GameProfile prof;
@@ -536,7 +587,7 @@ public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 
 		@Override
 		public String getCorpseName() {
-			return prof.getName();
+			return corpseName;
 		}
 
 
@@ -549,6 +600,14 @@ public class NMSCorpses_v1_8_R3 extends NmsBase implements Corpses {
 		@Override
 		public UUID getKillerUUID() {
 			return killerUUID;
+		}
+
+
+		@Override
+		public String getProfilePropertiesJson() {
+			PropertyMap pmap = prof.getProperties();
+			JsonElement element = new PropertyMap.Serializer().serialize(pmap, null, null);
+			return element.toString();
 		}
 
 	}

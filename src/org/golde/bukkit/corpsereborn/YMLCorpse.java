@@ -22,6 +22,9 @@ public class YMLCorpse {
 			Location loc = (Location)config.get(first + "location");
 			String name = config.getString(first + "name");
 			String skin = config.getString(first + "skin");
+			if(skin == null) {
+				skin = "";
+			}
 			int rotation = config.getInt(first + "rotation");
 			int selectedSlot = config.getInt(first + "slot");
 
@@ -36,8 +39,10 @@ public class YMLCorpse {
 				}
 			}
 
-			CorpseData data = rawCorpse.loadCorpse(name, skin, loc, inv, rotation).setSelectedSlot(selectedSlot);
-			data.setSelectedSlot(selectedSlot);
+			CorpseData data = rawCorpse.loadCorpse(name, skin, loc, inv, rotation);
+			if(data != null) {
+				data.setSelectedSlot(selectedSlot);
+			}
 		}
 
 	}
@@ -45,13 +50,17 @@ public class YMLCorpse {
 
 	public static void save(List<CorpseData> list, Configuration config) {
 		int tempCounter = 0;
+		config.set("VERSION", Main.serverVersion.name());
 		config.set("amount-of-corpses", list.size());
+		
 		for(CorpseData d:list) {
 			String first = tempCounter + ".";
 
 			config.set(first + "location", d.getOrigLocation());
 			config.set(first + "name", d.getCorpseName());
-			config.set(first + "skin", d.getProfilePropertiesJson());
+			if(d.getProfilePropertiesJson() != null) {
+				config.set(first + "skin", d.getProfilePropertiesJson());
+			}
 			config.set(first + "rotation", d.getRotation());
 			config.set(first + "slot", d.getSelectedSlot());
 			Inventory inv = d.getLootInventory();

@@ -27,6 +27,7 @@ public class ConfigData {
 	private static boolean checkForUpdate;
 	private static boolean shouldRenderArmor;
 	private static boolean shouldSaveCorpses;
+	private static boolean shouldSendDataToEric;
 
 	public static boolean shouldCheckForUpdates(){return checkForUpdate;}
 	public static int getCorpseTime() {return corpseTime;}
@@ -37,6 +38,7 @@ public class ConfigData {
 	public static boolean getNewHitbox(){return newHitbox;}
 	public static boolean shouldSaveCorpses(){return shouldSaveCorpses;}
 	public static boolean shouldRenderArmor() {return shouldRenderArmor;}
+	public static boolean shouldSendDataToEric(){return shouldSendDataToEric;}
 	public static String getInventoryName(Player p){return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
 	
 	@Deprecated
@@ -146,8 +148,17 @@ public class ConfigData {
 		
 		if (! config.isSet("save-corpses")) {
 			appendConfig("#Should we save corpses on restart?",
-					"#Note: Skins will not be saved, but everything else will",
+					"#Note: v1_8_R1 and below will not save. (1.8.8+ will save)",
 					"save-corpses: true");
+		}
+		
+		if (! config.isSet("send-data")) {
+			appendConfig("#Should we send anonymous data to Eric?",
+					"#The only data sent to my web server is what Minecraft version and what type of server you're running.",
+					"#My goal with this data is to see which is the most popular version so I can improve this plugin as best as I can.",
+					"#I totally understand if you do not want to send my server data, hence why this option is here.",
+					"#The public static are located here if you wish to see them: http://web2.golde.org/files/spigot/CorpseReborn/stats/",
+					"send-data: true");
 		}
 
 	}
@@ -179,19 +190,20 @@ public class ConfigData {
 	public static void load() {
 		try {
 			FileConfiguration config = Main.getPlugin().getConfig();
-			corpseTime = config.getInt("corpse-time");
-			onDeath = config.getBoolean("on-death");
-			lootingInventory = config.getBoolean("looting-inventory");
-			showTags = config.getBoolean("show-tags");
-			worldName = config.getString("world");
-			guiName = config.getString("gui-title");
-			username = config.getString("username-format");
-			autoDespawn = config.getBoolean("despawn-after-looted");
-			finishLootingMessage = config.getString("finish-looting-message");
-			newHitbox = config.getBoolean("new-hitboxes");
-			checkForUpdate = config.getBoolean("enable-update-checker");
-			shouldRenderArmor = config.getBoolean("render-armor");
-			shouldSaveCorpses = config.getBoolean("save-corpses");
+			corpseTime = config.getInt("corpse-time", 120);
+			onDeath = config.getBoolean("on-death", true);
+			lootingInventory = config.getBoolean("looting-inventory", true);
+			showTags = config.getBoolean("show-tags", true);
+			worldName = config.getString("world", "all");
+			guiName = config.getString("gui-title", "%corpse%'s Items");
+			username = config.getString("username-format", "%corpse%");
+			autoDespawn = config.getBoolean("despawn-after-looted", true);
+			finishLootingMessage = config.getString("finish-looting-message", "&bYou have finished looting %corpse%'s corpse.");
+			newHitbox = config.getBoolean("new-hitboxes", true);
+			checkForUpdate = config.getBoolean("enable-update-checker", true);
+			shouldRenderArmor = config.getBoolean("render-armor", true);
+			shouldSaveCorpses = config.getBoolean("save-corpses", true);
+			shouldSendDataToEric = config.getBoolean("send-data", true);
 
 			if(Main.serverVersion.compareTo(ServerVersion.v1_8) < 0 && newHitbox){
 				Util.cinfo("&cNew hitboxes and finish-looting-message are disabled because your version ("+Main.serverVersion.name()+") does not support it. Please use 1.8+ for these things to work correctly");
