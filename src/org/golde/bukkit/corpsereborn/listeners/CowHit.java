@@ -19,7 +19,7 @@ import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 
 public class CowHit implements Listener{
 
-	@EventHandler(priority=EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority=EventPriority.LOWEST)
 	public void leftClick(EntityDamageByEntityEvent e){
 		try{
 			if(e.getDamager() instanceof Player && e.getCause() == DamageCause.ENTITY_ATTACK){
@@ -38,7 +38,7 @@ public class CowHit implements Listener{
 		}
 	}
 
-	@EventHandler(priority=EventPriority.LOW, ignoreCancelled = true)
+	@EventHandler(priority=EventPriority.LOW)
 	public void rightClick(PlayerInteractAtEntityEvent e){
 		try{
 			if(Main.serverVersion.getNiceVersion().compareTo(ServerVersion.v1_10 ) < 0 || e.getHand().equals(EquipmentSlot.HAND)){
@@ -58,7 +58,7 @@ public class CowHit implements Listener{
 		return false;
 	}
 	
-	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority=EventPriority.HIGH)
 	public void cowDamageEvent(EntityDamageEvent e) {
 		Entity entity = e.getEntity();
 		if(entity == null || entity.getType() != NmsBase.ENTITY) {

@@ -17,6 +17,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -31,12 +32,10 @@ import org.golde.bukkit.corpsereborn.nms.nmsclasses.packetlisteners.PcktIn_v1_7_
 
 import net.minecraft.server.v1_7_R4.ChunkCoordinates;
 import net.minecraft.server.v1_7_R4.DataWatcher;
-import net.minecraft.server.v1_7_R4.Enchantment;
 import net.minecraft.server.v1_7_R4.Entity;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 //import net.minecraft.server.v1_7_R4.EnumPlayerInfoAction;
 import net.minecraft.server.v1_7_R4.IChatBaseComponent;
-import net.minecraft.server.v1_7_R4.Item;
 import net.minecraft.server.v1_7_R4.ItemStack;
 import net.minecraft.server.v1_7_R4.MathHelper;
 import net.minecraft.server.v1_7_R4.NBTTagCompound;
@@ -49,7 +48,6 @@ import net.minecraft.server.v1_7_R4.PacketPlayOutRelEntityMove;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
 //import net.minecraft.server.v1_7_R4.PlayerInfoData;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
-import net.minecraft.util.com.mojang.authlib.properties.PropertyMap;
 
 public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 
@@ -231,9 +229,9 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			return rotation;
 		}
 
-		@SuppressWarnings("deprecation")
 		public ItemStack convertBukkitToMc(org.bukkit.inventory.ItemStack stack){
-			if(stack == null){
+			return CraftItemStack.asNMSCopy(stack);
+			/*if(stack == null){
 				return null;	
 			}
 			ItemStack temp = new ItemStack(Item.getById(stack.getTypeId()), stack.getAmount());
@@ -241,7 +239,7 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 			if(stack.getEnchantments().size() >= 1) {
 				temp.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);//Dummy enchantment
 			}
-			return temp;
+			return temp;*/
 		}
 
 		public void setCanSee(Player p, boolean canSee) {
@@ -647,20 +645,6 @@ public class NMSCorpses_v1_7_R4 extends NmsBase implements Corpses {
 		for (CorpseData data : toRemoveCorpses) {
 			removeCorpse(data);
 		}
-	}
-
-	public boolean isInViewDistance(Player p, CorpseData data) {
-		Location p1loc = p.getLocation();
-		Location p2loc = data.getTrueLocation();
-		double minX = p2loc.getX() - 45;
-		double minY = p2loc.getY() - 45;
-		double minZ = p2loc.getZ() - 45;
-		double maxX = p2loc.getX() + 45;
-		double maxY = p2loc.getY() + 45;
-		double maxZ = p2loc.getZ() + 45;
-		return p1loc.getX() >= minX && p1loc.getX() <= maxX
-				&& p1loc.getY() >= minY && p1loc.getY() <= maxY
-				&& p1loc.getZ() >= minZ && p1loc.getZ() <= maxZ;
 	}
 
 	public List<CorpseData> getAllCorpses() {

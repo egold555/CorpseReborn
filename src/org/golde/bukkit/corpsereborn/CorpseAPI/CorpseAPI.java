@@ -194,5 +194,38 @@ public class CorpseAPI {
 		}
 		return toReturn;
 	}
+	
+	
+	/**
+	 * (THis works even if players have /togglecorpse enabled)
+	 * @param p The Player to check
+	 * @param data The corpse that we should check to see if this statement is true or false
+	 * @return Is the player's client able to see the corpse
+	 */
+	public static boolean isCorpseInViewDistance(Player p, CorpseData data) {
+		return isCorpseInViewDistance(p, data, true);
+	}
+	
+	/**
+	 * 
+	 * @param p The Player to check
+	 * @param data The corpse that we should check to see if this statement is true or false
+	 * @param forceVisible - Should we ignore if players have /togglecorpse (TRUE: ignore)
+	 * @return Is the player's client able to see the corpse
+	 */
+	public static boolean isCorpseInViewDistance(Player p, CorpseData data, boolean forceVisible) {
+		if(!Main.getPlugin().shouldPlayerSeeCorpse(p) && !forceVisible) {return false;}
+		Location p1loc = p.getLocation();
+		Location p2loc = data.getTrueLocation();
+		double minX = p2loc.getX() - 45;
+		double minY = p2loc.getY() - 45;
+		double minZ = p2loc.getZ() - 45;
+		double maxX = p2loc.getX() + 45;
+		double maxY = p2loc.getY() + 45;
+		double maxZ = p2loc.getZ() + 45;
+		return p1loc.getX() >= minX && p1loc.getX() <= maxX
+				&& p1loc.getY() >= minY && p1loc.getY() <= maxY
+				&& p1loc.getZ() >= minZ && p1loc.getZ() <= maxZ;
+	}
 
 }

@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,6 +17,7 @@ import org.golde.bukkit.corpsereborn.cmds.GenericCommands;
 import org.golde.bukkit.corpsereborn.cmds.RemoveCorpseRadius;
 import org.golde.bukkit.corpsereborn.cmds.ResendCorpses;
 import org.golde.bukkit.corpsereborn.cmds.SpawnCorpse;
+import org.golde.bukkit.corpsereborn.cmds.ToggleCorpse;
 import org.golde.bukkit.corpsereborn.dump.ReportError;
 import org.golde.bukkit.corpsereborn.listeners.ChunkCorpseFix;
 import org.golde.bukkit.corpsereborn.listeners.CowHit;
@@ -33,6 +36,8 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 public class Main extends JavaPlugin {
 
 	private static Main plugin;
+	
+	private HashSet<String> whoCanNotSeeCorpses = new HashSet<String>();
 
 	public final int playerInitialTickDelay = 35;  
 
@@ -47,7 +52,7 @@ public class Main extends JavaPlugin {
 
 	public WorldguardListener worldGuardListener;
 
-	private File corpseSaveFile;
+	public File corpseSaveFile;
 
 	@Override
 	public void onLoad() {
@@ -64,7 +69,7 @@ public class Main extends JavaPlugin {
 		try{
 			plugin = this;
 			serverType = ServerType.whatAmI(this);
-			if(!serverType.isCompatible()){
+			if(!serverType.isCompatible() && !isDev){
 				Util.cinfo("&e====================================================");
 				Util.cinfo("&cIt seems like you are not running a supported version of server. This plugin only supports: ");
 				Util.cinfo("&b" + ServerType.getSupportedVersions());
@@ -81,8 +86,9 @@ public class Main extends JavaPlugin {
 			ConfigData.load();
 			corpseSaveFile = new File(getDataFolder(), "corpses.yml");
 
-			checkForUpdates();
-			if(serverVersion == ServerVersion.UNKNOWN){
+			if(!isDev) {checkForUpdates();}
+			
+			if(serverVersion == ServerVersion.UNKNOWN && !isDev){
 				Util.cinfo("&e====================================================");
 				Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
 				Util.cinfo("&b" + Bukkit.getVersion());
@@ -106,9 +112,15 @@ public class Main extends JavaPlugin {
 			getCommand("removecorpse").setExecutor(new RemoveCorpseRadius());
 			getCommand("corpsereborn").setExecutor(new GenericCommands());
 			getCommand("resendcorpses").setExecutor(new ResendCorpses());
+			getCommand("togglecorpse").setExecutor(new ToggleCorpse());
 
 			if(isWorldGuardEnabled) {
-				worldGuardListener.registerEvents(pm);
+				try {
+					worldGuardListener.registerEvents(pm);
+				}catch(Exception e) {
+					Util.info("Only worldguard 6.2 or later can use flags! Disabling worldguard support!");
+					isWorldGuardEnabled = false;
+				}
 			}
 
 			// Removing stray cows after 2 ticks, and every minute.
@@ -140,7 +152,7 @@ public class Main extends JavaPlugin {
 				}
 			}
 			
-			sendCoolDataToEric();
+			if(!isDev) {sendCoolDataToEric();}
 
 
 
@@ -157,7 +169,8 @@ public class Main extends JavaPlugin {
 			try {
 				corpseSave.save(corpseSaveFile);
 			} catch (IOException e) {
-				new ReportError(e);
+				//new ReportError(e);
+				e.printStackTrace();
 			}
 		}
 
@@ -165,7 +178,8 @@ public class Main extends JavaPlugin {
 			//remove all cows
 			corpses.removeAllCows();
 		}catch(Exception ex){
-			new ReportError(ex);
+			//new ReportError(ex);
+			ex.printStackTrace();
 		}
 
 	}
@@ -284,5 +298,22 @@ public class Main extends JavaPlugin {
 			Util.warning("Eric's server seems to be down. I can not send stats to it!");
 		}
 		
+	}
+	
+	public boolean shouldPlayerSeeCorpse(Player p) {
+		return !whoCanNotSeeCorpses.contains(p.getUniqueId().toString());
+	}
+	
+	public boolean toggleCorpseForPlayer(Player p) {
+		boolean result;
+		String uuid = p.getUniqueId().toString();
+		if(whoCanNotSeeCorpses.contains(uuid)) {
+			whoCanNotSeeCorpses.remove(uuid);
+			result = true;
+		}else {
+			whoCanNotSeeCorpses.add(uuid);
+			result = false;
+		}
+		return result;
 	}
 }

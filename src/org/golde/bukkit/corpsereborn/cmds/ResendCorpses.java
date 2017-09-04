@@ -15,11 +15,13 @@ public class ResendCorpses implements CommandExecutor {
 	public boolean onCommand(final CommandSender sender, Command arg1, String arg2,
 			String[] arg3) {
 		try{
+			
 			if (!sender.hasPermission("corpses.resend")) {
 				sender.sendMessage(ChatColor.RED
 						+ "You do not have enough permissions!");
 				return true;
 			}
+			
 			for(final CorpseData cd:Main.getPlugin().corpses.getAllCorpses()){
 				new BukkitRunnable(){
 					public void run(){

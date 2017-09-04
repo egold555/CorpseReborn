@@ -48,7 +48,11 @@ public class ConfigData {
 	
 	public static String getUsername(String pUsername, String overrideUsername){
 		if(overrideUsername == null){
-			return username.replaceAll("%corpse%", pUsername).replaceAll("&", "§");
+			overrideUsername = username.replaceAll("%corpse%", pUsername).replaceAll("&", "§");
+		}
+		
+		if(overrideUsername.length() > 16) {
+			overrideUsername = overrideUsername.substring(0, 16);
 		}
 		return overrideUsername;
 	}

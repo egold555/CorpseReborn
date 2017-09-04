@@ -2,7 +2,7 @@ main: org.golde.bukkit.corpsereborn.Main
 name: CorpseReborn
 authors: ["Eric Golde", "Peter Golde", "Virizion"]
 website: https://www.spigotmc.org/resources/corpsereborn.29875/
-version: 2.11.1
+version: 2.12.0
 description: "This is a port to 1.7.10-1.12.1 versions of Spigot from the old Corpse plugin found on Spigot. Thanks to Virizion for letting me take over and manage his project §4❤"
 load: POSTWORLD
 softdepend: [Multiverse-Core, MultiWorld, WorldGuard]
@@ -27,6 +27,11 @@ commands:
     description: Resend corpses to all players
     permission: corpses.resend
     aliases: [resendc, cresend]
+  togglecorpse:
+    usage: /<command>
+    description: Toggle if you see corpses or not
+    permission: corpses.toggle
+    aliases: [togglec, ctoggle, togglecorpses]
     
 permissions:
   corpses.spawn:
@@ -44,3 +49,6 @@ permissions:
   corpses.dump:
     default: op
     description: Permission for /corpsereborn dump
+  corpses.toggle:
+    default: op
+    description: Permission for /togglecorpse

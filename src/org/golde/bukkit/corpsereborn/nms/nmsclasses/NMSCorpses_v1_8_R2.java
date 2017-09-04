@@ -17,6 +17,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -37,11 +38,9 @@ import com.mojang.authlib.properties.PropertyMap;
 import net.minecraft.server.v1_8_R2.BlockPosition;
 import net.minecraft.server.v1_8_R2.ChatMessage;
 import net.minecraft.server.v1_8_R2.DataWatcher;
-import net.minecraft.server.v1_8_R2.Enchantment;
 import net.minecraft.server.v1_8_R2.Entity;
 import net.minecraft.server.v1_8_R2.EntityHuman;
 import net.minecraft.server.v1_8_R2.IChatBaseComponent;
-import net.minecraft.server.v1_8_R2.Item;
 import net.minecraft.server.v1_8_R2.ItemStack;
 import net.minecraft.server.v1_8_R2.MathHelper;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;
@@ -263,9 +262,9 @@ public class NMSCorpses_v1_8_R2 extends NmsBase implements Corpses {
 			return rotation;
 		}
 
-		@SuppressWarnings("deprecation")
 		public ItemStack convertBukkitToMc(org.bukkit.inventory.ItemStack stack){
-			if(stack == null){
+			return CraftItemStack.asNMSCopy(stack);
+			/*if(stack == null){
 				return new ItemStack(Item.getById(0));	
 			}
 			ItemStack temp = new ItemStack(Item.getById(stack.getTypeId()), stack.getAmount());
@@ -273,7 +272,7 @@ public class NMSCorpses_v1_8_R2 extends NmsBase implements Corpses {
 			if(stack.getEnchantments().size() >= 1) {
 				temp.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);//Dummy enchantment
 			}
-			return temp;
+			return temp;*/
 		}
 
 		public void setCanSee(Player p, boolean canSee) {
@@ -670,20 +669,6 @@ public class NMSCorpses_v1_8_R2 extends NmsBase implements Corpses {
 		for (CorpseData data : toRemoveCorpses) {
 			removeCorpse(data);
 		}
-	}
-
-	public boolean isInViewDistance(Player p, CorpseData data) {
-		Location p1loc = p.getLocation();
-		Location p2loc = data.getTrueLocation();
-		double minX = p2loc.getX() - 45;
-		double minY = p2loc.getY() - 45;
-		double minZ = p2loc.getZ() - 45;
-		double maxX = p2loc.getX() + 45;
-		double maxY = p2loc.getY() + 45;
-		double maxZ = p2loc.getZ() + 45;
-		return p1loc.getX() >= minX && p1loc.getX() <= maxX
-				&& p1loc.getY() >= minY && p1loc.getY() <= maxY
-				&& p1loc.getZ() >= minZ && p1loc.getZ() <= maxZ;
 	}
 
 	public List<CorpseData> getAllCorpses() {

@@ -11,6 +11,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.golde.bukkit.corpsereborn.ConfigData;
+import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseRemoveEvent;
@@ -171,7 +172,7 @@ public abstract class NmsBase {
 	}
 
 	protected abstract void addNbtTagsToSlime(LivingEntity slime);
-	
+
 	public Location getNonClippableBlockUnderPlayer(Location loc, int addToYPos) {
 		if (loc.getBlockY() < 0) {
 			return null;
@@ -187,10 +188,10 @@ public abstract class NmsBase {
 				return new Location(loc.getWorld(), loc.getX(), y + addToYPos + slabAdjust, loc.getZ());
 			}
 		}
-		
+
 		return new Location(loc.getWorld(), loc.getX(), 1 + addToYPos, loc.getZ());
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private boolean isLowerSlab(Block block)
 	{
@@ -201,7 +202,24 @@ public abstract class NmsBase {
 				return true;
 			}
 		}
-		
+
 		return false;
+	}
+	
+	
+
+	public boolean isInViewDistance(Player p, CorpseData data) {
+		if(!Main.getPlugin().shouldPlayerSeeCorpse(p)) {return false;}
+		Location p1loc = p.getLocation();
+		Location p2loc = data.getTrueLocation();
+		double minX = p2loc.getX() - 45;
+		double minY = p2loc.getY() - 45;
+		double minZ = p2loc.getZ() - 45;
+		double maxX = p2loc.getX() + 45;
+		double maxY = p2loc.getY() + 45;
+		double maxZ = p2loc.getZ() + 45;
+		return p1loc.getX() >= minX && p1loc.getX() <= maxX
+				&& p1loc.getY() >= minY && p1loc.getY() <= maxY
+				&& p1loc.getZ() >= minZ && p1loc.getZ() <= maxZ;
 	}
 }
