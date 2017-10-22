@@ -36,7 +36,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 public class Main extends JavaPlugin {
 
 	private static Main plugin;
-	
+
 	private HashSet<String> whoCanNotSeeCorpses = new HashSet<String>();
 
 	public final int playerInitialTickDelay = 35;  
@@ -58,10 +58,16 @@ public class Main extends JavaPlugin {
 	public void onLoad() {
 		PluginManager pm = getServer().getPluginManager();
 		if(pm.getPlugin("WorldGuard") != null) {
-			Util.info("Worldguard detected. Adding custom spawn flags");
-			worldGuard = (WorldGuardPlugin)getServer().getPluginManager().getPlugin("WorldGuard");
-			worldGuardListener = new WorldguardListener(worldGuard);
-			isWorldGuardEnabled = true;
+			try {
+				Util.info("Worldguard detected. Adding custom spawn flags");
+				worldGuard = (WorldGuardPlugin)getServer().getPluginManager().getPlugin("WorldGuard");
+				worldGuardListener = new WorldguardListener(worldGuard);
+				isWorldGuardEnabled = true;
+			}
+			catch(Exception e) {
+				Util.info("Only worldguard 6.2 or later can use flags! Disabling worldguard support!");
+				isWorldGuardEnabled = false;
+			}
 		}
 	}
 
@@ -87,7 +93,7 @@ public class Main extends JavaPlugin {
 			corpseSaveFile = new File(getDataFolder(), "corpses.yml");
 
 			if(!isDev) {checkForUpdates();}
-			
+
 			if(serverVersion == ServerVersion.UNKNOWN && !isDev){
 				Util.cinfo("&e====================================================");
 				Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
@@ -151,7 +157,7 @@ public class Main extends JavaPlugin {
 
 				}
 			}
-			
+
 			if(!isDev) {sendCoolDataToEric();}
 
 
@@ -274,36 +280,36 @@ public class Main extends JavaPlugin {
 	public static Main getPlugin() {
 		return plugin;
 	}
-	
+
 	private void sendCoolDataToEric() {
 		if(ConfigData.shouldSendDataToEric())
-		try {
-			
-			HttpURLConnection con = (HttpURLConnection) new URL("http://web2.golde.org/files/spigot/CorpseReborn/stats/write.php?v=" + serverVersion.name() + "&t=" + serverType.name()).openConnection();
+			try {
 
-			// optional default is GET
-			con.setRequestMethod("GET");
+				HttpURLConnection con = (HttpURLConnection) new URL("http://web2.golde.org/files/spigot/CorpseReborn/stats/write.php?v=" + serverVersion.name() + "&t=" + serverType.name()).openConnection();
 
-			//add request header
-			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+				// optional default is GET
+				con.setRequestMethod("GET");
 
-			int responseCode = con.getResponseCode();
-			if(responseCode == 200) {
-				Util.info("Successfully sent stats!");
-			}else {
-				Util.warning("Failed to send stats: Responce Code:" + responseCode);
+				//add request header
+				con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+				int responseCode = con.getResponseCode();
+				if(responseCode == 200) {
+					Util.info("Successfully sent stats!");
+				}else {
+					Util.warning("Failed to send stats: Responce Code:" + responseCode);
+				}
+
+			}catch(Exception e) {
+				Util.warning("Eric's server seems to be down. I can not send stats to it!");
 			}
-			
-		}catch(Exception e) {
-			Util.warning("Eric's server seems to be down. I can not send stats to it!");
-		}
-		
+
 	}
-	
+
 	public boolean shouldPlayerSeeCorpse(Player p) {
 		return !whoCanNotSeeCorpses.contains(p.getUniqueId().toString());
 	}
-	
+
 	public boolean toggleCorpseForPlayer(Player p) {
 		boolean result;
 		String uuid = p.getUniqueId().toString();
