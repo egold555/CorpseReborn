@@ -103,30 +103,35 @@ public abstract class NmsBase {
 		slime.setCustomName("CRHitbox");
 		slime.setCustomNameVisible(false);
 		try{
-			slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
-			slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
-			slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1000000, 100, true));
-			slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
-			slime.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 100, true));
-			slime.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1000000, 100, true));
+			applyPotion(slime);
 			addNbtTagsToSlime(slime);
 		}catch(Exception ex){
 			new ReportError(ex);
 		}
 		return slime;
 	}
-
+	public void applyPotion(LivingEntity slime) {
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1000000, 100, true));
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 100, true));
+		slime.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1000000, 100, true));
+	}
 	public void updateCows(){
 		try{
 			for (LivingEntity slime: new ArrayList<LivingEntity>(allSlimes.keySet())) {
 				CorpseData data = allSlimes.get(slime);
-				if(slime.isDead()){
+				if(!slime.isValid()){
 					allSlimes.remove(slime);
 					if(data != null){
 						spawnSlimeForCorpse(data);
 					}
 				}else{
 					if(data != null){
+						if(!slime.hasPotionEffect(PotionEffectType.INVISIBILITY)) {
+							applyPotion(slime);
+						}
 						teleportSlime(data.getOrigLocation(), slime, data.getRotation());
 					}
 				}
