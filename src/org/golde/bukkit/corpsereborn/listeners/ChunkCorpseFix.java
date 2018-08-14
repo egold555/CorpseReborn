@@ -57,7 +57,7 @@ public class ChunkCorpseFix implements Listener{
 	@EventHandler
 	public void onWorldLoaded(WorldLoadEvent event){
 		for(Entity e:event.getWorld().getEntities()){
-			if(e instanceof LivingEntity && e instanceof Cow /*&& e.getType() == NmsBase.ENTITY*/){
+			if(e instanceof LivingEntity && e instanceof Cow /*&& e.getType() == NmsBase.ENTITY*/){ //TODO: Check name of cow, option to log remove bugged stuff (Global method for this)
 				LivingEntity le = (LivingEntity)e;
 				if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)){
 					Util.info("Removed bugged cow at " + e.getLocation().getBlockX() + " " + e.getLocation().getBlockY() + " " + e.getLocation().getBlockZ());

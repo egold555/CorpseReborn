@@ -18,6 +18,8 @@ public enum ServerVersion {
 	v1_11_R1,
 	v1_12,
 	v1_12_R1,
+	v1_13,
+	v1_13_R1,
 	UNKNOWN;
 	public ServerVersion getNiceVersion(){
 		switch(this){
@@ -30,6 +32,7 @@ public enum ServerVersion {
 		case v1_10_R1: return v1_10;
 		case v1_11_R1: return v1_11;
 		case v1_12_R1: return v1_12;
+		case v1_13_R1: return v1_13;
 		default: return UNKNOWN;
 		}
 	}
@@ -52,6 +55,7 @@ public enum ServerVersion {
 		case "v1_10_R1": return v1_10_R1;
 		case "v1_11_R1": return v1_11_R1;
 		case "v1_12_R1": return v1_12_R1;
+		case "v1_13_R1": return v1_13_R1;
 		default: return UNKNOWN;
 		}
 	}

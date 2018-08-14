@@ -83,7 +83,7 @@ public class Util {
 			world = Bukkit.getWorlds();
 		}
 		for(World w:world){
-			for(Entity e:w.getEntities()){
+			for(Entity e:w.getEntities()){ //TODO: Check name of cow, option to log remove bugged stuff
 				if(e instanceof LivingEntity && e instanceof Cow && !Main.getPlugin().corpses.isValidCow((LivingEntity)e)){
 					LivingEntity le = (LivingEntity)e;
 					if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)){
@@ -121,6 +121,16 @@ public class Util {
 
 
 		return returnCorpses;
+	}
+	
+	public static CorpseData getCorpseInRaduis(Location loc, double radius) {
+		for(CorpseData cd:Main.getPlugin().corpses.getAllCorpses()){
+			Location l = cd.getOrigLocation();
+			if(isWithinRadius(loc, radius, l)){
+				return cd;
+			}
+		}
+		return null;
 	}
 
 	public static ArrayList<CorpseData> removeAllCorpses(World world){

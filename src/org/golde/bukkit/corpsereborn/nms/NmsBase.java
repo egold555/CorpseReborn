@@ -63,16 +63,13 @@ public abstract class NmsBase {
 
 	// Call this when a player hits a slime.
 	// returns false is slime is NOT a corpse slime, true if slime is a corpse slime.
-	public boolean cowHit(Player player, LivingEntity slime, TypeOfClick clickType)
+	public boolean cowHit(Player player, CorpseData data, TypeOfClick clickType)
 	{
-		if(isValidCow(slime)){
-			CorpseData data = allSlimes.get(slime);
-			CorpseClickEvent cce = new CorpseClickEvent(data, player, clickType);
-			Util.callEvent(cce);
-			if(!cce.isCancelled()) {
-				openInventory(player, data);
-				return true;
-			}
+		CorpseClickEvent cce = new CorpseClickEvent(data, player, clickType);
+		Util.callEvent(cce);
+		if(!cce.isCancelled()) {
+			openInventory(player, data);
+			return true;
 		}
 		return false;
 	}
@@ -117,6 +114,10 @@ public abstract class NmsBase {
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1000000, 100, true));
+		
+		if(Main.getPlugin().isDev) {
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 100, true));
+		}
 	}
 	public void updateCows(){
 		try{
@@ -210,8 +211,8 @@ public abstract class NmsBase {
 
 		return false;
 	}
-	
-	
+
+
 
 	public boolean isInViewDistance(Player p, CorpseData data) {
 		if(!Main.getPlugin().shouldPlayerSeeCorpse(p)) {return false;}

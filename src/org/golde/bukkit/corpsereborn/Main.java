@@ -43,7 +43,7 @@ public class Main extends JavaPlugin {
 
 	public Corpses corpses;
 	public boolean cont = true;
-	public boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
+	public boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNKNOWN;
 	public static ServerType serverType = ServerType.UNKNOWN;
 
@@ -98,6 +98,12 @@ public class Main extends JavaPlugin {
 				Util.cinfo("&e====================================================");
 				Util.cinfo("&cIt seems like you are using a untested version that I have not explored in detail of why it might not work. If you could please Private Message me on spigot the following (In blue) so I can check out in more detail why this version might not be compatable that would be fantastic :)");
 				Util.cinfo("&b" + Bukkit.getVersion());
+				Util.cinfo("&e====================================================");
+			}
+			
+			if(isDev){
+				Util.cinfo("&e====================================================");
+				Util.cinfo("&cDev mode activated. Turn this off before release!");
 				Util.cinfo("&e====================================================");
 			}
 			if (!cont) {
@@ -180,10 +186,11 @@ public class Main extends JavaPlugin {
 			}
 		}
 
-		try{
+		try{ //TODO: Null pointer if version is not found
 			//remove all cows
 			corpses.removeAllCows();
-		}catch(Exception ex){
+		}
+		catch(Exception ex){
 			//new ReportError(ex);
 			ex.printStackTrace();
 		}

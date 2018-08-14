@@ -25,7 +25,7 @@ public interface Corpses {
 	
 	public void registerPacketListener(Player p);
 	
-	public boolean cowHit(Player player, LivingEntity cow, TypeOfClick clickType);
+	public boolean cowHit(Player player, CorpseData data, TypeOfClick clickType);
 	
 	public void updateCows();
 	

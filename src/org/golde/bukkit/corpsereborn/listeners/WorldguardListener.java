@@ -20,7 +20,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 
-public class WorldguardListener implements Listener{
+public class WorldguardListener implements Listener{ //TODO: Fix the worldguard bugs :|
 
 	private StateFlag corpseSpawn = new StateFlag("corpse-spawn", true);
 	private StateFlag corpseClick = new StateFlag("corpse-click", true);
@@ -50,7 +50,7 @@ public class WorldguardListener implements Listener{
 		}
 	}
 	@EventHandler(priority=EventPriority.HIGHEST)
-	public void onCowSpawn(EntitySpawnEvent e) {
+	public void onCowSpawn(final EntitySpawnEvent e) {
 		if(e.getEntityType().equals(EntityType.COW)) {
 			Location loc = e.getLocation();
 			if(!getFlagStatus(DefaultFlag.MOB_SPAWNING,loc)) {
