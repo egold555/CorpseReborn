@@ -32,7 +32,7 @@ public class SpawnCorpse implements CommandExecutor {
 				Player p = (Player) sender;
 
 				data = Main.getPlugin().corpses.spawnCorpse(p, null, p.getLocation(), Util.makeNiceInv(p), 0).setSelectedSlot(p.getInventory().getHeldItemSlot());
-				p.sendMessage(ChatColor.GREEN + "Corpse of yourself spawned!");
+				p.sendMessage(ChatColor.GREEN + "Spawned corpse of yourself!");
 				Util.callEvent(new CorpseSpawnEvent(data, true));
 			} else if (args.length == 1) {
 				Player p = Bukkit.getServer().getPlayer(args[0]);
