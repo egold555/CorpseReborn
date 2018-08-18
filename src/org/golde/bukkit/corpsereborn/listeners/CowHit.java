@@ -1,23 +1,30 @@
 package org.golde.bukkit.corpsereborn.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.ServerVersion;
 import org.golde.bukkit.corpsereborn.Util;
+import org.golde.bukkit.corpsereborn.dump.ReportError;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
 import org.golde.bukkit.corpsereborn.nms.NmsBase;
 import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 
 public class CowHit implements Listener{
 
-	/*@EventHandler(priority=EventPriority.LOWEST)
+	@EventHandler(priority=EventPriority.LOWEST)
 	public void leftClick(EntityDamageByEntityEvent e){
 		try{
 			if(e.getDamager() instanceof Player && e.getCause() == DamageCause.ENTITY_ATTACK){
@@ -47,26 +54,24 @@ public class CowHit implements Listener{
 		}catch(Exception ex){
 			new ReportError(ex);
 		}
-	}*/
+	}
 
-	/*boolean handle(Player p, Entity entity, TypeOfClick clickType){
+	boolean handle(Player p, Entity entity, TypeOfClick clickType){
 		if(entity.getType() == NmsBase.ENTITY){
-			return Main.getPlugin().corpses.cowHit(p, (LivingEntity)entity, clickType);
+			CorpseData cd = Util.getCorpseInRaduis(entity.getLocation(), 2);
+			return Main.getPlugin().corpses.cowHit(p, cd, clickType);
 		}
 		return false;
-	}*/
+	}
 	
 	@EventHandler
-	public void click(PlayerInteractEvent e) { //TODO: Remove logging
-		Bukkit.getLogger().info("Got event");
+	public void click(PlayerInteractEvent e) {
 		if(e.getAction() != Action.PHYSICAL) {
-			Bukkit.getLogger().info("BLOCK: " + e.getClickedBlock());
 			if(e.getClickedBlock() != null) {
-				Bukkit.getLogger().info("Not null");
 				Location loc = e.getClickedBlock().getLocation();
 				CorpseData cd = Util.getCorpseInRaduis(loc, 2);
 				if(cd != null) {
-					Bukkit.getLogger().info("CD != null");
+					//Bukkit.broadcastMessage(ChatColor.RED + "CD: " + ChatColor.BLUE + cd.toString());
 					Main.getPlugin().corpses.cowHit(e.getPlayer(), cd, TypeOfClick.UNKNOWN);
 				}
 				

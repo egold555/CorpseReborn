@@ -83,7 +83,7 @@ public class Util {
 			world = Bukkit.getWorlds();
 		}
 		for(World w:world){
-			for(Entity e:w.getEntities()){ //TODO: Check name of cow, option to log remove bugged stuff
+			for(Entity e:w.getEntities()){ //TODO: Check name of cow, option to log remove bugged stuff (Global method for this)
 				if(e instanceof LivingEntity && e instanceof Cow && !Main.getPlugin().corpses.isValidCow((LivingEntity)e)){
 					LivingEntity le = (LivingEntity)e;
 					if(le.hasPotionEffect(PotionEffectType.INVISIBILITY)){
