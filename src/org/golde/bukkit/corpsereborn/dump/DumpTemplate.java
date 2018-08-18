@@ -60,9 +60,9 @@ public class DumpTemplate {
 		cfg = cfg + "username-format: " + config.getString("username-format") + NEW_LINE;
 		cfg = cfg + "finish-looting-message: " + config.getString("finish-looting-message") + NEW_LINE;
 		cfg = cfg + "new-hitboxes: " + ConfigData.getNewHitbox() + NEW_LINE;
-		cfg = cfg + "render-armor: " + ConfigData.shouldRenderArmor();
-		cfg = cfg + "save-corpses: " + ConfigData.shouldSaveCorpses();
-		cfg = cfg + "send-data: " + ConfigData.shouldSendDataToEric();
+		cfg = cfg + "render-armor: " + ConfigData.shouldRenderArmor() + NEW_LINE;
+		cfg = cfg + "save-corpses: " + ConfigData.shouldSaveCorpses() + NEW_LINE;
+		cfg = cfg + "send-data: " + ConfigData.shouldSendDataToEric() + NEW_LINE;
 		return cfg;
 	}
 

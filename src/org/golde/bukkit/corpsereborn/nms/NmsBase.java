@@ -111,12 +111,15 @@ public abstract class NmsBase {
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1000000, 100, true));
-		slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
+		
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 100, true));
 		slime.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 1000000, 100, true));
 		
 		if(Main.getPlugin().isDev) {
 			slime.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 100, true));
+		}
+		else {
+			slime.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 100, true));
 		}
 	}
 	public void updateCows(){

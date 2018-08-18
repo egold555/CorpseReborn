@@ -43,7 +43,7 @@ public class Main extends JavaPlugin {
 
 	public Corpses corpses;
 	public boolean cont = true;
-	public boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
+	public final boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNKNOWN;
 	public static ServerType serverType = ServerType.UNKNOWN;
 
@@ -164,7 +164,7 @@ public class Main extends JavaPlugin {
 				}
 			}
 
-			if(!isDev) {sendCoolDataToEric();}
+			//if(!isDev) {sendCoolDataToEric();}
 
 
 
@@ -217,7 +217,6 @@ public class Main extends JavaPlugin {
 		else if (result.getResult() == Updater.UpdateResult.DEV){
 			Util.cinfo("&eYou seem to have a version of the plugin that is not on spigot...");
 			Util.cinfo("&cExpect bugs!");
-			isDev = true;
 		}
 	}
 
@@ -288,7 +287,8 @@ public class Main extends JavaPlugin {
 		return plugin;
 	}
 
-	private void sendCoolDataToEric() {
+	@Deprecated
+	private void sendCoolDataToEric() { //TODO: Fix stats page
 		if(ConfigData.shouldSendDataToEric())
 			try {
 

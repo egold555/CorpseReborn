@@ -41,17 +41,11 @@ public class Updater
     }
 
     private String urlBase;
-    private String APIKey;
     private String currentVersion;
-
-    private String resourceUrl;
 
     public Updater(String resourceUrl)
     {
-        this.resourceUrl = resourceUrl;
-
-        urlBase = "http://www.spigotmc.org/api/general.php";
-        APIKey = "98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4";
+        urlBase = "https://api.spigotmc.org/legacy/update.php?resource=" + resourceUrl;
         currentVersion = Main.getPlugin().getDescription().getVersion().split(" ")[0];
     }
 
@@ -64,9 +58,9 @@ public class Updater
                 HttpURLConnection con = (HttpURLConnection) new URL(urlBase).openConnection();
 
                 con.setDoOutput(true);
-                con.setRequestMethod("POST");
+                con.setRequestMethod("GET");
                 con.getOutputStream()
-                        .write(("key=" + APIKey + "&resource=" + resourceUrl).getBytes("UTF-8"));
+                        .write((urlBase).getBytes("UTF-8"));
 
                 if (con.getResponseCode() == 500)
                     return new UpdateResults(UpdateResult.FAIL, "Server responded with code 500: Internal server error");
