@@ -6,26 +6,26 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_9_R1.NetworkManager;
-import net.minecraft.server.v1_9_R1.PacketPlayInUseEntity;
-import net.minecraft.server.v1_9_R1.PacketPlayInUseEntity.EnumEntityUseAction;
+import net.minecraft.server.v1_13_R2.NetworkManager;
+import net.minecraft.server.v1_13_R2.PacketPlayInUseEntity;
+import net.minecraft.server.v1_13_R2.PacketPlayInUseEntity.EnumEntityUseAction;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
 import org.golde.bukkit.corpsereborn.ConfigData;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.Util;
 import org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent;
-import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 import org.golde.bukkit.corpsereborn.nms.Corpses.CorpseData;
+import org.golde.bukkit.corpsereborn.nms.TypeOfClick;
 
-public class PcktIn_v1_9_R1 extends ChannelInboundHandlerAdapter {
+public class PcktIn_v1_13_R2 extends ChannelInboundHandlerAdapter {
 
 	private Player p;
 
-	public PcktIn_v1_9_R1(Player p) {
+	public PcktIn_v1_13_R2(Player p) {
 		this.p = p;
 	}
 
@@ -37,7 +37,7 @@ public class PcktIn_v1_9_R1 extends ChannelInboundHandlerAdapter {
 			.runTask(Main.getPlugin(), new Runnable() {
 				public void run() {
 
-					if (packet.a() == EnumEntityUseAction.INTERACT_AT) {
+					if (packet.b() == EnumEntityUseAction.INTERACT_AT) {
 						for (CorpseData cd : Main.getPlugin().corpses
 								.getAllCorpses()) {
 							if (cd.getEntityId() == getId(packet)) {
@@ -79,7 +79,7 @@ public class PcktIn_v1_9_R1 extends ChannelInboundHandlerAdapter {
 			throw new NullPointerException("Couldn't get channel??");
 		}
 		c.pipeline().addBefore("packet_handler", "packet_in_listener",
-				new PcktIn_v1_9_R1(p));
+				new PcktIn_v1_13_R2(p));
 	}
 
 	public static final Channel getChannel(Player p) {

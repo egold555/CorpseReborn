@@ -36,13 +36,14 @@ public class PcktIn_v1_10_R1 extends ChannelInboundHandlerAdapter {
 			Bukkit.getServer().getScheduler()
 			.runTask(Main.getPlugin(), new Runnable() {
 				public void run() {
-					if (ConfigData.hasLootingInventory()) {
-						if (packet.a() == EnumEntityUseAction.INTERACT_AT) {
-							for (CorpseData cd : Main.getPlugin().corpses
-									.getAllCorpses()) {
-								if (cd.getEntityId() == getId(packet)) {
-									CorpseClickEvent cce = new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN);
-									Util.callEvent(cce);
+
+					if (packet.a() == EnumEntityUseAction.INTERACT_AT) {
+						for (CorpseData cd : Main.getPlugin().corpses
+								.getAllCorpses()) {
+							if (cd.getEntityId() == getId(packet)) {
+								CorpseClickEvent cce = new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN);
+								Util.callEvent(cce);
+								if (ConfigData.hasLootingInventory()) {
 									if(!cce.isCancelled()) {
 										InventoryView view = p.openInventory(cd
 												.getLootInventory());

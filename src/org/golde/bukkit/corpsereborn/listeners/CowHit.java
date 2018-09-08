@@ -59,6 +59,9 @@ public class CowHit implements Listener{
 	boolean handle(Player p, Entity entity, TypeOfClick clickType){
 		if(entity.getType() == NmsBase.ENTITY){
 			CorpseData cd = Util.getCorpseInRaduis(entity.getLocation(), 2);
+			if(cd == null) {
+				return false;
+			}
 			return Main.getPlugin().corpses.cowHit(p, cd, clickType);
 		}
 		return false;
@@ -79,7 +82,7 @@ public class CowHit implements Listener{
 		}
 	}
 	
-	@EventHandler(priority=EventPriority.HIGH)
+	@EventHandler(priority=EventPriority.HIGH) //TODO: Handel /kill @e command
 	public void cowDamageEvent(EntityDamageEvent e) {
 		Entity entity = e.getEntity();
 		if(entity == null || entity.getType() != NmsBase.ENTITY) {

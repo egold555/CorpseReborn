@@ -35,27 +35,28 @@ public class PcktIn_v1_7_R4 extends ChannelInboundHandlerAdapter {
 		if (msg instanceof PacketPlayInUseEntity) {
 			final PacketPlayInUseEntity packet = (PacketPlayInUseEntity) msg;
 			Bukkit.getServer().getScheduler()
-					.runTask(Main.getPlugin(), new Runnable() {
-						public void run() {
-							if (ConfigData.hasLootingInventory()) {
-								if (packet.c() == EnumEntityUseAction.INTERACT) {
-									for (CorpseData cd : Main.getPlugin().corpses
-											.getAllCorpses()) {
-										if (cd.getEntityId() == getId(packet)) {
-											CorpseClickEvent cce = new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN);
-											Util.callEvent(cce);
-											if(!cce.isCancelled()) {
-												InventoryView view = p.openInventory(cd
-														.getLootInventory());
-												cd.setInventoryView(view);
-											}
-											break;
-										}
+			.runTask(Main.getPlugin(), new Runnable() {
+				public void run() {
+
+					if (packet.c() == EnumEntityUseAction.INTERACT) {
+						for (CorpseData cd : Main.getPlugin().corpses
+								.getAllCorpses()) {
+							if (cd.getEntityId() == getId(packet)) {
+								CorpseClickEvent cce = new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN);
+								Util.callEvent(cce);
+								if (ConfigData.hasLootingInventory()) {
+									if(!cce.isCancelled()) {
+										InventoryView view = p.openInventory(cd
+												.getLootInventory());
+										cd.setInventoryView(view);
 									}
+									break;
 								}
 							}
 						}
-					});
+					}
+				}
+			});
 		}
 		super.channelRead(ctx, msg);
 	}

@@ -43,7 +43,7 @@ public class Main extends JavaPlugin {
 
 	public Corpses corpses;
 	public boolean cont = true;
-	public final boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
+	public final boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNKNOWN;
 	public static ServerType serverType = ServerType.UNKNOWN;
 
@@ -100,7 +100,7 @@ public class Main extends JavaPlugin {
 				Util.cinfo("&b" + Bukkit.getVersion());
 				Util.cinfo("&e====================================================");
 			}
-			
+
 			if(isDev){
 				Util.cinfo("&e====================================================");
 				Util.cinfo("&cDev mode activated. Turn this off before release!");
@@ -188,7 +188,9 @@ public class Main extends JavaPlugin {
 
 		try{ //TODO: Null pointer if version is not found
 			//remove all cows
-			corpses.removeAllCows();
+			if(corpses != null) {
+				corpses.removeAllCows();
+			}
 		}
 		catch(Exception ex){
 			//new ReportError(ex);

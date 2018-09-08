@@ -20,6 +20,7 @@ public enum ServerVersion {
 	v1_12_R1,
 	v1_13,
 	v1_13_R1,
+	v1_13_R2,
 	UNKNOWN;
 	public ServerVersion getNiceVersion(){
 		switch(this){
@@ -33,6 +34,7 @@ public enum ServerVersion {
 		case v1_11_R1: return v1_11;
 		case v1_12_R1: return v1_12;
 		case v1_13_R1: return v1_13;
+		case v1_13_R2: return v1_13;
 		default: return UNKNOWN;
 		}
 	}
@@ -43,7 +45,7 @@ public enum ServerVersion {
 	
 	public static String rawMcVersion = getParenthesesContent(Bukkit.getVersion()).replaceAll("MC: ", "");
 	
-	public static ServerVersion fromClass(String clazz){
+	public static ServerVersion fromClass(String clazz){ //TODO: Change
 		
 		switch(clazz){
 		case "v1_7_R4": return v1_7_R4;
@@ -56,6 +58,7 @@ public enum ServerVersion {
 		case "v1_11_R1": return v1_11_R1;
 		case "v1_12_R1": return v1_12_R1;
 		case "v1_13_R1": return v1_13_R1;
+		case "v1_13_R2": return v1_13_R2;
 		default: return UNKNOWN;
 		}
 	}

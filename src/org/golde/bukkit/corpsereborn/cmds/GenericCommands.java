@@ -38,7 +38,7 @@ public class GenericCommands implements CommandExecutor{
 					sender.sendMessage(ChatColor.RED + "Expect bugs!");
 				}
 				if(sender.hasPermission("corpses.reload") || sender.hasPermission("corpses.dump")){
-					sender.sendMessage("/corpsereborn reload|dump");
+					sender.sendMessage("/corpsereborn reload:dump");
 				}
 				return true;
 			}

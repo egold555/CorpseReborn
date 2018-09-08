@@ -35,27 +35,28 @@ public class PcktIn_v1_8_R2 extends ChannelInboundHandlerAdapter {
 		if (msg instanceof PacketPlayInUseEntity) {
 			final PacketPlayInUseEntity packet = (PacketPlayInUseEntity) msg;
 			Bukkit.getServer().getScheduler()
-					.runTask(Main.getPlugin(), new Runnable() {
-						public void run() {
-							if (ConfigData.hasLootingInventory()) {
-								if (packet.a() == EnumEntityUseAction.INTERACT_AT) {
-									for (CorpseData cd : Main.getPlugin().corpses
-											.getAllCorpses()) {
-										if (cd.getEntityId() == getId(packet)) {
-											CorpseClickEvent cce = new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN);
-											Util.callEvent(cce);
-											if(!cce.isCancelled()) {
-												InventoryView view = p.openInventory(cd
-														.getLootInventory());
-												cd.setInventoryView(view);
-											}
-											break;
-										}
+			.runTask(Main.getPlugin(), new Runnable() {
+				public void run() {
+
+					if (packet.a() == EnumEntityUseAction.INTERACT_AT) {
+						for (CorpseData cd : Main.getPlugin().corpses
+								.getAllCorpses()) {
+							if (cd.getEntityId() == getId(packet)) {
+								CorpseClickEvent cce = new CorpseClickEvent(cd, p, TypeOfClick.UNKNOWN);
+								Util.callEvent(cce);
+								if (ConfigData.hasLootingInventory()) {
+									if(!cce.isCancelled()) {
+										InventoryView view = p.openInventory(cd
+												.getLootInventory());
+										cd.setInventoryView(view);
 									}
+									break;
 								}
 							}
 						}
-					});
+					}
+				}
+			});
 		}
 		super.channelRead(ctx, msg);
 	}
@@ -92,7 +93,7 @@ public class PcktIn_v1_8_R2 extends ChannelInboundHandlerAdapter {
 			Channel c = (Channel) ifield.get(nm);
 			ifield.setAccessible(false);
 			return c;
-			*/
+			 */
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
