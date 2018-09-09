@@ -43,7 +43,7 @@ public class Main extends JavaPlugin {
 
 	public Corpses corpses;
 	public boolean cont = true;
-	public final boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
+	public final boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNKNOWN;
 	public static ServerType serverType = ServerType.UNKNOWN;
 
