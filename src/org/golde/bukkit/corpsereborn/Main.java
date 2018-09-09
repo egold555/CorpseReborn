@@ -77,10 +77,11 @@ public class Main extends JavaPlugin {
 			serverType = ServerType.whatAmI(this);
 			if(!serverType.isCompatible() && !isDev){
 				Util.cinfo("&e====================================================");
-				Util.cinfo("&cIt seems like you are not running a supported version of server. This plugin only supports: ");
+				Util.cinfo("&cYou are not running a supported server version. This plugin only supports the following versions: ");
 				Util.cinfo("&b" + ServerType.getSupportedVersions());
-				Util.cinfo("&cYou are running: &e" + serverType.name());
-				Util.cinfo("&cExpect things to not work as they were intended too.");
+				Util.cinfo("&cThe server &cYOU are running is the following: &e" + serverType.name());
+				Util.cinfo("&cThings may not work as they should.");
+				Util.cinfo("&cIf you want things to work properly, please update to the supported versions.");
 				Util.cinfo("&eYOU HAVE BEEN WARNED!");
 				Util.cinfo("&e====================================================");
 			}
