@@ -9,11 +9,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public enum ServerType {
 	BUKKIT(true), 
 	SPIGOT(true), 
-	PAPER_SPIGOT(false), //corpse just gets removed. No errors.
-	TACO_SPIGOT(false), //fork of paper
-	GLOWSTONE(false), //Plugin does not load
-	SPONGE(false), //Not tested
-	CAULDRON(false), //NMS Does not load. 
+	PAPER_SPIGOT(true), 
+	TACO_SPIGOT(false),
+	GLOWSTONE(false), 
+	SPONGE(false),
+	CAULDRON(false),
 	UNKNOWN(false);
 
 	private final boolean compatible;

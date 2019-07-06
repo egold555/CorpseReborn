@@ -57,31 +57,49 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		PluginManager pm = getServer().getPluginManager();
-		if(pm.getPlugin("WorldGuard") != null) {
-			try {
-				Util.info("Worldguard detected. Adding custom spawn flags");
-				worldGuard = (WorldGuardPlugin)getServer().getPluginManager().getPlugin("WorldGuard");
-				worldGuardListener = new WorldguardListener(worldGuard);
-				isWorldGuardEnabled = true;
-			}
-			catch(Exception e) {
-				Util.info("Only worldguard 6.2 or later can use flags! Disabling worldguard support!");
-				isWorldGuardEnabled = false;
-			}
-		}
+		
+		//For this release, I am disabling WorldGuard until I can get support for it.
+		
+//		if(pm.getPlugin("WorldGuard") != null) {
+//			try {
+//				Util.info("Worldguard detected. Adding custom spawn flags");
+//				worldGuard = (WorldGuardPlugin)getServer().getPluginManager().getPlugin("WorldGuard");
+//				worldGuardListener = new WorldguardListener(worldGuard);
+//				isWorldGuardEnabled = true;
+//			}
+//			catch(Exception e) {
+//				Util.info("Only worldguard 6.2 or later can use flags! Disabling worldguard support!");
+//				isWorldGuardEnabled = false;
+//			}
+//		}
 	}
 
+	@Override
 	public void onEnable() {
 		try{
 			plugin = this;
 			serverType = ServerType.whatAmI(this);
+			Util.cinfo("");
+			Util.cinfo("");
+			Util.cinfo("&dHi!");
+			Util.cinfo("&dThank you for downloading the new beta 1.14.3 update.");
+			Util.cinfo("&dPlease note that I have &cDisabled WorldGuard support &dfor this update entirely.");
+			Util.cinfo("&dI am working on a new System to support all versions of WorldGuard,");
+			Util.cinfo("&dbut I wanted to get this update out ASAP for everyone.");
+			Util.cinfo("&dIf you find any bugs, please let me know by either filling out a bug report on GitHub");
+			Util.cinfo("&bhttps://github.com/egold555/CorpseReborn/issues &dor reporting them");
+			Util.cinfo("&dto me on Spigot: &bhttps://www.spigotmc.org/resources/corpsereborn.29875/");
+			Util.cinfo("");
+			Util.cinfo("&d--Eric Golde");
+			Util.cinfo("");
+			Util.cinfo("");
+			
 			if(!serverType.isCompatible() && !isDev){
 				Util.cinfo("&e====================================================");
-				Util.cinfo("&cIt seems like you are not running a supported version of server. This plugin only supports: ");
+				Util.cinfo("&cHello! You seem to be using a untested server type: ");
 				Util.cinfo("&b" + ServerType.getSupportedVersions());
 				Util.cinfo("&cYou are running: &e" + serverType.name());
 				Util.cinfo("&cExpect things to not work as they were intended too.");
-				Util.cinfo("&eYOU HAVE BEEN WARNED!");
 				Util.cinfo("&e====================================================");
 			}
 
@@ -150,7 +168,7 @@ public class Main extends JavaPlugin {
 
 			if(ConfigData.shouldSaveCorpses()) {
 				if(corpseSaveFile.exists()){
-					YamlConfiguration corpseConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "corpses.yml"));
+					YamlConfiguration corpseConfig = YamlConfiguration.loadConfiguration(corpseSaveFile);
 					if(ServerVersion.valueOf(corpseConfig.getString("VERSION")) == Main.serverVersion) { //Different versions save different things to config
 
 						YMLCorpse.loadAndSpawnAllCorpses(corpses, corpseConfig);
@@ -158,7 +176,14 @@ public class Main extends JavaPlugin {
 					else {
 						Util.info("Looks like you changed server versions. I have made a backup of your corpses.yml just in case.");
 						Util.copyFiles(corpseSaveFile, new File(getDataFolder(), "corpses.yml.backup"));
-						Util.info("Removing old corpses.yml because you updated your server!");
+//						Util.info("Removing old corpses.yml because you updated your server!");
+						corpseConfig.set("VERSION", Main.serverVersion.name());
+						try {
+							corpseConfig.save(corpseSaveFile);
+						} catch (IOException e) {
+							//new ReportError(e);
+							e.printStackTrace();
+						}
 					}
 
 				}
