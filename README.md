@@ -1,5 +1,5 @@
 # CorpseReborn
-This is a port of the plugin Corpses by Virizion (https://www.spigotmc.org/resources/corpses.1817/) that I have ported to Spigot 1.7.10-1.12.2
+This is a port of the plugin Corpses by Virizion (https://www.spigotmc.org/resources/corpses.1817/) that I have ported to Spigot 1.7.10-1.14.3
 
 Link to my plugin: https://www.spigotmc.org/resources/corpsereborn.29875/
 
