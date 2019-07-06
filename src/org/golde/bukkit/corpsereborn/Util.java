@@ -1,6 +1,8 @@
 package org.golde.bukkit.corpsereborn;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -224,5 +226,15 @@ public class Util {
 			return false;
 		}
 	}
+	
+	public static void setFinalStatic(Object theObj, Field field, Object newValue) throws Exception {
+	      field.setAccessible(true);
+
+	      Field modifiersField = Field.class.getDeclaredField("modifiers");
+	      modifiersField.setAccessible(true);
+	      modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+	      field.set(theObj, newValue);
+	   }
 	
 }

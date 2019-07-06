@@ -137,11 +137,10 @@ public class NMSCorpses_v1_14_R1 extends NmsBase implements Corpses {
 
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 
-//		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(10, DataWatcherRegistry.b);
-//		dw.set(obj, (int)0);
-//		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(13, DataWatcherRegistry.a);
-//		dw.set(obj2, (byte)0x7F);
-
+		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(11, DataWatcherRegistry.b);
+		dw.set(obj, (int)0);
+		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(15, DataWatcherRegistry.a);
+		dw.set(obj2, (byte)0x7F);
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
 		used.setYaw(loc.getYaw());
@@ -173,11 +172,12 @@ public class NMSCorpses_v1_14_R1 extends NmsBase implements Corpses {
 			gp.getProperties().putAll(propertyMap);
 		}
 
+		//
 		DataWatcher dw = clonePlayerDatawatcher(gp, loc.getWorld(), entityId);
-//		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(10, DataWatcherRegistry.b);
-//		dw.set(obj, (int)0);
-//		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(13, DataWatcherRegistry.a);
-//		dw.set(obj2, (byte)0x7F);
+		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(11, DataWatcherRegistry.b);
+		dw.set(obj, (int)0);
+		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(15, DataWatcherRegistry.a);
+		dw.set(obj2, (byte)0x7F);
 
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
@@ -478,7 +478,7 @@ public class NMSCorpses_v1_14_R1 extends NmsBase implements Corpses {
 				conn.sendPacket(spawnPacket);
 				//conn.sendPacket(bedPacket);
 
-				makePlayerSleep(p, getBlockPositionFromBukkitLocation(bedLocation));
+				makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
 				conn.sendPacket(getEntityMetadataPacket());
 				conn.sendPacket(movePacket);
 				if(ConfigData.shouldRenderArmor()) {
@@ -522,8 +522,9 @@ public class NMSCorpses_v1_14_R1 extends NmsBase implements Corpses {
 					Material.BED_BLOCK, (byte) rotation);
 			conn.sendPacket(infoPacket);
 			conn.sendPacket(spawnPacket);
+
 			//conn.sendPacket(bedPacket);
-			makePlayerSleep(p, getBlockPositionFromBukkitLocation(bedLocation));
+			makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
 			conn.sendPacket(getEntityMetadataPacket());
 			conn.sendPacket(movePacket);
 			if(ConfigData.shouldRenderArmor()) {
@@ -548,11 +549,28 @@ public class NMSCorpses_v1_14_R1 extends NmsBase implements Corpses {
 			return new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		}
 
-		//https://www.spigotmc.org/threads/how-can-i-make-a-fake-player-sleep.371318/#post-3391128
-		private void makePlayerSleep(Player p, BlockPosition bedPos) {
+		private void makePlayerSleep(Player p, PlayerConnection conn, BlockPosition bedPos, DataWatcher playerDW) {
 			EntityPlayer entityPlayer = new EntityPlayer(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle()));
-			entityPlayer.e(bedPos);
+			entityPlayer.e(entityId); //sets the entity id
+
+			try {
+				//Set the datawatcher field on the newly crafted entity -- uses reflection
+//				Field dwField = EntityPlayer.class.getField("datawatcher");
+//				dwField.setAccessible(true);
+//				dwField.set(entityPlayer, playerDW);
+				Util.setFinalStatic(entityPlayer, Entity.class.getDeclaredField("datawatcher"), playerDW);
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			
+
+			entityPlayer.e(bedPos); //go to sleep
+			conn.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), playerDW, false));
 		}
+		
+		
 
 		@SuppressWarnings("deprecation")
 		public void destroyCorpseFromPlayer(Player p) {
