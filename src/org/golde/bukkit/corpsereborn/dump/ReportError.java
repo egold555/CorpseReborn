@@ -33,6 +33,7 @@ public class ReportError {
 	private void makeDump(final CommandSender sender, final DumpTemplate dt, final Exception e){
 		if(Main.getPlugin().isDev){
 			e.printStackTrace();
+			Util.cinfo(dt.output());
 			return;
 		}
 		PastebinAPI api = new PastebinAPI("bcfd9fe9a975802e3b494234ebaa1c25");
