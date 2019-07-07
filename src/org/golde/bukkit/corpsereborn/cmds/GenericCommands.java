@@ -49,8 +49,12 @@ public class GenericCommands implements CommandExecutor{
 							+ "You do not have enough permissions!");
 					return true;
 				}else{
+					
+					Main.getPlugin().reloadConfig();
+					
 					ConfigData.checkConfigForMissingOptions();
 					ConfigData.load();
+					
 					sender.sendMessage(ChatColor.GREEN + "Config reloaded.");
 				}
 			}

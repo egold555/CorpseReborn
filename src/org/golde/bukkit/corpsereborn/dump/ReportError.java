@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.Main;
+import org.golde.bukkit.corpsereborn.Util;
 public class ReportError {
 
 	public ReportError(Exception e){
@@ -31,7 +32,7 @@ public class ReportError {
 
 	private void makeDump(final CommandSender sender, final DumpTemplate dt, final Exception e){
 		if(Main.getPlugin().isDev){
-			Bukkit.getLogger().info(dt.output());
+			e.printStackTrace();
 			return;
 		}
 		PastebinAPI api = new PastebinAPI("bcfd9fe9a975802e3b494234ebaa1c25");

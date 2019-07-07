@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -43,7 +44,7 @@ public class Main extends JavaPlugin {
 
 	public Corpses corpses;
 	public boolean cont = true;
-	public final boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
+	public final boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNKNOWN;
 	public static ServerType serverType = ServerType.UNKNOWN;
 
@@ -53,6 +54,8 @@ public class Main extends JavaPlugin {
 	public WorldguardListener worldGuardListener;
 
 	public File corpseSaveFile;
+	
+	private static final Random RANDOM = new Random();
 
 	@Override
 	public void onLoad() {
@@ -198,6 +201,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	@Override
 	public void onDisable(){
 
 		if(ConfigData.shouldSaveCorpses()) {
@@ -355,5 +359,9 @@ public class Main extends JavaPlugin {
 			result = false;
 		}
 		return result;
+	}
+	
+	public Random getRandom() {
+		return RANDOM;
 	}
 }

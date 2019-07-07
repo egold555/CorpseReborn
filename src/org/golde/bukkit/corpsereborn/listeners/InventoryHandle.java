@@ -1,5 +1,7 @@
 package org.golde.bukkit.corpsereborn.listeners;
 
+import java.util.List;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -25,9 +27,10 @@ public class InventoryHandle implements Listener{
 
 			if(Util.isInventoryEmpty(iv.getTopInventory())){
 				if(Main.serverVersion.getNiceVersion() != ServerVersion.v1_7){
-					String message = ConfigData.finishLootingMessage(cd.getCorpseName());
-					if(message != null){
-						event.getPlayer().sendMessage(message);
+					List<String> messages = ConfigData.finishLootingMessage(cd.getCorpseName());
+					if(messages != null){
+						
+						event.getPlayer().sendMessage(getRandomString(messages));
 					}
 				}
 				Util.removeCorpse(cd);
@@ -35,6 +38,10 @@ public class InventoryHandle implements Listener{
 		}catch(Exception ex){
 			new ReportError(ex);
 		}
+	}
+	
+	private String getRandomString(List<String> strings) {
+		return strings.get(Main.getPlugin().getRandom().nextInt(strings.size()));
 	}
 
 }

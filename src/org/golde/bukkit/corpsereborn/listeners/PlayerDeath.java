@@ -20,6 +20,11 @@ public class PlayerDeath implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		try{
+			
+			if(ConfigData.getDamageCausesThatDontCauseACorpse().contains(e.getEntity().getLastDamageCause().getCause())) {
+				return;
+			}
+			
 			if (ConfigData.isOnDeath() && Util.playerInCorrectWorld(e.getEntity())) {
 				CorpseData data;
 				PlayerInventoryClone inv = new PlayerInventoryClone(e.getEntity(), e.getDrops());

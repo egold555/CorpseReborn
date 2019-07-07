@@ -65,11 +65,11 @@ public class Util {
 		return false;
 	}
 
-	
+
 	public static boolean isWithinRadius(Player p, double radius, Location corpseLocation){
 		return isWithinRadius(p.getLocation(), radius, corpseLocation);
 	}
-	
+
 	public static boolean isWithinRadius(Location playerLoc, double radius, Location corpseLocation){
 		if(playerLoc.getWorld() != corpseLocation.getWorld()){
 			return false;
@@ -124,7 +124,7 @@ public class Util {
 
 		return returnCorpses;
 	}
-	
+
 	public static CorpseData getCorpseInRaduis(Location loc, double radius) {
 		for(CorpseData cd:Main.getPlugin().corpses.getAllCorpses()){
 			Location l = cd.getOrigLocation();
@@ -207,17 +207,17 @@ public class Util {
 		}
 		return result;
 	}
-	
+
 	public static Location bedLocation(Location loc){
 		Location l = loc.clone();
 		l.setY(bedLocation());
 		return l;
 	}
-	
+
 	public static int bedLocation(){
 		return 1;
 	}
-	
+
 	public static boolean copyFiles(File source, File dest) {
 		try {
 			Files.copy(source.toPath(), dest.toPath());
@@ -226,15 +226,23 @@ public class Util {
 			return false;
 		}
 	}
-	
+
 	public static void setFinalStatic(Object theObj, Field field, Object newValue) throws Exception {
-	      field.setAccessible(true);
+		field.setAccessible(true);
 
-	      Field modifiersField = Field.class.getDeclaredField("modifiers");
-	      modifiersField.setAccessible(true);
-	      modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+		Field modifiersField = Field.class.getDeclaredField("modifiers");
+		modifiersField.setAccessible(true);
+		modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
-	      field.set(theObj, newValue);
-	   }
+		field.set(theObj, newValue);
+	}
 	
+	public static <E extends Enum<E>> String prettyPrintGenericEnum(Class<E> clazz) {
+		StringBuilder commaSeperatedValidMsgTypes = new StringBuilder();
+        for(E msgType : clazz.getEnumConstants()) {
+            commaSeperatedValidMsgTypes.append(msgType.name() + ", ");
+        }
+        return commaSeperatedValidMsgTypes.toString();
+	}
+
 }

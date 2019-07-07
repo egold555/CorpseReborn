@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.golde.bukkit.corpsereborn.dump.ReportError;
 
 public class ConfigData {
@@ -22,12 +24,13 @@ public class ConfigData {
 	private static String guiName;
 	private static String username;
 	private static boolean autoDespawn;
-	private static String finishLootingMessage;
+	private static List<String> finishLootingMessage = new ArrayList<String>();
 	private static boolean newHitbox;
 	private static boolean checkForUpdate;
 	private static boolean shouldRenderArmor;
 	private static boolean shouldSaveCorpses;
 	private static boolean shouldSendDataToEric;
+	private static List<DamageCause> damageCausesThatDontCauseACorpse = new ArrayList<DamageCause>();
 
 	public static boolean shouldCheckForUpdates(){return checkForUpdate;}
 	public static int getCorpseTime() {return corpseTime;}
@@ -40,6 +43,7 @@ public class ConfigData {
 	public static boolean shouldRenderArmor() {return shouldRenderArmor;}
 	public static boolean shouldSendDataToEric(){return shouldSendDataToEric;}
 	public static String getInventoryName(Player p){return guiName.replaceAll("%corpse%", p.getName()).replaceAll("&", "§");}
+	public static List<DamageCause> getDamageCausesThatDontCauseACorpse() {return damageCausesThatDontCauseACorpse;}
 	
 	@Deprecated
 	public static String getUsername(Player p, String overrideUsername){
@@ -56,11 +60,22 @@ public class ConfigData {
 		}
 		return overrideUsername;
 	}
-	public static String finishLootingMessage(String name){
-		if(finishLootingMessage.equalsIgnoreCase("none")){
+	public static List<String> finishLootingMessage(String name){
+		if(finishLootingMessage.size() == 0) {
 			return null;
 		}
-		return finishLootingMessage.replaceAll("%corpse%", name).replaceAll("&", "§");
+		
+		if(finishLootingMessage.get(0).equalsIgnoreCase("none")){
+			return null;
+		}
+		
+		List<String> toReturn = new ArrayList<String>();
+		
+		for(String repl : finishLootingMessage) {
+			toReturn.add(repl.replaceAll("%corpse%", name).replaceAll("&", "§"));
+		}
+		
+		return toReturn;
 	}
 
 	public static boolean shouldDespawnAfterLoot(){
@@ -164,6 +179,13 @@ public class ConfigData {
 					"#The public static are located here if you wish to see them: http://web2.golde.org/files/spigot/CorpseReborn/stats/",
 					"send-data: true");
 		}
+		
+		if (! config.isSet("no-corpse-causes")) {
+			appendConfig("#What types of causes should we not spawn corpses for?",
+					"#Leave empty to not cancel any causes.",
+					"#Valid causes are: " + Util.prettyPrintGenericEnum(DamageCause.class),
+					"no-corpse-causes: []");
+		}
 
 	}
 
@@ -194,6 +216,7 @@ public class ConfigData {
 	public static void load() {
 		try {
 			FileConfiguration config = Main.getPlugin().getConfig();
+			
 			corpseTime = config.getInt("corpse-time", 120);
 			onDeath = config.getBoolean("on-death", true);
 			lootingInventory = config.getBoolean("looting-inventory", true);
@@ -202,12 +225,37 @@ public class ConfigData {
 			guiName = config.getString("gui-title", "%corpse%'s Items");
 			username = config.getString("username-format", "%corpse%");
 			autoDespawn = config.getBoolean("despawn-after-looted", true);
-			finishLootingMessage = config.getString("finish-looting-message", "&bYou have finished looting %corpse%'s corpse.");
+			
+			
+			String finishLootingMessageString = config.getString("finish-looting-message", "&bYou have finished looting %corpse%'s corpse.");
+			
+			//work around for upgrading configs. finish-looting-message can now also support mutiple messages
+			
+			if(finishLootingMessageString.charAt(0) == '[' && finishLootingMessageString.charAt(finishLootingMessageString.length() - 1) == ']') {
+				finishLootingMessage = config.getStringList("finish-looting-message");
+			}
+			else {
+				finishLootingMessage.add(finishLootingMessageString);
+			}
+			
 			newHitbox = config.getBoolean("new-hitboxes", true);
 			checkForUpdate = config.getBoolean("enable-update-checker", true);
 			shouldRenderArmor = config.getBoolean("render-armor", true);
 			shouldSaveCorpses = config.getBoolean("save-corpses", true);
 			shouldSendDataToEric = config.getBoolean("send-data", true);
+			
+			damageCausesThatDontCauseACorpse.clear();
+			for(String c : config.getStringList("no-corpse-causes")) {
+				try {
+					DamageCause dc = DamageCause.valueOf(c);
+					if(!damageCausesThatDontCauseACorpse.contains(dc)) {
+						damageCausesThatDontCauseACorpse.add(dc);
+					}
+				}
+				catch(IllegalArgumentException e) {
+					Util.cinfo("&c[WARNING] Damage Cause &a'" + c + "' &cis not a valid Damage Cause! Valid damage causes are as follows: &6" + Util.prettyPrintGenericEnum(DamageCause.class));
+				}
+			}
 
 			if(Main.serverVersion.compareTo(ServerVersion.v1_8) < 0 && newHitbox){
 				Util.cinfo("&cNew hitboxes and finish-looting-message are disabled because your version ("+Main.serverVersion.name()+") does not support it. Please use 1.8+ for these things to work correctly");
