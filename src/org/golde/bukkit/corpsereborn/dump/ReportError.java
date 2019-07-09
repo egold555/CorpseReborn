@@ -22,7 +22,7 @@ public class ReportError {
 	
 	public ReportError(final Exception e, final CommandSender cs){
 		//makes a new dump and sends the user the link
-		final DumpTemplate dt = new DumpTemplate(e);
+		final DumpTemplateMarkdown dt = new DumpTemplateMarkdown(e);
 		new BukkitRunnable(){
 			public void run(){
 				makeDump(cs, dt, e);
@@ -30,15 +30,19 @@ public class ReportError {
 		}.runTaskAsynchronously(Main.getPlugin());
 	}
 
-	private void makeDump(final CommandSender sender, final DumpTemplate dt, final Exception e){
+	private void makeDump(final CommandSender sender, final DumpTemplateMarkdown dt, final Exception e){
 		if(Main.getPlugin().isDev){
 			e.printStackTrace();
-			Util.cinfo(dt.output());
+			Util.cinfo("");
+			Util.cinfo("");
+			System.out.println(dt.getOutput());
+			Util.cinfo("");
+			Util.cinfo("");
 			return;
 		}
 		PastebinAPI api = new PastebinAPI("bcfd9fe9a975802e3b494234ebaa1c25");
 		CreatePaste paste = api.createPaste();
-		paste.withText(dt.output());
+		paste.withText(dt.getOutput());
 		paste.withPrivacyLevel(PrivacyLevel.PUBLIC);
 		paste.withExpireDate(ExpireDate.NEVER);
 		paste.withName("CorpseReborn Error Paste");

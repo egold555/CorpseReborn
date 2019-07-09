@@ -26,6 +26,8 @@ public class DumpTemplateMarkdown {
 	private final boolean isFromDumpCommand;
 	
 	private static final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	
+	private static final String NL = "\n";
 
 	public DumpTemplateMarkdown(Exception ex){
 		if(ex instanceof DumpException){
@@ -54,30 +56,31 @@ public class DumpTemplateMarkdown {
 	private CodeBlock getCommonInfo() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Date: " + dateFormat.format(new Date()));
-		sb.append("CorpseReborn Version: " + Main.getPlugin().getDescription().getVersion().split(" ")[0]);
-		sb.append("");
-		sb.append("Server Version: " + Bukkit.getVersion());
-		sb.append("Server Type: " + Main.serverType.name());
-		sb.append("NMS Version: " + Main.serverVersion.name());
+		sb.append("Date: " + dateFormat.format(new Date())).append(NL);
+		sb.append("CorpseReborn Version: " + Main.getPlugin().getDescription().getVersion().split(" ")[0]).append(NL);
+		sb.append("").append(NL);
+		sb.append("Server Version: " + Bukkit.getVersion()).append(NL);
+		sb.append("Server Type: " + Main.serverType.name()).append(NL);
+		sb.append("NMS Version: " + Main.serverVersion.name()).append(NL);
 		
 		
 		return new CodeBlock(sb.toString());
 	}
 	
-	private CodeBlock getConfig() {
+	private CodeBlock getFileAsCodeBlock(String configName) {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(Main.getPlugin().getConfig().getCurrentPath()));
+			BufferedReader br = new BufferedReader(new FileReader(new File(Main.getPlugin().getDataFolder(), configName)));
 			String line = null;
 			while ((line = br.readLine()) != null) {
-				sb.append(line);
+				sb.append(line).append(NL);
 			}
 			br.close();
 		}
 		catch(Exception e) {
-			
+			e.printStackTrace();
+			return new CodeBlock(e.getMessage());
 		}
 		
 		
@@ -89,21 +92,20 @@ public class DumpTemplateMarkdown {
 		
 		int tempCounter = 0;
 		for(CorpseData d:Main.getPlugin().corpses.getAllCorpses()) {
-			String first = tempCounter + ".";
-
-			sb.append(first + "location: " + d.getOrigLocation());
-			sb.append(first + "name: " +  d.getCorpseName());
+			sb.append(tempCounter + ":").append(NL);
+			sb.append("    location: " + d.getOrigLocation()).append(NL);
+			sb.append("    name: " +  d.getCorpseName()).append(NL);
 			if(d.getProfilePropertiesJson() != null) {
-				sb.append(first + "skin: " + d.getProfilePropertiesJson());
+				sb.append("    skin: " + d.getProfilePropertiesJson()).append(NL);
 			}
-			sb.append(first + "rotation: " + d.getRotation());
-			sb.append(first + "slot: " + d.getSelectedSlot());
+			sb.append("    rotation: " + d.getRotation()).append(NL);
+			sb.append("    slot: " + d.getSelectedSlot()).append(NL);
 			Inventory inv = d.getLootInventory();
 
 			for(int slot = 0; slot < inv.getSize(); slot++) {
 				ItemStack item = inv.getItem(slot);
 				if(item != null) {
-					sb.append(first + "inventory." + slot + ": " + item);
+					sb.append("    inventory." + slot + ": " + item).append(NL);
 				}
 			}
 
@@ -116,7 +118,7 @@ public class DumpTemplateMarkdown {
 	
 	private CodeBlock getException() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(exception);
+		sb.append(exception).append(NL);
 		
 		return new CodeBlock(sb.toString());
 	}
@@ -124,22 +126,29 @@ public class DumpTemplateMarkdown {
 	public String getOutput(){
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append(new Heading("Common Info: ", 1));
-		sb.append(getCommonInfo());
+		sb.append(new Heading("Common Info: ", 1)).append(NL);
+		sb.append(getCommonInfo()).append("\n");
 		
-		sb.append(new Heading("Exception: ", 1));
-		sb.append(getException());
+		sb.append(new Heading("Exception: ", 1)).append(NL);
+		sb.append(getException()).append("\n");
 		
-		sb.append(new Heading("Plugins: ", 1));
-		sb.append(getPlugins());
+		sb.append(new Heading("Plugins: ", 1)).append(NL);
+		sb.append(getPlugins()).append("\n");
 		
-		sb.append(new Heading("Config: ", 1));
-		sb.append(getConfig());
+		sb.append(new Heading("Config: ", 1)).append(NL);
+		sb.append(getFileAsCodeBlock("config.yml")).append("\n");
 		
-		sb.append(new Heading("Corpse Data: ", 1));
-		sb.append(getCorpseData());
+		sb.append(new Heading("Corpse Data (Array): ", 1)).append(NL);
+		sb.append(getCorpseData()).append("\n");
+		
+		sb.append(new Heading("Corpse Data (Config): ", 1)).append(NL);
+		sb.append(getFileAsCodeBlock("corpses.yml")).append("\n");
 		
 		return sb.toString();
+	}
+	
+	public boolean isFromDumpCommand() {
+		return isFromDumpCommand;
 	}
 	
 }
