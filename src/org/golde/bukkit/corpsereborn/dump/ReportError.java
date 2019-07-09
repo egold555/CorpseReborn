@@ -2,18 +2,13 @@ package org.golde.bukkit.corpsereborn.dump;
 
 import java.io.IOException;
 
-import me.nrubin29.pastebinapi.CreatePaste;
-import me.nrubin29.pastebinapi.ExpireDate;
-import me.nrubin29.pastebinapi.PastebinAPI;
-import me.nrubin29.pastebinapi.PastebinException;
-import me.nrubin29.pastebinapi.PrivacyLevel;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.golde.bukkit.corpsereborn.Main;
 import org.golde.bukkit.corpsereborn.Util;
+
 public class ReportError {
 
 	public ReportError(Exception e){
@@ -38,17 +33,10 @@ public class ReportError {
 			System.out.println(dt.getOutput());
 			Util.cinfo("");
 			Util.cinfo("");
-			return;
 		}
-		PastebinAPI api = new PastebinAPI("bcfd9fe9a975802e3b494234ebaa1c25");
-		CreatePaste paste = api.createPaste();
-		paste.withText(dt.getOutput());
-		paste.withPrivacyLevel(PrivacyLevel.PUBLIC);
-		paste.withExpireDate(ExpireDate.NEVER);
-		paste.withName("CorpseReborn Error Paste");
 		
 		try {
-			String url = paste.post();
+			String url = CRDumpHTTPApi.paste(dt.getOutput());
 			if(dt.isFromDumpCommand()){
 				sender.sendMessage(ChatColor.GREEN + "Dump has been created.");
 			}else{
@@ -56,10 +44,8 @@ public class ReportError {
 			}
 			
 			sender.sendMessage(ChatColor.YELLOW + url);
-		} catch (PastebinException e1) {
-			sender.sendMessage(ChatColor.RED + "Failed to dump, please check the console for more information.");
-			e.printStackTrace();
-		} catch (IOException e1) {
+		}
+		catch (IOException e1) {
 			sender.sendMessage(ChatColor.RED + "Failed to dump, please check the console for more information.");
 			e.printStackTrace();
 		}
