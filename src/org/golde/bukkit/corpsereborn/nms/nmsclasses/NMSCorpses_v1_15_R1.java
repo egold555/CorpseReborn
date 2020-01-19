@@ -484,7 +484,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 		}
 
 		public PacketPlayOutEntityMetadata getEntityMetadataPacket() {
-			return new PacketPlayOutEntityMetadata(entityId, metadata, false);
+			return new PacketPlayOutEntityMetadata(entityId, metadata, true);
 		}
 
 		@SuppressWarnings("deprecation")
