@@ -85,7 +85,7 @@ public class Main extends JavaPlugin {
 			Util.cinfo("");
 			Util.cinfo("");
 			Util.cinfo("&dHi!");
-			Util.cinfo("&dThank you for downloading the new beta 1.14.3 update.");
+			Util.cinfo("&dThank you for downloading the new beta 1.15 update.");
 			Util.cinfo("&dPlease note that I have &cDisabled WorldGuard support &dfor this update entirely.");
 			Util.cinfo("&dI am working on a new System to support all versions of WorldGuard,");
 			Util.cinfo("&dbut I wanted to get this update out ASAP for everyone.");

@@ -20,6 +20,7 @@ import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_15_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -50,6 +51,7 @@ import net.minecraft.server.v1_15_R1.EnumGamemode;
 import net.minecraft.server.v1_15_R1.EnumItemSlot;
 import net.minecraft.server.v1_15_R1.IChatBaseComponent;
 import net.minecraft.server.v1_15_R1.ItemStack;
+import net.minecraft.server.v1_15_R1.PacketPlayOutBlockChange;
 //import net.minecraft.server.v1_15_R1.PacketPlayOutBed;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntityDestroy;
@@ -376,9 +378,9 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				g.setAccessible(true);
 				g.setByte(packet,
 						(byte) (int) (loc.getPitch() * 256.0F / 360.0F));
-				Field i = packet.getClass().getDeclaredField("h");
-				i.setAccessible(true);
-				i.set(packet, metadata);
+//				Field i = packet.getClass().getDeclaredField("h");
+//				i.setAccessible(true);
+//				i.set(packet, metadata);
 			} catch (Exception e) {
 
 				e.printStackTrace();
@@ -472,7 +474,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			for (Player p : toSend) {
 				PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 				Location bedLocation = Util.bedLocation(loc);
-				p.sendBlockChange(bedLocation,
+				sendBlockChange(p, bedLocation,
 						Material.BED_BLOCK, (byte) rotation);
 				conn.sendPacket(infoPacket);
 				conn.sendPacket(spawnPacket);
@@ -518,8 +520,9 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			final PacketPlayOutEntityEquipment offhandInfo = getEquipmentPacket(EnumItemSlot.OFFHAND, convertBukkitToMc(items.getItem(7)));
 			PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 			Location bedLocation = Util.bedLocation(loc);
-			p.sendBlockChange(bedLocation,
+			sendBlockChange(p, bedLocation,
 					Material.BED_BLOCK, (byte) rotation);
+
 			conn.sendPacket(infoPacket);
 			conn.sendPacket(spawnPacket);
 
@@ -543,6 +546,18 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				}
 			}, 20L);
 
+		}
+		
+		private void sendBlockChange(Player p, final Location loc, final Material material, final byte data) {
+			
+			p.sendMessage("Trying to set a client side block @" + loc.toString() + " of type " + material.name() + " with data " + data);
+			
+			final PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange(((CraftWorld)loc.getWorld()).getHandle(), new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+	        packet.block = CraftMagicNumbers.getBlock(material, data);
+	        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+	        
+	        
+			
 		}
 
 		private BlockPosition getBlockPositionFromBukkitLocation(Location loc) {
@@ -589,7 +604,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				}
 			}
 			if (removeBed) {
-				p.sendBlockChange(b.getLocation(), b.getType(), b.getData());
+				sendBlockChange(p, b.getLocation(), b.getType(), b.getData());
 			}
 		}
 
@@ -616,7 +631,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				((CraftPlayer) p).getHandle().playerConnection
 				.sendPacket(packet);
 				if (removeBed) {
-					p.sendBlockChange(b.getLocation(), b.getType(), b.getData());
+					sendBlockChange(p, b.getLocation(), b.getType(), b.getData());
 				}
 			}
 		}
