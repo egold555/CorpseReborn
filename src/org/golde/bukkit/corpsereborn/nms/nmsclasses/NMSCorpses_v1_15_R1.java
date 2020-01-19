@@ -552,9 +552,11 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			
 			p.sendMessage("Trying to set a client side block @" + loc.toString() + " of type " + material.name() + " with data " + data);
 			
-			final PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange(((CraftWorld)loc.getWorld()).getHandle(), new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-	        packet.block = CraftMagicNumbers.getBlock(material, data);
-	        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+//			final PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange(((CraftWorld)loc.getWorld()).getHandle(), new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+//	        packet.block = CraftMagicNumbers.getBlock(material, data);
+//	        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+			
+			p.getWorld().getBlockAt(loc).setType(material);
 	        
 	        
 			
