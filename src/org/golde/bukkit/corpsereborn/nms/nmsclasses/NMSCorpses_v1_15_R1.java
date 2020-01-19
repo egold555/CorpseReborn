@@ -637,6 +637,22 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 					System.out.println("SEND MESSAGE " + ichatbasecomponent.getString());
 				}
 				
+				//Many errors happened here, so I am trying to fix them all by overriding all the functions that errord
+				@Override
+				public void addScore(int i) {
+					
+				}
+				
+				@Override
+				public int getScore() {
+					return 0;
+				}
+				
+				@Override
+				public void giveExp(int i) {
+					
+				}
+				
 			};
 			
 			System.out.println("Set entity id: " + entityId);
