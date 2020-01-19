@@ -41,12 +41,14 @@ import com.mojang.authlib.properties.PropertyMap;
 
 import net.minecraft.server.v1_15_R1.BlockPosition;
 import net.minecraft.server.v1_15_R1.ChatMessage;
+import net.minecraft.server.v1_15_R1.ChatMessageType;
 import net.minecraft.server.v1_15_R1.DataWatcher;
 import net.minecraft.server.v1_15_R1.DataWatcherObject;
 import net.minecraft.server.v1_15_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_15_R1.Entity;
 import net.minecraft.server.v1_15_R1.EntityHuman;
 import net.minecraft.server.v1_15_R1.EntityPlayer;
+import net.minecraft.server.v1_15_R1.EntityPose;
 import net.minecraft.server.v1_15_R1.EnumGamemode;
 import net.minecraft.server.v1_15_R1.EnumItemSlot;
 import net.minecraft.server.v1_15_R1.IChatBaseComponent;
@@ -84,6 +86,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				((CraftWorld) player.getWorld()).getHandle(),
 				((CraftPlayer) player).getProfile()) {
 			public void sendMessage(IChatBaseComponent arg0) {
+				Bukkit.getLogger().info("[CORPSE ID " + getId() + "] sendMessage " +arg0.getText());
 				return;
 			}
 
@@ -92,7 +95,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			}
 
 			public BlockPosition getChunkCoordinates() {
-				return null;
+				return new BlockPosition(0, 0, 0); //changed from null to fix null pointer potentally
 			}
 
 			public boolean isSpectator() {
@@ -102,6 +105,17 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			@Override
 			public boolean isCreative() {
 				return false;
+			}
+
+			@Override
+			public void setRespawnPosition(BlockPosition blockposition, boolean flag, boolean flag1) {
+				Bukkit.getLogger().info("[CORPSE ID " + getId() + "] setRespawnPosition " + blockposition.toString() + " " + flag + " " + flag1);
+				super.setRespawnPosition(blockposition, flag, flag1);
+			}
+			
+			@Override
+			protected void dX() {
+				setPose(EntityPose.SLEEPING);
 			}
 
 		};
@@ -200,6 +214,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			int currentEntId) {
 		EntityHuman h = new EntityHuman(((CraftWorld) world).getHandle(),gp) {
 			public void sendMessage(IChatBaseComponent arg0) {
+				Bukkit.getLogger().info("[CORPSE ID " + getId() + "] sendMessage " +arg0.getText());
 				return;
 			}
 
@@ -208,7 +223,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			}
 
 			public BlockPosition getChunkCoordinates() {
-				return null;
+				return new BlockPosition(0, 0, 0); //changed from null to fix null pointer potentally
 			}
 
 			public boolean isSpectator() {
@@ -219,8 +234,23 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			public boolean isCreative() {
 				return false;
 			}
+
+			@Override
+			public void setRespawnPosition(BlockPosition blockposition, boolean flag, boolean flag1) {
+				Bukkit.getLogger().info("[CORPSE ID " + getId() + "] setRespawnPosition " + blockposition.toString() + " " + flag + " " + flag1);
+				super.setRespawnPosition(blockposition, flag, flag1);
+			}
+			
+			@Override
+			protected void dX() {
+				setPose(EntityPose.SLEEPING);
+			}
+			
+			//player connection ight be null
+			
 		};
 		h.e(currentEntId);
+		
 		return h.getDataWatcher();
 	}
 
@@ -378,9 +408,9 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				g.setAccessible(true);
 				g.setByte(packet,
 						(byte) (int) (loc.getPitch() * 256.0F / 360.0F));
-//				Field i = packet.getClass().getDeclaredField("h");
-//				i.setAccessible(true);
-//				i.set(packet, metadata);
+				//				Field i = packet.getClass().getDeclaredField("h");
+				//				i.setAccessible(true);
+				//				i.set(packet, metadata);
 			} catch (Exception e) {
 
 				e.printStackTrace();
@@ -472,23 +502,40 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			final PacketPlayOutEntityEquipment offhandInfo = getEquipmentPacket(EnumItemSlot.OFFHAND, convertBukkitToMc(items.getItem(7)));
 			final List<Player> toSend = loc.getWorld().getPlayers();
 			for (Player p : toSend) {
+				System.out.println("[CORPSE ID " + entityId + "] Get Connection");
 				PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
+				System.out.println("[CORPSE ID " + entityId + "] Get location");
 				Location bedLocation = Util.bedLocation(loc);
+				System.out.println("[CORPSE ID " + entityId + "] send bed block change");
 				sendBlockChange(p, bedLocation,
 						Material.BED_BLOCK, (byte) rotation);
+				System.out.println("[CORPSE ID " + entityId + "] send info packet");
 				conn.sendPacket(infoPacket);
+				
+				System.out.println("[CORPSE ID " + entityId + "] send spawn packet");
 				conn.sendPacket(spawnPacket);
 				//conn.sendPacket(bedPacket);
 
+				System.out.println("[CORPSE ID " + entityId + "] makePlayerSleep()");
 				makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
+				
+				System.out.println("[CORPSE ID " + entityId + "] send entity metadata packet");
 				conn.sendPacket(getEntityMetadataPacket());
+				
+				System.out.println("[CORPSE ID " + entityId + "] send move packet");
 				conn.sendPacket(movePacket);
 				if(ConfigData.shouldRenderArmor()) {
+					System.out.println("[CORPSE ID " + entityId + "] send helmetInfo");
 					conn.sendPacket(helmetInfo);
+					System.out.println("[CORPSE ID " + entityId + "] send chestplateInfo");
 					conn.sendPacket(chestplateInfo);
+					System.out.println("[CORPSE ID " + entityId + "] send leggingsInfo");
 					conn.sendPacket(leggingsInfo);
+					System.out.println("[CORPSE ID " + entityId + "] send bootsInfo");
 					conn.sendPacket(bootsInfo);
+					System.out.println("[CORPSE ID " + entityId + "] send mainhandInfo");
 					conn.sendPacket(mainhandInfo);
+					System.out.println("[CORPSE ID " + entityId + "] send offhandInfo");
 					conn.sendPacket(offhandInfo);
 				}
 			}
@@ -518,24 +565,40 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			final PacketPlayOutEntityEquipment bootsInfo = getEquipmentPacket(EnumItemSlot.FEET, convertBukkitToMc(items.getItem(4)));
 			final PacketPlayOutEntityEquipment mainhandInfo = getEquipmentPacket(EnumItemSlot.MAINHAND, convertBukkitToMc(items.getItem(slot+45)));
 			final PacketPlayOutEntityEquipment offhandInfo = getEquipmentPacket(EnumItemSlot.OFFHAND, convertBukkitToMc(items.getItem(7)));
+			System.out.println("[CORPSE ID " + entityId + "] Get Connection");
 			PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
+			System.out.println("[CORPSE ID " + entityId + "] Get location");
 			Location bedLocation = Util.bedLocation(loc);
+			System.out.println("[CORPSE ID " + entityId + "] send bed block change");
 			sendBlockChange(p, bedLocation,
 					Material.BED_BLOCK, (byte) rotation);
-
+			System.out.println("[CORPSE ID " + entityId + "] send info packet");
 			conn.sendPacket(infoPacket);
+			
+			System.out.println("[CORPSE ID " + entityId + "] send spawn packet");
 			conn.sendPacket(spawnPacket);
-
 			//conn.sendPacket(bedPacket);
+
+			System.out.println("[CORPSE ID " + entityId + "] makePlayerSleep()");
 			makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
+			
+			System.out.println("[CORPSE ID " + entityId + "] send entity metadata packet");
 			conn.sendPacket(getEntityMetadataPacket());
+			
+			System.out.println("[CORPSE ID " + entityId + "] send move packet");
 			conn.sendPacket(movePacket);
 			if(ConfigData.shouldRenderArmor()) {
+				System.out.println("[CORPSE ID " + entityId + "] send helmetInfo");
 				conn.sendPacket(helmetInfo);
+				System.out.println("[CORPSE ID " + entityId + "] send chestplateInfo");
 				conn.sendPacket(chestplateInfo);
+				System.out.println("[CORPSE ID " + entityId + "] send leggingsInfo");
 				conn.sendPacket(leggingsInfo);
+				System.out.println("[CORPSE ID " + entityId + "] send bootsInfo");
 				conn.sendPacket(bootsInfo);
+				System.out.println("[CORPSE ID " + entityId + "] send mainhandInfo");
 				conn.sendPacket(mainhandInfo);
+				System.out.println("[CORPSE ID " + entityId + "] send offhandInfo");
 				conn.sendPacket(offhandInfo);
 			}
 			Bukkit.getServer().getScheduler()
@@ -547,19 +610,19 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			}, 20L);
 
 		}
-		
+
 		private void sendBlockChange(Player p, final Location loc, final Material material, final byte data) {
-			
+
 			p.sendMessage("Trying to set a client side block @" + loc.toString() + " of type " + material.name() + " with data " + data);
-			
-//			final PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange(((CraftWorld)loc.getWorld()).getHandle(), new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-//	        packet.block = CraftMagicNumbers.getBlock(material, data);
-//	        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-			
+
+			//			final PacketPlayOutBlockChange packet = new PacketPlayOutBlockChange(((CraftWorld)loc.getWorld()).getHandle(), new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+			//	        packet.block = CraftMagicNumbers.getBlock(material, data);
+			//	        ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+
 			p.getWorld().getBlockAt(loc).setType(material);
-	        
-	        
-			
+
+
+
 		}
 
 		private BlockPosition getBlockPositionFromBukkitLocation(Location loc) {
@@ -567,27 +630,37 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 		}
 
 		private void makePlayerSleep(Player p, PlayerConnection conn, BlockPosition bedPos, DataWatcher playerDW) {
-			EntityPlayer entityPlayer = new EntityPlayer(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle()));
+			EntityPlayer entityPlayer = new EntityPlayer(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle())) {
+				
+				@Override
+				public void sendMessage(IChatBaseComponent ichatbasecomponent) {
+					System.out.println("SEND MESSAGE " + ichatbasecomponent.getString());
+				}
+				
+			};
+			
+			System.out.println("Set entity id: " + entityId);
 			entityPlayer.e(entityId); //sets the entity id
 
 			try {
 				//Set the datawatcher field on the newly crafted entity -- uses reflection
-//				Field dwField = EntityPlayer.class.getField("datawatcher");
-//				dwField.setAccessible(true);
-//				dwField.set(entityPlayer, playerDW);
+				//				Field dwField = EntityPlayer.class.getField("datawatcher");
+				//				dwField.setAccessible(true);
+				//				dwField.set(entityPlayer, playerDW);
+				System.out.println("set final static");
 				Util.setFinalStatic(entityPlayer, Entity.class.getDeclaredField("datawatcher"), playerDW);
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
 			}
-			
-			
 
-			entityPlayer.sleep(bedPos); //go to sleep
+			System.out.println("sleep function");
+			entityPlayer.sleep(bedPos, true); //go to sleep, forcefully
+			System.out.println("PacketPlayOutEntityMetadata");
 			conn.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), playerDW, false));
 		}
-		
-		
+
+
 
 		@SuppressWarnings("deprecation")
 		public void destroyCorpseFromPlayer(Player p) {
