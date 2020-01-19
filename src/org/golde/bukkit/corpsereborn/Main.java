@@ -32,7 +32,7 @@ import org.golde.bukkit.corpsereborn.nms.Corpses;
 
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+//import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
 
@@ -49,7 +49,7 @@ public class Main extends JavaPlugin {
 	public static ServerType serverType = ServerType.UNKNOWN;
 
 	public boolean isWorldGuardEnabled = false;
-	public WorldGuardPlugin worldGuard = null;
+	//public WorldGuardPlugin worldGuard = null;
 
 	public WorldguardListener worldGuardListener;
 
@@ -147,14 +147,14 @@ public class Main extends JavaPlugin {
 			getCommand("resendcorpses").setExecutor(new ResendCorpses());
 			getCommand("togglecorpse").setExecutor(new ToggleCorpse());
 
-			if(isWorldGuardEnabled) {
-				try {
-					worldGuardListener.registerEvents(pm);
-				}catch(Exception e) {
-					Util.info("Only worldguard 6.2 or later can use flags! Disabling worldguard support!");
-					isWorldGuardEnabled = false;
-				}
-			}
+//			if(isWorldGuardEnabled) {
+//				try {
+//					worldGuardListener.registerEvents(pm);
+//				}catch(Exception e) {
+//					Util.info("Only worldguard 6.2 or later can use flags! Disabling worldguard support!");
+//					isWorldGuardEnabled = false;
+//				}
+//			}
 
 			// Removing stray cows after 2 ticks, and every minute.
 			new BukkitRunnable(){
