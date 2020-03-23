@@ -99,7 +99,7 @@ public class Main extends JavaPlugin {
 				Util.cinfo("&cHello! You seem to be using a untested server type: ");
 				Util.cinfo("&b" + ServerType.getSupportedVersions());
 				Util.cinfo("&cYou are running: &e" + serverType.name());
-				Util.cinfo("&cExpect things to not work as they were intended too.");
+				Util.cinfo("&cExpect things to not work as they were intended to.");
 				Util.cinfo("&e====================================================");
 			}
 
