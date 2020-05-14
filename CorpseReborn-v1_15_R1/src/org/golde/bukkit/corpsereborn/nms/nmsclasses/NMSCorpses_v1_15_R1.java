@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,26 +37,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.PropertyMap;
-import com.mojang.datafixers.util.Either;
 
 import net.minecraft.server.v1_15_R1.BlockPosition;
-import net.minecraft.server.v1_15_R1.Blocks;
 import net.minecraft.server.v1_15_R1.ChatMessage;
 import net.minecraft.server.v1_15_R1.DataWatcher;
 import net.minecraft.server.v1_15_R1.DataWatcherObject;
 import net.minecraft.server.v1_15_R1.DataWatcherRegistry;
 import net.minecraft.server.v1_15_R1.Entity;
 import net.minecraft.server.v1_15_R1.EntityHuman;
-import net.minecraft.server.v1_15_R1.EntityHuman.EnumBedResult;
-import net.minecraft.server.v1_15_R1.EntityItem;
 import net.minecraft.server.v1_15_R1.EntityPlayer;
-import net.minecraft.server.v1_15_R1.EntityPose;
 import net.minecraft.server.v1_15_R1.EnumGamemode;
 import net.minecraft.server.v1_15_R1.EnumItemSlot;
 import net.minecraft.server.v1_15_R1.IChatBaseComponent;
 import net.minecraft.server.v1_15_R1.ItemStack;
-import net.minecraft.server.v1_15_R1.MinecraftKey;
-import net.minecraft.server.v1_15_R1.MinecraftServer;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntityEquipment;
@@ -68,12 +60,6 @@ import net.minecraft.server.v1_15_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoActio
 import net.minecraft.server.v1_15_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_15_R1.PlayerConnection;
 import net.minecraft.server.v1_15_R1.PlayerInteractManager;
-import net.minecraft.server.v1_15_R1.SectionPosition;
-import net.minecraft.server.v1_15_R1.SoundCategory;
-import net.minecraft.server.v1_15_R1.SoundEffect;
-import net.minecraft.server.v1_15_R1.Statistic;
-import net.minecraft.server.v1_15_R1.Unit;
-import net.minecraft.server.v1_15_R1.WorldServer;
 
 public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 
@@ -95,7 +81,6 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				((CraftWorld) player.getWorld()).getHandle(),
 				((CraftPlayer) player).getProfile()) {
 			public void sendMessage(IChatBaseComponent arg0) {
-				System.out.println("GOT CHAT: " + this.getId() + " " + arg0);
 				return;
 			}
 
@@ -114,58 +99,6 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			@Override
 			public boolean isCreative() {
 				return false;
-			}
-
-			@Override
-			public void setRespawnPosition(BlockPosition blockposition, boolean flag, boolean flag1) {
-
-			}
-
-			@Override
-			public void a(Statistic<?> statistic) {
-				System.out.println("a(Statistic<?> statistic)");
-			}
-
-			@Override
-			public void a(final Statistic<?> statistic, final int i) {
-				System.out.println("a(final Statistic<?> statistic, final int i)");
-			}
-
-			@Override
-			public boolean b(final float f, final float f1) {
-				return false;
-			}
-
-			@Override
-			protected void dX() {
-				setPose(EntityPose.SLEEPING);
-			}
-
-			@Override
-			public EntityItem a(final ItemStack itemstack, final boolean flag, final boolean flag1) {
-				final EntityItem entityitem = new EntityItem(getWorld(), this.locX(), this.locY(), this.locZ());
-				entityitem.a(new ItemStack(Blocks.COBBLESTONE));
-
-				return entityitem;
-			}
-
-			@Override
-			public void a(final SoundEffect soundeffect, final SoundCategory soundcategory, final float f, final float f1) {
-			}
-
-			//			@Override
-			//			public void tick() {
-			//
-			//			}
-
-			@Override
-			public boolean isSleeping() {
-				return true;
-			}
-			
-			@Override
-			public EntityPose getPose() {
-				return EntityPose.SLEEPING;
 			}
 
 		};
@@ -264,7 +197,6 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			int currentEntId) {
 		EntityHuman h = new EntityHuman(((CraftWorld) world).getHandle(),gp) {
 			public void sendMessage(IChatBaseComponent arg0) {
-				System.out.println("GOT CHAT: " + this.getId() + " " + arg0);
 				return;
 			}
 
@@ -284,60 +216,6 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			public boolean isCreative() {
 				return false;
 			}
-
-			@Override
-			public void setRespawnPosition(BlockPosition blockposition, boolean flag, boolean flag1) {
-
-			}
-
-			@Override
-			public void a(Statistic<?> statistic) {
-				System.out.println("a(Statistic<?> statistic)");
-			}
-
-			@Override
-			public void a(final Statistic<?> statistic, final int i) {
-				System.out.println("a(final Statistic<?> statistic, final int i)");
-			}
-
-			@Override
-			public boolean b(final float f, final float f1) {
-				return false;
-			}
-
-			@Override
-			protected void dX() {
-				setPose(EntityPose.SLEEPING);
-			}
-			
-			@Override
-			public EntityPose getPose() {
-				return EntityPose.SLEEPING;
-			}
-
-			@Override
-			public EntityItem a(final ItemStack itemstack, final boolean flag, final boolean flag1) {
-				final EntityItem entityitem = new EntityItem(getWorld(), this.locX(), this.locY(), this.locZ());
-				entityitem.a(new ItemStack(Blocks.COBBLESTONE));
-
-				return entityitem;
-			}
-
-			@Override
-			public void a(final SoundEffect soundeffect, final SoundCategory soundcategory, final float f, final float f1) {
-			}
-
-			//			@Override
-			//			public void tick() {
-			//
-			//			}
-
-			@Override
-			public boolean isSleeping() {
-				return true;
-			}
-
-
 		};
 		h.e(currentEntId);
 		return h.getDataWatcher();
@@ -497,6 +375,9 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				g.setAccessible(true);
 				g.setByte(packet,
 						(byte) (int) (loc.getPitch() * 256.0F / 360.0F));
+				Field i = packet.getClass().getDeclaredField("h");
+				i.setAccessible(true);
+				i.set(packet, metadata);
 			} catch (Exception e) {
 
 				e.printStackTrace();
@@ -590,15 +471,15 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			for (Player p : toSend) {
 				PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 				Location bedLocation = Util.bedLocation(loc);
-				//p.sendBlockChange(bedLocation,Material.BED_BLOCK, (byte) rotation);
-				p.getWorld().getBlockAt(bedLocation).setTypeIdAndData(Material.RED_BED.getId(), (byte)rotation, false);
+				p.sendBlockChange(bedLocation,
+						Material.RED_BED, (byte) rotation);
 				conn.sendPacket(infoPacket);
 				conn.sendPacket(spawnPacket);
 				//conn.sendPacket(bedPacket);
 
 				makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
-				//conn.sendPacket(getEntityMetadataPacket());
-				//conn.sendPacket(movePacket);
+				conn.sendPacket(getEntityMetadataPacket());
+				conn.sendPacket(movePacket);
 				if(ConfigData.shouldRenderArmor()) {
 					conn.sendPacket(helmetInfo);
 					conn.sendPacket(chestplateInfo);
@@ -636,15 +517,15 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 			final PacketPlayOutEntityEquipment offhandInfo = getEquipmentPacket(EnumItemSlot.OFFHAND, convertBukkitToMc(items.getItem(7)));
 			PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 			Location bedLocation = Util.bedLocation(loc);
-			//p.sendBlockChange(bedLocation,Material.BED_BLOCK, (byte) rotation);
-			p.getWorld().getBlockAt(bedLocation).setTypeIdAndData(Material.RED_BED.getId(), (byte)rotation, false);
+			p.sendBlockChange(bedLocation,
+					Material.RED_BED, (byte) rotation);
 			conn.sendPacket(infoPacket);
 			conn.sendPacket(spawnPacket);
 
 			//conn.sendPacket(bedPacket);
 			makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
-			//conn.sendPacket(getEntityMetadataPacket());
-			//conn.sendPacket(movePacket);
+			conn.sendPacket(getEntityMetadataPacket());
+			conn.sendPacket(movePacket);
 			if(ConfigData.shouldRenderArmor()) {
 				conn.sendPacket(helmetInfo);
 				conn.sendPacket(chestplateInfo);
@@ -668,33 +549,26 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 		}
 
 		private void makePlayerSleep(Player p, PlayerConnection conn, BlockPosition bedPos, DataWatcher playerDW) {
-			EntityPlayer entityPlayer = new FakeEntityPlayer(p, prof, entityId, bedPos);
-			//entityPlayer.e(entityId); //sets the entity id
-			
-			
+			EntityPlayer entityPlayer = new EntityPlayer(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle()));
+			entityPlayer.e(entityId); //sets the entity id
 
 			try {
 				//Set the datawatcher field on the newly crafted entity -- uses reflection
-				//				Field dwField = EntityPlayer.class.getField("datawatcher");
-				//				dwField.setAccessible(true);
-				//				dwField.set(entityPlayer, playerDW);
+//				Field dwField = EntityPlayer.class.getField("datawatcher");
+//				dwField.setAccessible(true);
+//				dwField.set(entityPlayer, playerDW);
 				Util.setFinalStatic(entityPlayer, Entity.class.getDeclaredField("datawatcher"), playerDW);
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
 			}
-
-
-			//			Either<EnumBedResult, Unit> result = entityPlayer.sleep(bedPos, true); //go to sleep
-			//			System.out.println(result.left().get().name());
-			entityPlayer.entitySleep(bedPos);
 			
-			//conn.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), playerDW, false));
+
+			entityPlayer.entitySleep(bedPos); //go to sleep
+			conn.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), playerDW, false));
 		}
-
-
-
-
+		
+		
 
 		@SuppressWarnings("deprecation")
 		public void destroyCorpseFromPlayer(Player p) {
@@ -713,7 +587,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				}
 			}
 			if (removeBed) {
-				//p.sendBlockChange(b.getLocation(), b.getType(), b.getData());
+				p.sendBlockChange(b.getLocation(), b.getType(), b.getData());
 			}
 		}
 
@@ -740,7 +614,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				((CraftPlayer) p).getHandle().playerConnection
 				.sendPacket(packet);
 				if (removeBed) {
-					//p.sendBlockChange(b.getLocation(), b.getType(), b.getData());
+					p.sendBlockChange(b.getLocation(), b.getType(), b.getData());
 				}
 			}
 		}
@@ -915,134 +789,6 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 		nmsEntity.setNoGravity(true);
 	}
 
-	static class FakeEntityPlayer extends EntityPlayer {
 
-		private final BlockPosition bedPos;
-
-		public FakeEntityPlayer(Player p, GameProfile prof, int entityId, BlockPosition bedPos) {
-			super(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle()));
-			e(entityId);
-			sleepTicks = 99;
-			setPose(EntityPose.SLEEPING);
-			this.bedPos = bedPos;
-		}
-
-		@Override
-		public void sendMessage(IChatBaseComponent ichatbasecomponent) {
-
-		}
-
-		@Override
-		public void sendMessage(IChatBaseComponent[] ichatbasecomponent) {
-
-		}
-
-		@Override
-		public void a(MinecraftKey minecraftkey) {
-
-		}
-
-		@Override
-		public void a(MinecraftKey minecraftkey, int i) {
-
-		}
-
-		@Override
-		public void a(Statistic<?> statistic) {
-
-		}
-
-		@Override
-		public void a(Statistic<?> statistic, int i) {
-
-		}
-
-		@Override
-		protected void dX() {
-			setPose(EntityPose.SLEEPING);
-
-		}
-
-		@Override
-		public boolean isSpectator() {
-			return false;
-		}
-
-		@Override
-		public boolean isCreative() {
-			return false;
-		}
-
-		@Override
-		public int getScore() {
-			return 0;
-		}
-
-		@Override
-		public void addScore(int i) {
-
-		}
-
-		@Override
-		public void giveExp(int i) {
-
-		}
-
-		@Override
-		public void wakeup(boolean flag, boolean flag1) {
-
-		}
-
-		@Override
-		public void entityWakeup() {
-
-		}
-
-		@Override
-		public void tick() {
-			entitySleep(bedPos);
-			super.tick();
-			entitySleep(bedPos);
-			datawatcher.set(POSE, EntityPose.SLEEPING);
-		}
-
-		@Override
-		public boolean isSleeping() {
-			return true;
-		}
-
-		@Override
-		public BlockPosition getBed() {
-			return bedPos;
-		}
-
-		@Override
-		public Optional<BlockPosition> getBedPosition() {
-			return Optional.of(bedPos);
-		}
-
-		public BlockPosition getBedPos() {
-			return bedPos;
-		}
-		
-		@Override
-		public int ef() {
-			return 99;
-		}
-		
-		@Override
-		public EntityPose getPose() {
-			return EntityPose.SLEEPING;
-		}
-		
-		@Override
-		public void entitySleep(BlockPosition blockposition) {
-			// TODO Auto-generated method stub
-			super.entitySleep(blockposition);
-			
-			datawatcher.set(POSE, EntityPose.SLEEPING);
-		}
-
-	}
 
 }
