@@ -210,7 +210,7 @@ public class Util {
 
 	public static Location bedLocation(Location loc){
 		Location l = loc.clone();
-		l.setY(bedLocation());
+		//l.setY(bedLocation());
 		return l;
 	}
 
