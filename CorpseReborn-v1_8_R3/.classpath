@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/eric/Documents/Games/Minecraft/Servers/CorpseRebornTestServer/plugins/CR-Base.jar"/>
+	<classpathentry kind="lib" path="C:/Users/eric/eclipse-workspace/CorpseReborn/Export/CR-Base.jar"/>
 	<classpathentry kind="lib" path="C:/Users/eric/Documents/Games/Minecraft/SpigotVersions/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
