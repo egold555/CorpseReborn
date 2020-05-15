@@ -39,6 +39,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.PropertyMap;
 
 import net.minecraft.server.v1_15_R1.BlockPosition;
+import net.minecraft.server.v1_15_R1.ChatComponentText;
 import net.minecraft.server.v1_15_R1.ChatMessage;
 import net.minecraft.server.v1_15_R1.DataWatcher;
 import net.minecraft.server.v1_15_R1.DataWatcherObject;
@@ -138,10 +139,10 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 
 		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
 
-		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(11, DataWatcherRegistry.b);
-		dw.set(obj, (int)0);
-		DataWatcherObject<Integer> obj2 = new DataWatcherObject<Integer>(15, DataWatcherRegistry.b);
-		dw.set(obj2, (int)0x7F);
+		
+		DataWatcherObject<Byte> skinFlags = new DataWatcherObject<Byte>(16, DataWatcherRegistry.a);
+		dw.set(skinFlags, (byte)0x7F);
+		
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
 		used.setYaw(loc.getYaw());
@@ -175,10 +176,9 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 
 		//
 		DataWatcher dw = clonePlayerDatawatcher(gp, loc.getWorld(), entityId);
-		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(11, DataWatcherRegistry.b);
-		dw.set(obj, (int)0);
-		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(15, DataWatcherRegistry.a);
-		dw.set(obj2, (byte)0x7F);
+		
+		DataWatcherObject<Byte> skinFlags = new DataWatcherObject<Byte>(16, DataWatcherRegistry.a);
+		dw.set(skinFlags, (byte)0x7F);
 
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
@@ -419,8 +419,8 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				@SuppressWarnings("unchecked")
 				List<PlayerInfoData> data = (List<PlayerInfoData>) b
 				.get(packet);
-				data.add(packet.new PlayerInfoData(prof, 0,
-						EnumGamemode.SURVIVAL, new ChatMessage("")));
+				data.add(packet.new PlayerInfoData(prof, -1,
+						EnumGamemode.SURVIVAL, new ChatMessage("[CR]")));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -436,8 +436,8 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				@SuppressWarnings("unchecked")
 				List<PlayerInfoData> data = (List<PlayerInfoData>) b
 				.get(packet);
-				data.add(packet.new PlayerInfoData(prof, 0,
-						EnumGamemode.SURVIVAL, new ChatMessage("")));
+				data.add(packet.new PlayerInfoData(prof, -1,
+						EnumGamemode.SURVIVAL, new ChatMessage("[CR]")));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -499,7 +499,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 						.sendPacket(removeInfo);
 					}
 				}
-			}, 20L);
+			}, 40L);
 		}
 
 
@@ -542,7 +542,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 					((CraftPlayer) p).getHandle().playerConnection
 					.sendPacket(removeInfo);
 				}
-			}, 20L);
+			}, 40L);
 
 		}
 
