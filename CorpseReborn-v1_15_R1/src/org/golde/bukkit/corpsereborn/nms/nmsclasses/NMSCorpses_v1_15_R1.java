@@ -50,6 +50,7 @@ import net.minecraft.server.v1_15_R1.EnumGamemode;
 import net.minecraft.server.v1_15_R1.EnumItemSlot;
 import net.minecraft.server.v1_15_R1.IChatBaseComponent;
 import net.minecraft.server.v1_15_R1.ItemStack;
+import net.minecraft.server.v1_15_R1.MinecraftServer;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntity.PacketPlayOutRelEntityMove;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_15_R1.PacketPlayOutEntityEquipment;
@@ -60,6 +61,7 @@ import net.minecraft.server.v1_15_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoActio
 import net.minecraft.server.v1_15_R1.PacketPlayOutPlayerInfo.PlayerInfoData;
 import net.minecraft.server.v1_15_R1.PlayerConnection;
 import net.minecraft.server.v1_15_R1.PlayerInteractManager;
+import net.minecraft.server.v1_15_R1.WorldServer;
 
 public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 
@@ -138,8 +140,8 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 
 		DataWatcherObject<Integer> obj = new DataWatcherObject<Integer>(11, DataWatcherRegistry.b);
 		dw.set(obj, (int)0);
-		DataWatcherObject<Byte> obj2 = new DataWatcherObject<Byte>(15, DataWatcherRegistry.a);
-		dw.set(obj2, (byte)0x7F);
+		DataWatcherObject<Integer> obj2 = new DataWatcherObject<Integer>(15, DataWatcherRegistry.b);
+		dw.set(obj2, (int)0x7F);
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
 		used.setYaw(loc.getYaw());
@@ -375,9 +377,9 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 				g.setAccessible(true);
 				g.setByte(packet,
 						(byte) (int) (loc.getPitch() * 256.0F / 360.0F));
-				Field i = packet.getClass().getDeclaredField("h");
-				i.setAccessible(true);
-				i.set(packet, metadata);
+//				Field i = packet.getClass().getDeclaredField("h");
+//				i.setAccessible(true);
+//				i.set(packet, metadata);
 			} catch (Exception e) {
 
 				e.printStackTrace();
@@ -549,7 +551,7 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 		}
 
 		private void makePlayerSleep(Player p, PlayerConnection conn, BlockPosition bedPos, DataWatcher playerDW) {
-			EntityPlayer entityPlayer = new EntityPlayer(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle()));
+			EntityPlayer entityPlayer = new CustomEntityPlayer(p, prof);
 			entityPlayer.e(entityId); //sets the entity id
 
 			try {
@@ -789,6 +791,17 @@ public class NMSCorpses_v1_15_R1 extends NmsBase implements Corpses {
 		nmsEntity.setNoGravity(true);
 	}
 
+	static class CustomEntityPlayer extends EntityPlayer {
 
+		public CustomEntityPlayer(Player p, GameProfile prof) {
+			super(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle()));
+		}
+		
+		@Override
+		public void setRespawnPosition(BlockPosition blockposition, boolean flag, boolean flag1) {
+			//This has nothing in it, to fix a NPE
+		}
+		
+	}
 
 }

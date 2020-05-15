@@ -1,5 +1,7 @@
+@echo off
+
 rem clean up any temp files, and create the tmp folder again
-rd /s/q
+rd /s/q tmp
 mkdir tmp
 cd tmp
 
@@ -24,8 +26,8 @@ cd ..
 "jar" -cvf CorpseReborn.jar -C tmp .
 
 rem copy the built jar to my test server
-copy CorpseReborn.jar C:\Users\eric\Documents\Games\Minecraft\Servers\CorpseRebornTestServer\plugins\CorpseReborn.jar
+copy CorpseReborn.jar C:\Users\eric\Documents\Games\Minecraft\Servers\115\plugins\CorpseReborn.jar
 
 rem Delete the temp files
 del CorpseReborn.jar
-rd /s/q
+rd /s/q tmp
