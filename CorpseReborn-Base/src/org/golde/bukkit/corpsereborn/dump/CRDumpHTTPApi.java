@@ -9,7 +9,7 @@ import java.net.URL;
 
 public class CRDumpHTTPApi {
 
-	private static final String PASTE_URL = "http://web.golde.org/temp/pastetest/";
+	private static final String PASTE_URL = "https://web2.golde.org/websites/corpsereborn/dumps/";
 	private static final String ARGS_UPLOAD = "index.php";
 	private static final String ARGS_VIEW = "view.php?id=";
 	

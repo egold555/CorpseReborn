@@ -44,7 +44,7 @@ public class Main extends JavaPlugin {
 
 	public Corpses corpses;
 	public boolean cont = true;
-	public final boolean isDev = true; //TODO: CHANGE BEFORE RELEASE
+	public final boolean isDev = false; //TODO: CHANGE BEFORE RELEASE
 	public static ServerVersion serverVersion = ServerVersion.UNKNOWN;
 	public static ServerType serverType = ServerType.UNKNOWN;
 
@@ -84,14 +84,20 @@ public class Main extends JavaPlugin {
 			serverType = ServerType.whatAmI(this);
 			Util.cinfo("");
 			Util.cinfo("");
-			Util.cinfo("&dHi!");
-			Util.cinfo("&dThank you for downloading the new beta 1.15 update.");
-			Util.cinfo("&dPlease note that I have &cDisabled WorldGuard support &dfor this update entirely.");
-			Util.cinfo("&dI am working on a new System to support all versions of WorldGuard,");
-			Util.cinfo("&dbut I wanted to get this update out ASAP for everyone.");
-			Util.cinfo("&dIf you find any bugs, please let me know by either filling out a bug report on GitHub");
-			Util.cinfo("&bhttps://github.com/egold555/CorpseReborn/issues &dor reporting them");
-			Util.cinfo("&dto me on Spigot: &bhttps://www.spigotmc.org/resources/corpsereborn.29875/");
+			Util.cinfo("&dHello!");
+			Util.cinfo("&dThank you for downloading the new BETA 1.15 update.");
+			Util.cinfo("&dI am sorry it took so long for me to put this out, ive been hecka busy.");
+			Util.cinfo("");
+			Util.cinfo("&dThis 1.15 beta version has been tested with the following: ");
+			Util.cinfo("  &a- Spigot: git-Spigot-2f5d615-d07a78b");
+			Util.cinfo("  &a- Paper Spigot: #284 bb4002d");
+			Util.cinfo("");
+			Util.cinfo("");
+			Util.cinfo("&dIf you find any bugs, please let me know on the GitHub 1.15 discussion thread");
+			Util.cinfo("&bhttps://github.com/egold555/CorpseReborn/issues/89");
+			Util.cinfo("");
+			Util.cinfo("&dIf you would like to see what still needs to be done, here is the checklist:");
+			Util.cinfo("&bhttps://github.com/egold555/CorpseReborn/issues/90");
 			Util.cinfo("");
 			Util.cinfo("&d--Eric Golde");
 			Util.cinfo("");
@@ -113,7 +119,7 @@ public class Main extends JavaPlugin {
 			ConfigData.load();
 			corpseSaveFile = new File(getDataFolder(), "corpses.yml");
 
-			if(!isDev) {checkForUpdates();}
+			//if(!isDev) {checkForUpdates();}
 
 			if(serverVersion == ServerVersion.UNKNOWN && !isDev){
 				Util.cinfo("&e====================================================");

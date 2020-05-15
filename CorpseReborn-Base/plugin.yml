@@ -2,8 +2,8 @@ main: org.golde.bukkit.corpsereborn.Main
 name: CorpseReborn
 authors: ["Eric Golde", "Peter Golde", "Virizion"]
 website: https://www.spigotmc.org/resources/corpsereborn.29875/
-version: 2.14.1
-description: "Dead Bodies in Bukkit! Ported to 1.7.10-1.14.3 versions of Bukkit/Spigot/Paper. Thanks to Virizion for letting me take over and manage his old corpse plugin §4❤§f."
+version: 2.15.0 BETA
+description: "Dead Bodies in Bukkit! Ported to 1.7.10-1.15.2 versions of Bukkit/Spigot/Paper. Thanks to Virizion for letting me take over and manage his old corpse plugin §4❤§f."
 load: POSTWORLD
 softdepend: [Multiverse-Core, MultiWorld, WorldGuard]
 api-version: 1.13

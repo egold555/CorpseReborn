@@ -35,16 +35,14 @@ public enum ServerType {
 
 	public static ServerType whatAmI(JavaPlugin p){
 		
-		if(Bukkit.getVersion().toLowerCase().contains("paper")){
-			return PAPER_SPIGOT;
-		}else if(Bukkit.getVersion().toLowerCase().contains("taco")){
+		if(Bukkit.getVersion().toLowerCase().contains("taco")){
 			return TACO_SPIGOT;
 		}
 		
-		/*try{
-			Class.forName("org.github.paperspigot.PaperSpigotConfig");
+		try{
+			Class.forName("com.destroystokyo.paper.PaperConfig");
 			return PAPER_SPIGOT;
-		}catch (Exception e){}*/
+		}catch (Exception e){}
 		
 		try{
 			Class.forName("net.glowstone.GlowServer");
