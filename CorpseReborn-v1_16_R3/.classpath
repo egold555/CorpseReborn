@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/ryans/Desktop/Tools/BuildTools/1.16.4/spigot-1.16.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CorpseReborn - Base"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
