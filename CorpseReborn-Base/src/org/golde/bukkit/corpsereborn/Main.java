@@ -91,7 +91,7 @@ public class Main extends JavaPlugin {
 			Util.cinfo("");
 			Util.cinfo("&dThis 1.16.4 beta version has been tested with the following server versions: ");
 			Util.cinfo("  &a- Spigot: git-Spigot-ff439d1-24c79a1");
-			Util.cinfo("  &a- git-Paper-366");
+			Util.cinfo("  &a- Paper: git-Paper-366");
 			Util.cinfo("");
 			Util.cinfo("");
 			Util.cinfo("&dIf you find any bugs, please let me know on the GitHub 1.16.4 discussion thread");
