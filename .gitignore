@@ -1,8 +1,6 @@
-*.classpath
-*.project
 .settings/
 bin/
-doc/
-src/generatedoc.bat
-src/uploaddoc.bat
-BATCH/
+
+DUMMY/
+Export/*
+!Export/mergejars.bat
