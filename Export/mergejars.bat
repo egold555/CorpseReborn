@@ -18,7 +18,7 @@ rem Combine all the jars together into one jar
 "C:\Program Files\7-Zip\7z" x -aoa ..\CR-v1_12_R1.jar
 "C:\Program Files\7-Zip\7z" x -aoa ..\CR-v1_13_R1.jar
 "C:\Program Files\7-Zip\7z" x -aoa ..\CR-v1_14_R1.jar
-"C:\Program Files\7-Zip\7z" x -aoa ..\CR-v1_15_R1.jar
+"C:\Program Files\7-Zip\7z" x -aoa ..\CR-v1_16_R3.jar
 "C:\Program Files\7-Zip\7z" x -aoa ..\CR-Base.jar
 
 cd ..
@@ -26,7 +26,7 @@ cd ..
 "jar" -cvf CorpseReborn.jar -C tmp .
 
 rem copy the built jar to my test server
-copy CorpseReborn.jar C:\Users\eric\Documents\Games\Minecraft\Servers\115\plugins\CorpseReborn.jar
+copy CorpseReborn.jar C:\Users\eric\Documents\Games\Minecraft\Servers\116\plugins\CorpseReborn.jar
 
 rem Delete the temp files
 del CorpseReborn.jar

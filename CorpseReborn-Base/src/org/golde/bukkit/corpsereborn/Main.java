@@ -82,26 +82,26 @@ public class Main extends JavaPlugin {
 		try{
 			plugin = this;
 			serverType = ServerType.whatAmI(this);
+			
 			Util.cinfo("");
 			Util.cinfo("");
 			Util.cinfo("&dHello!");
-			Util.cinfo("&dThank you for downloading the new BETA 1.15 update.");
-			Util.cinfo("&dI am sorry it took so long for me to put this out, ive been hecka busy.");
+			Util.cinfo("&dThank you for downloading the 1.16.4 Beta update.");
+			Util.cinfo("&dI know it has been a long time. I just haven't had time with College to work on this Plugin.");
 			Util.cinfo("");
-			Util.cinfo("&dThis 1.15 beta version has been tested with the following: ");
-			Util.cinfo("  &a- Spigot: git-Spigot-2f5d615-d07a78b");
-			Util.cinfo("  &a- Paper Spigot: #284 bb4002d");
+			Util.cinfo("&dThis 1.16.4 beta version has been tested with the following server versions: ");
+			Util.cinfo("  &a- Spigot: git-Spigot-ff439d1-24c79a1");
+			Util.cinfo("  &a- Paper: git-Paper-366");
 			Util.cinfo("");
 			Util.cinfo("");
-			Util.cinfo("&dIf you find any bugs, please let me know on the GitHub 1.15 discussion thread");
-			Util.cinfo("&bhttps://github.com/egold555/CorpseReborn/issues/89");
+			Util.cinfo("&dIf you find any bugs, please let me know on the GitHub 1.16.4 discussion thread");
+			Util.cinfo("&bhttps://github.com/egold555/CorpseReborn/issues/104");
 			Util.cinfo("");
-			Util.cinfo("&dIf you would like to see what still needs to be done, here is the checklist:");
-			Util.cinfo("&bhttps://github.com/egold555/CorpseReborn/issues/90");
 			Util.cinfo("");
 			Util.cinfo("&d--Eric Golde");
 			Util.cinfo("");
 			Util.cinfo("");
+			
 			
 			if(!serverType.isCompatible() && !isDev){
 				Util.cinfo("&e====================================================");
@@ -136,6 +136,11 @@ public class Main extends JavaPlugin {
 			if (!cont) {
 				return;
 			}
+			
+			if(serverVersion == ServerVersion.v1_16_R3) {
+				Util.cinfo("&bThank you for the 1.16.4 support @ryanopily &c<3");
+			}
+			
 			PluginManager pm = getServer().getPluginManager();
 			pm.registerEvents(new PlayerJoin(), this);
 			pm.registerEvents(new PlayerRespawn(), this);
