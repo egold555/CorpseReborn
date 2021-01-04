@@ -107,7 +107,12 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 
 	public GameProfile cloneProfileWithRandomUUID(GameProfile oldProf,
 			String name) {
-		GameProfile newProf = new GameProfile(UUID.randomUUID(), name);
+		
+		// For NPCs, UUIDv2 should be used
+		UUID v2 = UUID.randomUUID();
+		v2 = UUID.fromString(new StringBuilder(v2.toString()).replace(14, 15, "2").toString());
+		
+		GameProfile newProf = new GameProfile(v2, name);
 		newProf.getProperties().putAll(oldProf.getProperties());
 		return newProf;
 	}
@@ -132,19 +137,13 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 		GameProfile prof = cloneProfileWithRandomUUID(
 				((CraftPlayer) p).getProfile(),
 				ConfigData.showTags() ? ConfigData.getUsername(p.getName(), overrideUsername) : "");
-
-		DataWatcher dw = clonePlayerDatawatcher(p, entityId);
-
-		
-		DataWatcherObject<Byte> skinFlags = new DataWatcherObject<Byte>(16, DataWatcherRegistry.a);
-		dw.set(skinFlags, (byte)0x7F);
 		
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
 		used.setYaw(loc.getYaw());
 		used.setPitch(loc.getPitch());
 
-		NMSCorpseData data = new NMSCorpseData(prof, used, dw, entityId,
+		NMSCorpseData data = new NMSCorpseData(prof, used, entityId,
 				ConfigData.getCorpseTime() * 20, inv, facing);
 
 		if(p.getKiller() != null) {
@@ -170,18 +169,12 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 			gp.getProperties().putAll(propertyMap);
 		}
 
-		//
-		DataWatcher dw = clonePlayerDatawatcher(gp, loc.getWorld(), entityId);
-		
-		DataWatcherObject<Byte> skinFlags = new DataWatcherObject<Byte>(16, DataWatcherRegistry.a);
-		dw.set(skinFlags, (byte)0x7F);
-
 		Location locUnder = getNonClippableBlockUnderPlayer(loc, 1);
 		Location used = locUnder != null ? locUnder : loc;
 		used.setYaw(loc.getYaw());
 		used.setPitch(loc.getPitch());
 
-		NMSCorpseData data = new NMSCorpseData(gp, used, dw, entityId,
+		NMSCorpseData data = new NMSCorpseData(gp, used, entityId,
 				ConfigData.getCorpseTime() * 20, items, facing);
 
 		data.corpseName = gpName;
@@ -261,7 +254,7 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 		private Map<Player, Integer> tickLater;
 		private GameProfile prof;
 		private Location loc;
-		private DataWatcher metadata;
+//		private DataWatcher metadata;
 		private int entityId;
 		private int ticksLeft;
 		private Inventory items;
@@ -272,13 +265,20 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 
 		private String killerName;
 		private UUID killerUUID;
+		
+		// 1.16 support
+		private EntityPlayer entity;
+		private boolean sleeping = false;
+		
+		// If you spawn the bed in the same location consecutively, the corpses rotate in weird ways. This will help with that.
+		private Location lastLoc;
 
 		public NMSCorpseData(GameProfile prof, Location loc,
-				DataWatcher metadata, int entityId, int ticksLeft,
+				 int entityId, int ticksLeft,
 				Inventory items, int rotation) {
 			this.prof = prof;
 			this.loc = loc;
-			this.metadata = metadata;
+//			this.metadata = metadata;
 			this.entityId = entityId;
 			this.ticksLeft = ticksLeft;
 			this.canSee = new HashMap<Player, Boolean>();
@@ -288,6 +288,13 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 			if(rotation >3 || rotation < 0) {
 				this.rotation = 0;
 			}
+			
+			// Initialize corpse entity
+			this.entity = new CustomEntityPlayer(loc, prof);
+			entity.e(entityId);
+			
+			DataWatcherObject<Byte> skinFlags = new DataWatcherObject<Byte>(16, DataWatcherRegistry.a);
+			entity.getDataWatcher().set(skinFlags, (byte)0x7F);
 		}
 
 
@@ -446,16 +453,20 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 //		}
 
 		public PacketPlayOutEntityMetadata getEntityMetadataPacket() {
-			return new PacketPlayOutEntityMetadata(entityId, metadata, false);
+			return new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), false);
+		}
+		
+		public PacketPlayOutEntityDestroy getDestroyPacket() {
+			return new PacketPlayOutEntityDestroy(
+					entityId);
 		}
 
 		@SuppressWarnings("deprecation")
 		public void resendCorpseToEveryone() {
-			PacketPlayOutNamedEntitySpawn spawnPacket = getSpawnPacket();
-			//PacketPlayOutBed bedPacket = getBedPacket();
-			PacketPlayOutRelEntityMove movePacket = getMovePacket();
 			PacketPlayOutPlayerInfo infoPacket = getInfoPacket();
-			final PacketPlayOutPlayerInfo removeInfo = getRemoveInfoPacket();
+			PacketPlayOutNamedEntitySpawn spawnPacket = getSpawnPacket();
+			PacketPlayOutPlayerInfo removeInfo = getRemoveInfoPacket();
+
 			//Defining the list of Pairs with EnumItemSlot and (NMS) ItemStack
 			final List<Pair<EnumItemSlot, net.minecraft.server.v1_16_R3.ItemStack>> equipmentList = new ArrayList<>();
 
@@ -472,23 +483,27 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 			for (Player p : toSend) {
 				PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 				Location bedLocation = Util.bedLocation(loc);
-				// You don't need beds since we force the sleeping position in makePlayerSleep (Check it out)
-				p.sendBlockChange(bedLocation,
-						Material.RED_BED, (byte) rotation);
+				
+				if(sleeping) {
+					wakeUp(p, lastLoc);
+					conn.sendPacket(getDestroyPacket());
+				}
+				
+				if(lastLoc != null && bedLocation.equals(lastLoc))
+					lastLoc = bedLocation.add(0, 5, 0);
+				
 				conn.sendPacket(infoPacket);
 				conn.sendPacket(spawnPacket);
-				//conn.sendPacket(bedPacket);
 
-				conn.sendPacket(movePacket);
 				// The EntityMetadataPacket is sent from here.
-				makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
+				makePlayerSleep(p, conn, lastLoc = bedLocation);
+				sleeping = true;
 				
-				// Why resend the packet? This is part of the reason why corpses spawn standing up.
-				//conn.sendPacket(getEntityMetadataPacket());
 				if(ConfigData.shouldRenderArmor()) {
 					conn.sendPacket(entityEquipment);
 				}
 			}
+			
 			Bukkit.getServer().getScheduler()
 			.scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
 				public void run() {
@@ -505,11 +520,10 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 
 		@SuppressWarnings("deprecation")
 		public void resendCorpseToPlayer(final Player p) {
-			PacketPlayOutNamedEntitySpawn spawnPacket = getSpawnPacket();
-			PacketPlayOutRelEntityMove movePacket = getMovePacket();
 			PacketPlayOutPlayerInfo infoPacket = getInfoPacket();
-			final PacketPlayOutPlayerInfo removeInfo = getRemoveInfoPacket();
-			
+			PacketPlayOutNamedEntitySpawn spawnPacket = getSpawnPacket();
+			PacketPlayOutPlayerInfo removeInfo = getRemoveInfoPacket();
+
 			//Defining the list of Pairs with EnumItemSlot and (NMS) ItemStack
 			final List<Pair<EnumItemSlot, net.minecraft.server.v1_16_R3.ItemStack>> equipmentList = new ArrayList<>();
 
@@ -523,22 +537,25 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 			//Creating the packet
 			final PacketPlayOutEntityEquipment entityEquipment = new PacketPlayOutEntityEquipment(entityId, equipmentList);
 			
-
 			PlayerConnection conn = ((CraftPlayer) p).getHandle().playerConnection;
 			Location bedLocation = Util.bedLocation(loc);
-
-			p.sendBlockChange(bedLocation,
-					Material.RED_BED, (byte) rotation);
+			
+			if(sleeping) {
+				wakeUp(p, lastLoc);
+				conn.sendPacket(getDestroyPacket());
+			}
+			
+			
+			if(lastLoc != null && bedLocation.equals(lastLoc))
+				lastLoc = bedLocation.add(1, 0, 1);
+			
 			conn.sendPacket(infoPacket);
 			conn.sendPacket(spawnPacket);
-			//conn.sendPacket(bedPacket);
 
-			conn.sendPacket(movePacket);
 			// The EntityMetadataPacket is sent from here.
-			makePlayerSleep(p, conn, getBlockPositionFromBukkitLocation(bedLocation), metadata);
+			makePlayerSleep(p, conn, lastLoc = bedLocation);
+			sleeping = true;
 			
-			// Why resend the packet? This is part of the reason why corpses spawn standing up.
-			//conn.sendPacket(getEntityMetadataPacket());
 			if(ConfigData.shouldRenderArmor()) {
 				conn.sendPacket(entityEquipment);
 			}
@@ -557,32 +574,49 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 			return new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		}
 
-		private void makePlayerSleep(Player p, PlayerConnection conn, BlockPosition bedPos, DataWatcher playerDW) {
-			EntityPlayer entityPlayer = new CustomEntityPlayer(p, prof);
-			entityPlayer.e(entityId); //sets the entity id
-
+		private void makePlayerSleep(Player p, PlayerConnection conn, Location bedPos) {
 			try {
-				//Set the datawatcher field on the newly crafted entity -- uses reflection
-//				Field dwField = EntityPlayer.class.getField("datawatcher");
-//				dwField.setAccessible(true);
-//				dwField.set(entityPlayer, playerDW);
-				
-//				 These lines force an entity player into the sleeping position
+
+				// These lines force an entity player into the sleeping position
 				Field poseF = Entity.class.getDeclaredField("POSE");
 				poseF.setAccessible(true);
 				DataWatcherObject<EntityPose> POSE = (DataWatcherObject<EntityPose>) poseF.get(null);
-				entityPlayer.getDataWatcher().set(POSE, EntityPose.SLEEPING);
+				entity.getDataWatcher().set(POSE, EntityPose.SLEEPING);
+				DataWatcherObject<Byte> skinFlags = new DataWatcherObject<Byte>(16, DataWatcherRegistry.a);
+				entity.getDataWatcher().set(skinFlags, (byte)0x7F);
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
 			}
 			
-			entityPlayer.entitySleep(bedPos); //go to sleep
-			conn.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), entityPlayer.getDataWatcher(), false));
+			p.sendBlockChange(bedPos, Material.RED_BED.createBlockData());
+			entity.entitySleep(getBlockPositionFromBukkitLocation(bedPos)); //go to sleep
+			
+			conn.sendPacket(getMovePacket());
+			conn.sendPacket(getEntityMetadataPacket());
 		}
 		
+		// When resending corpses, you need to wake them up otherwise they won't sleep again
+		private void wakeUp(Player p, Location bedPos) {
+			try {
+				// These lines force an entity player into the standing position
+				Field poseF = Entity.class.getDeclaredField("POSE");
+				poseF.setAccessible(true);
+				DataWatcherObject<EntityPose> POSE = (DataWatcherObject<EntityPose>) poseF.get(null);
+				entity.getDataWatcher().set(POSE, EntityPose.STANDING);
+				
+				// As a matter of fact, waking up a corpse includes removing the skin layers temporarily. This took TOO long to figure out.
+				DataWatcherObject<Byte> skinFlags = new DataWatcherObject<Byte>(16, DataWatcherRegistry.a);
+				entity.getDataWatcher().set(skinFlags, (byte)0xFF);
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			p.sendBlockChange(bedPos, Material.AIR.createBlockData());
+			((CraftPlayer)p).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), false));
+		}
 		
-
 		@SuppressWarnings("deprecation")
 		public void destroyCorpseFromPlayer(Player p) {
 			PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(
@@ -802,9 +836,10 @@ public class NMSCorpses_v1_16_R3 extends NmsBase implements Corpses {
 		nmsEntity.setNoGravity(true);
 	}
 
+	// Used to represent corpses
 	static class CustomEntityPlayer extends EntityPlayer {
 
-		public CustomEntityPlayer(Player p, GameProfile prof) {
+		public CustomEntityPlayer(Location p, GameProfile prof) {
 			super(((CraftWorld) p.getWorld()).getHandle().getMinecraftServer(), ((CraftWorld) p.getWorld()).getHandle(), prof, new PlayerInteractManager(((CraftWorld) p.getWorld()).getHandle()));
 		}
 
